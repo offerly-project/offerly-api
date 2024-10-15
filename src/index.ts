@@ -1,25 +1,34 @@
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express, { json } from "express";
 import morgan from "morgan";
+import { db } from "./configs/db";
 import { env } from "./configs/env";
+import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
 import { authRouter } from "./routers/auth.router";
 
 dotenv.config();
 
-const app = express();
+(async function () {
+	await db.connect();
 
-app.use(json());
+	const app = express();
 
-app.use(morgan("common"));
+	app.use(morgan("common"));
 
-app.use(cors());
+	app.use(cookieParser());
 
-app.use("/auth", authRouter);
+	app.use(json());
 
-app.use(errorsMiddleware);
+	app.use(cors(CORS_OPTIONS));
 
-app.listen(env.PORT, () => {
-	console.log(`Server is running on port ${env.PORT}`);
-});
+	app.use("/auth", authRouter);
+
+	app.use(errorsMiddleware);
+
+	app.listen(env.PORT, () => {
+		console.log(`Server is running on port ${env.PORT}`);
+	});
+})();
