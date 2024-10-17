@@ -6,3 +6,5 @@ export const adminLoginSchema = z.object({
 		password: z.string({ message: "Password is required" }),
 	}),
 });
+
+export type AdminLoginBodyData = z.infer<typeof adminLoginSchema>["body"];

@@ -1,7 +1,7 @@
-import { MongoClient } from "mongodb";
+import { Document, MongoClient } from "mongodb";
 import { env } from "./env";
 
-type Collections = "admins";
+type Collections = "admins" | "banks" | "cards" | "offers";
 
 export class Database {
 	private _client: MongoClient;
@@ -25,8 +25,8 @@ export class Database {
 		return this._client.db(env.DB_NAME);
 	}
 
-	getCollection(name: Collections) {
-		return this.db.collection(name);
+	getCollection<T extends Document>(name: Collections) {
+		return this.db.collection<T>(name);
 	}
 }
 

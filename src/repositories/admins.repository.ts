@@ -1,16 +1,15 @@
+import { Collection } from "mongodb";
 import { Database, db } from "../configs/db";
-import { AdminType } from "../models/users.models";
+import { IAdmin } from "../models/admin.model";
 
 export class AdminsRepository {
-	database: Database;
+	private collection: Collection<IAdmin>;
 	constructor(db: Database) {
-		this.database = db;
+		this.collection = db.getCollection<IAdmin>("admins");
 	}
 
-	async findAdminByUsername(username: string) {
-		const adminsCollection = this.database.getCollection("admins");
-
-		const admin = await adminsCollection.findOne<AdminType>({
+	async findOneByUsername(username: string) {
+		const admin = await this.collection.findOne({
 			username,
 		});
 		return admin;
