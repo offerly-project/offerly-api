@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import STATUS from "http-status-codes";
-import { CreateBankBodyData } from "../schemas/bank.schemas";
+import { StatusCodes } from "http-status-codes";
 import { banksService } from "../services/banks.service";
+import { CreateBankBodyData } from "../validators/bank.validators";
 
 const createBankHandler = async (
 	req: Request<{}, {}, CreateBankBodyData>,
@@ -12,7 +12,7 @@ const createBankHandler = async (
 		const bankData = req.body;
 		const id = await banksService.createNewBank(bankData);
 
-		res.status(STATUS.OK).json({ id });
+		res.status(StatusCodes.OK).json({ id });
 	} catch (e) {
 		next(e);
 	}

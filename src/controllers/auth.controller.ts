@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { COOKIE_OPTIONS } from "../configs/options";
-import { AdminLoginBodyData } from "../schemas/auth.schemas";
 import { authService } from "../services/auth.service";
+import { AdminLoginBodyData } from "../validators/auth.validators";
 
 const adminLoginHandler = async (
 	req: Request<{}, {}, AdminLoginBodyData>,

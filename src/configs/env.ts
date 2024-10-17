@@ -8,6 +8,7 @@ const schema = z.object({
 	DB_NAME: z.string(),
 	SALT_ROUNDS: z.string().default("10"),
 	PRIVATE_KEY: z.string(),
+	DATA_DIR: z.string(),
 });
 
 export const env = schema.parse(process.env);

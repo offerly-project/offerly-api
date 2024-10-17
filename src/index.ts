@@ -6,10 +6,10 @@ import morgan from "morgan";
 import { db } from "./configs/db";
 import { env } from "./configs/env";
 import { CORS_OPTIONS } from "./configs/options";
-import { uploadHandler } from "./controllers/upload.controller";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
 import { authRouter } from "./routers/auth.router";
 import { banksRouter } from "./routers/banks.router";
+import { uploadsRouter } from "./routers/uploads.router";
 
 dotenv.config();
 
@@ -22,7 +22,7 @@ dotenv.config();
 
 	app.use(urlencoded({ extended: true }));
 
-	app.post("/uploads", uploadHandler);
+	app.use("/uploads", uploadsRouter);
 
 	app.use(cookieParser());
 

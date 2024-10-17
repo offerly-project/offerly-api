@@ -1,6 +1,6 @@
 import { IBank } from "../models/bank.model";
 import { banksRepository } from "../repositories/banks.repository";
-import { CreateBankBodyData } from "../schemas/bank.schemas";
+import { CreateBankBodyData } from "../validators/bank.validators";
 
 export class BanksService {
 	createNewBank(bank: CreateBankBodyData) {
