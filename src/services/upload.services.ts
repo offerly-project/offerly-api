@@ -8,22 +8,22 @@ type ImageSaveParams = {
 };
 
 export class ImageUploadService {
-	save(params: ImageSaveParams) {
-		return new Promise<void>((resolve, reject) => {
-			const { buffer, path, dims } = params;
+	async save(params: ImageSaveParams) {
+		const { buffer, path, dims } = params;
 
-			const sharpImage = sharp(buffer);
-			if (dims) {
-				const [width, height] = dims.split("x").map(Number);
-				sharpImage.resize(width, height);
+		const sharpImage = sharp(buffer);
+		if (dims) {
+			const [width, height] = dims.split("x").map(Number);
+			if (isNaN(width) || isNaN(height)) {
+				throw new Error("Invalid dimensions");
 			}
-			sharpImage
-				.withMetadata()
-				.toFormat("png", { quality: 90 })
-				.toFile(path)
-				.then(() => resolve())
-				.catch(reject);
-		});
+			sharpImage.resize(width, height);
+		}
+
+		await sharpImage
+			.withMetadata()
+			.toFormat("png", { quality: 90 })
+			.toFile(path);
 	}
 }
 
