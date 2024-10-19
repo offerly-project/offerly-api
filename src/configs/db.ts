@@ -5,6 +5,7 @@ type Collections = "admins" | "banks" | "cards" | "offers";
 
 export class Database {
 	private _client: MongoClient;
+	ObjectID: any;
 	constructor() {
 		this._client = new MongoClient(env.DB_URL);
 	}

@@ -6,6 +6,7 @@ import { createCardSchema } from "../validators/card.validators";
 export const cardsRouter = Router();
 
 cardsRouter.get("/", cardsController.getCardsHandler);
+cardsRouter.get("/:id", cardsController.getCardHandler);
 
 cardsRouter.post(
 	"/",

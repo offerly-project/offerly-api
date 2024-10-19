@@ -17,6 +17,20 @@ const getCardsHandler = async (
 	}
 };
 
+const getCardHandler = async (
+	req: Request<{ id: string }>,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const cards = await cardsService.getCardById(req.params.id);
+
+		res.status(StatusCodes.OK).json(cards);
+	} catch (error) {
+		next(error);
+	}
+};
+
 const createCardHandler = async (
 	req: Request<{}, {}, CreateCardBodyData>,
 	res: Response,
@@ -31,4 +45,8 @@ const createCardHandler = async (
 	}
 };
 
-export const cardsController = { getCardsHandler, createCardHandler };
+export const cardsController = {
+	getCardsHandler,
+	createCardHandler,
+	getCardHandler,
+};

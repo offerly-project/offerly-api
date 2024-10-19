@@ -1,4 +1,4 @@
-import { Collection, WithId } from "mongodb";
+import { Collection, ObjectId, WithId } from "mongodb";
 import { Database, db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
 import { ICard } from "../models/card.model";
@@ -10,8 +10,18 @@ export class CardsRepository {
 		this.collection = db.getCollection<ICard>("cards");
 	}
 
-	getAll() {
-		return this.collection
+	async findById(id: string) {
+		const card = await this.collection.findOne<WithId<ICard>>({
+			_id: new ObjectId(id),
+		});
+		if (!card) {
+			return null;
+		}
+		return documentToClient(card);
+	}
+
+	async getAll() {
+		return await this.collection
 			.aggregate<WithId<ICard>>([
 				{
 					$lookup: {

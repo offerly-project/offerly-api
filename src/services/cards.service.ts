@@ -12,6 +12,15 @@ export class CardsService {
 		return cards;
 	}
 
+	async getCardById(id: string) {
+		const card = await cardsRepository.findById(id);
+		if (!card) {
+			throw new NotFoundError("Card with this id does not exist");
+		}
+
+		return card;
+	}
+
 	async createCard(card: CreateCardBodyData) {
 		const bankExists = await banksRepository.findById(card.bank);
 		if (!bankExists) {
