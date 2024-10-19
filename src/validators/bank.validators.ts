@@ -29,6 +29,7 @@ export const updateBankSchema = z.object({
 		name: z.string({ message: "Name is required" }).optional(),
 		logo: z.string({ message: "Logo is required" }).optional(),
 		status: z.enum(["enabled", "disabled"]).optional(),
+		cards: z.array(z.string()).optional(),
 	}),
 });
 

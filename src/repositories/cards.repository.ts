@@ -1,4 +1,4 @@
-import { Collection, ObjectId, WithId } from "mongodb";
+import { Collection, Document, ObjectId, WithId } from "mongodb";
 import { Database, db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
 import { ICard } from "../models/card.model";
@@ -6,14 +6,53 @@ import { documentToClient } from "../utils/utils";
 
 export class CardsRepository {
 	private collection: Collection<ICard>;
+
+	private _basePipeline: Document[] = [
+		{
+			$lookup: {
+				from: "banks",
+				localField: "bank",
+				foreignField: "_id",
+				as: "bank",
+			},
+		},
+		{
+			$unwind: "$bank",
+		},
+		{
+			$lookup: {
+				from: "offers",
+				localField: "offers",
+				foreignField: "_id",
+				as: "offers",
+			},
+		},
+	];
+
 	constructor(db: Database) {
 		this.collection = db.getCollection<ICard>("cards");
 	}
 
+	async cardNameExists(name: string, bankId: string) {
+		return (
+			(await this.collection.findOne({ name, bank: new ObjectId(bankId) })) !==
+			null
+		);
+	}
+
 	async findById(id: string) {
-		const card = await this.collection.findOne<WithId<ICard>>({
-			_id: new ObjectId(id),
-		});
+		const card = await this.collection
+			.aggregate<WithId<ICard>>([
+				{
+					$match: {
+						_id: new ObjectId(id),
+					},
+				},
+				...this._basePipeline,
+			])
+			.toArray()
+			.then((cards) => cards[0]);
+
 		if (!card) {
 			return null;
 		}
@@ -22,19 +61,7 @@ export class CardsRepository {
 
 	async getAll() {
 		return await this.collection
-			.aggregate<WithId<ICard>>([
-				{
-					$lookup: {
-						from: "banks",
-						localField: "bank",
-						foreignField: "_id",
-						as: "bank",
-					},
-				},
-				{
-					$unwind: "$bank",
-				},
-			])
+			.aggregate<WithId<ICard>>([...this._basePipeline])
 			.toArray()
 			.then((cards) => cards.map(documentToClient));
 	}
@@ -47,6 +74,19 @@ export class CardsRepository {
 		}
 
 		return result.insertedId;
+	}
+
+	async update(id: string, card: Partial<ICard>) {
+		const result = await this.collection.updateOne(
+			{ _id: new ObjectId(id) },
+			{ $set: card }
+		);
+
+		if (!result.matchedCount) {
+			throw new InternalServerError("Failed to update card");
+		}
+
+		return id;
 	}
 }
 

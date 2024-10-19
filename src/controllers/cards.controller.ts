@@ -1,7 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { cardsService } from "../services/cards.service";
-import { CreateCardBodyData } from "../validators/card.validators";
+import {
+	CreateCardBodyData,
+	UpdateCardBodyData,
+} from "../validators/card.validators";
 
 const getCardsHandler = async (
 	req: Request,
@@ -45,8 +48,26 @@ const createCardHandler = async (
 	}
 };
 
+const updateCardHandler = async (
+	req: Request<{ id: string }, {}, UpdateCardBodyData>,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { id } = req.params;
+		const cardData = req.body;
+
+		await cardsService.updateCard(id, cardData);
+
+		res.status(StatusCodes.OK).json({ message: "Card details updated" });
+	} catch (e) {
+		next(e);
+	}
+};
+
 export const cardsController = {
 	getCardsHandler,
 	createCardHandler,
 	getCardHandler,
+	updateCardHandler,
 };

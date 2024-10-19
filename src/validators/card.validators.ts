@@ -10,4 +10,18 @@ export const createCardSchema = z.object({
 	}),
 });
 
+export const updateCardSchema = z.object({
+	body: z.object({
+		bank: z.string().optional(),
+		name: z.string().optional(),
+		logo: z.string().optional(),
+		grade: z.string().optional(),
+		scheme: z.string().optional(),
+		status: z.enum(["enabled", "disabled"]).optional(),
+		offers: z.array(z.string()).optional(),
+	}),
+});
+
 export type CreateCardBodyData = z.infer<typeof createCardSchema>["body"];
+
+export type UpdateCardBodyData = z.infer<typeof updateCardSchema>["body"];

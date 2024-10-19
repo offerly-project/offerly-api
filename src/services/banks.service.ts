@@ -1,10 +1,8 @@
+import { ObjectId } from "mongodb";
 import { BadRequestError, NotFoundError } from "../errors/errors";
 import { IBank } from "../models/bank.model";
 import { banksRepository } from "../repositories/banks.repository";
-import {
-	documentToClient,
-	removeUndefinedValuesFromObject,
-} from "../utils/utils";
+import { removeUndefinedValuesFromObject } from "../utils/utils";
 import {
 	CreateBankBodyData,
 	UpdateBankBodyData,
@@ -21,7 +19,7 @@ export class BanksService {
 			cards: [],
 		};
 
-		const bankExists = await banksRepository.findByName(newBank.name);
+		const bankExists = await banksRepository.bankNameExists(newBank.name);
 
 		if (bankExists) {
 			throw new BadRequestError("Bank already exists");
@@ -40,6 +38,7 @@ export class BanksService {
 			name: bank.name,
 			logo: bank.logo,
 			status: bank.status,
+			cards: bank.cards?.map((card) => new ObjectId(card)),
 		});
 
 		banksRepository.update(id, patchData);
@@ -54,7 +53,7 @@ export class BanksService {
 		if (!bank) {
 			throw new NotFoundError("Bank not found");
 		}
-		return documentToClient(bank);
+		return bank;
 	}
 }
 

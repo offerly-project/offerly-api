@@ -1,21 +1,49 @@
-import { Collection, ObjectId } from "mongodb";
+import { Collection, Document, ObjectId, WithId } from "mongodb";
 import { Database, db } from "../configs/db";
-import { InternalServerError } from "../errors/errors";
+import { InternalServerError, NotFoundError } from "../errors/errors";
 import { IBank } from "../models/bank.model";
 import { documentToClient } from "../utils/utils";
 
 export class BanksRepository {
 	private collection: Collection<IBank>;
+
+	private _basePipeline: Document[] = [
+		{
+			$lookup: {
+				from: "cards",
+				localField: "cards",
+				foreignField: "_id",
+				as: "cards",
+			},
+		},
+	];
+
 	constructor(db: Database) {
 		this.collection = db.getCollection<IBank>("banks");
 	}
 
-	findByName(name: string) {
-		return this.collection.findOne({ name });
+	async bankNameExists(name: string) {
+		return (await this.collection.findOne({ name })) !== null;
 	}
 
-	findById(id: string) {
-		return this.collection.findOne({ _id: new ObjectId(id) });
+	async findById(id: string) {
+		const bank = await this.collection
+			.aggregate<WithId<IBank>>([
+				{
+					$match: {
+						_id: new ObjectId(id),
+					},
+				},
+				...this._basePipeline,
+			])
+			.toArray()
+			.then((result) => result[0]);
+
+		if (!bank) {
+			throw new NotFoundError("Bank not found");
+		}
+
+		return documentToClient(bank);
 	}
 
 	async create(bank: IBank) {
@@ -42,11 +70,9 @@ export class BanksRepository {
 	}
 	async getAll() {
 		return await this.collection
-			.find({})
+			.aggregate<WithId<IBank>>([...this._basePipeline])
 			.toArray()
-			.then((banks) => {
-				return banks.map((bank) => documentToClient(bank));
-			});
+			.then((banks) => banks.map(documentToClient));
 	}
 }
 
