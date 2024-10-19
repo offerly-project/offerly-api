@@ -1,7 +1,10 @@
 import { BadRequestError, NotFoundError } from "../errors/errors";
 import { IBank } from "../models/bank.model";
 import { banksRepository } from "../repositories/banks.repository";
-import { removeUndefinedValuesFromObject } from "../utils/utils";
+import {
+	documentToClient,
+	removeUndefinedValuesFromObject,
+} from "../utils/utils";
 import {
 	CreateBankBodyData,
 	UpdateBankBodyData,
@@ -40,6 +43,18 @@ export class BanksService {
 		});
 
 		banksRepository.update(id, patchData);
+	}
+
+	async getBanks() {
+		return banksRepository.getAll();
+	}
+
+	async getBank(id: string) {
+		const bank = await banksRepository.findById(id);
+		if (!bank) {
+			throw new NotFoundError("Bank not found");
+		}
+		return documentToClient(bank);
 	}
 }
 

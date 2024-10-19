@@ -8,6 +8,10 @@ import {
 
 export const banksRouter = Router();
 
+banksRouter.get("/", banksController.getBanksHandler);
+
+banksRouter.get("/:id", banksController.getBankHandler);
+
 banksRouter.post(
 	"/",
 	validateRequest(createBankSchema),

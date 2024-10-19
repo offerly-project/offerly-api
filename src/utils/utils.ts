@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { WithId } from "mongodb";
 import { ZodFriendlyError } from "../errors/errors";
 
 export const validateRequest =
@@ -17,5 +18,13 @@ export const removeUndefinedValuesFromObject = <T extends Record<string, any>>(
 	obj: T
 ): T => {
 	Object.keys(obj).forEach((key) => obj[key] === undefined && delete obj[key]);
+	return obj as T;
+};
+
+export const documentToClient = <T = any>(obj: WithId<T>): T => {
+	//@ts-ignore
+	obj.id = obj._id.toString();
+	//@ts-ignore
+	delete obj._id;
 	return obj as T;
 };

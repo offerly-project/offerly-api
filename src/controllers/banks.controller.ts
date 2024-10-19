@@ -37,7 +37,35 @@ const updateBankHandler = async (
 	}
 };
 
+const getBanksHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const banks = await banksService.getBanks();
+		res.status(StatusCodes.OK).json(banks);
+	} catch (e) {
+		next(e);
+	}
+};
+
+const getBankHandler = async (
+	req: Request<{ id: string }>,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const banks = await banksService.getBank(req.params.id);
+		res.status(StatusCodes.OK).json(banks);
+	} catch (e) {
+		next(e);
+	}
+};
+
 export const banksController = {
 	createBankHandler,
 	updateBankHandler,
+	getBanksHandler,
+	getBankHandler,
 };

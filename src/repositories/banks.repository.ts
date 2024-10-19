@@ -2,6 +2,7 @@ import { Collection, ObjectId } from "mongodb";
 import { Database, db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
 import { IBank } from "../models/bank.model";
+import { documentToClient } from "../utils/utils";
 
 export class BanksRepository {
 	private collection: Collection<IBank>;
@@ -38,6 +39,14 @@ export class BanksRepository {
 		}
 
 		return id;
+	}
+	async getAll() {
+		return await this.collection
+			.find({})
+			.toArray()
+			.then((banks) => {
+				return banks.map((bank) => documentToClient(bank));
+			});
 	}
 }
 
