@@ -1,6 +1,12 @@
 import { Router } from "express";
-import { imageUploadHandler } from "../controllers/upload.controller";
+import { imageUploadMiddleware } from "../middlewares/uploads.middleware";
 
 export const uploadsRouter = Router();
 
-uploadsRouter.post("/images", imageUploadHandler);
+uploadsRouter.post(
+	"/images",
+	imageUploadMiddleware({
+		allowCustomDimensions: true,
+		allowedPaths: ["/banks", "/offers", "/cards"],
+	})
+);
