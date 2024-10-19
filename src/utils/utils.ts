@@ -12,3 +12,10 @@ export const validateRequest =
 				next(new ZodFriendlyError(err));
 			});
 	};
+
+export const removeUndefinedValuesFromObject = <T extends Record<string, any>>(
+	obj: T
+): T => {
+	Object.keys(obj).forEach((key) => obj[key] === undefined && delete obj[key]);
+	return obj as T;
+};

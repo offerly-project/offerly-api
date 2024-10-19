@@ -1,6 +1,21 @@
 import { Router } from "express";
 import { banksController } from "../controllers/banks.controller";
+import { validateRequest } from "../utils/utils";
+import {
+	createBankSchema,
+	updateBankSchema,
+} from "../validators/bank.validators";
 
 export const banksRouter = Router();
 
-banksRouter.post("/", banksController.createBankHandler);
+banksRouter.post(
+	"/",
+	validateRequest(createBankSchema),
+	banksController.createBankHandler
+);
+
+banksRouter.patch(
+	"/:id",
+	validateRequest(updateBankSchema),
+	banksController.updateBankHandler
+);
