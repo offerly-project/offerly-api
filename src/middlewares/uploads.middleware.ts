@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import path from "path";
 import { ImageBuilder } from "../builders/image.builder";
 import { env } from "../configs/env";
+import { UploadDirectory } from "../configs/files";
 import { BadRequestError } from "../errors/errors";
 
 export type ImageDimensions = `${string}x${string}`;
@@ -17,7 +18,7 @@ export type ImageUploadPayload = {
 
 type ImageUploadMiddlwareOptions = {
 	allowCustomDimensions?: boolean;
-	allowedPaths?: string[];
+	allowedPaths?: UploadDirectory[];
 };
 
 export const imageUploadMiddleware =

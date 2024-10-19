@@ -5,6 +5,7 @@ import express, { json, urlencoded } from "express";
 import morgan from "morgan";
 import { db } from "./configs/db";
 import { env } from "./configs/env";
+import { createUploadDirectories } from "./configs/files";
 import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
 import { authRouter } from "./routers/auth.router";
@@ -14,6 +15,8 @@ import { uploadsRouter } from "./routers/uploads.router";
 dotenv.config();
 
 (async function () {
+	createUploadDirectories();
+
 	await db.connect();
 
 	const app = express();
