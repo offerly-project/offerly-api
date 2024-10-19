@@ -10,6 +10,7 @@ import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
 import { authRouter } from "./routers/auth.router";
 import { banksRouter } from "./routers/banks.router";
+import { cardsRouter } from "./routers/cards.router";
 import { uploadsRouter } from "./routers/uploads.router";
 
 dotenv.config();
@@ -36,6 +37,8 @@ dotenv.config();
 	app.use("/auth", authRouter);
 
 	app.use("/banks", banksRouter);
+
+	app.use("/cards", cardsRouter);
 
 	app.use(errorsMiddleware);
 

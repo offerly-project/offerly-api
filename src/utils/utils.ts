@@ -22,9 +22,23 @@ export const removeUndefinedValuesFromObject = <T extends Record<string, any>>(
 };
 
 export const documentToClient = <T = any>(obj: WithId<T>): T => {
-	//@ts-ignore
-	obj.id = obj._id.toString();
-	//@ts-ignore
-	delete obj._id;
-	return obj as T;
+	const convert = (item: any): any => {
+		if (Array.isArray(item)) {
+			return item.map(convert);
+		} else if (item && typeof item === "object") {
+			if (item._id) {
+				item.id = item._id.toString();
+				delete item._id;
+			}
+
+			for (const key in item) {
+				if (item.hasOwnProperty(key)) {
+					item[key] = convert(item[key]);
+				}
+			}
+		}
+		return item;
+	};
+
+	return convert(obj) as T;
 };
