@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { banksService } from "../services/banks.service";
+import { transformDocsResponse } from "../utils/utils";
 import {
 	CreateBankBodyData,
 	UpdateBankBodyData,
@@ -15,7 +16,7 @@ const createBankHandler = async (
 		const bankData = req.body;
 		const id = await banksService.createNewBank(bankData);
 
-		res.status(StatusCodes.OK).json({ id });
+		res.status(StatusCodes.OK).send({ id });
 	} catch (e) {
 		next(e);
 	}
@@ -31,7 +32,7 @@ const updateBankHandler = async (
 		const bankData = req.body;
 		await banksService.updateBank(id, bankData);
 
-		res.status(StatusCodes.OK).json({ message: "bank details updated" });
+		res.status(StatusCodes.OK).send({ message: "bank details updated" });
 	} catch (e) {
 		next(e);
 	}
@@ -44,7 +45,7 @@ const getBanksHandler = async (
 ) => {
 	try {
 		const banks = await banksService.getBanks();
-		res.status(StatusCodes.OK).json(banks);
+		res.status(StatusCodes.OK).send(transformDocsResponse(banks));
 	} catch (e) {
 		next(e);
 	}
@@ -57,7 +58,7 @@ const getBankHandler = async (
 ) => {
 	try {
 		const banks = await banksService.getBank(req.params.id);
-		res.status(StatusCodes.OK).json(banks);
+		res.status(StatusCodes.OK).send(transformDocsResponse(banks));
 	} catch (e) {
 		next(e);
 	}

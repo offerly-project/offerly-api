@@ -1,10 +1,10 @@
 import { Collection } from "mongodb";
-import { Database, db } from "../configs/db";
+import { db } from "../configs/db";
 import { IAdmin } from "../models/admin.model";
 
 export class AdminsRepository {
 	private collection: Collection<IAdmin>;
-	constructor(db: Database) {
+	constructor() {
 		this.collection = db.getCollection<IAdmin>("admins");
 	}
 
@@ -16,4 +16,4 @@ export class AdminsRepository {
 	}
 }
 
-export const adminsRepository = new AdminsRepository(db);
+export const adminsRepository = new AdminsRepository();

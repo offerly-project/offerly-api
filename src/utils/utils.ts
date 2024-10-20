@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { WithId } from "mongodb";
+import { Document } from "mongodb";
 import { ZodFriendlyError } from "../errors/errors";
 
 export const validateRequest =
@@ -21,24 +21,40 @@ export const removeUndefinedValuesFromObject = <T extends Record<string, any>>(
 	return obj as T;
 };
 
-export const documentToClient = <T = any>(obj: WithId<T>): T => {
-	const convert = (item: any): any => {
-		if (Array.isArray(item)) {
-			return item.map(convert);
-		} else if (item && typeof item === "object") {
-			if (item._id) {
-				item.id = item._id.toString();
-				delete item._id;
-			}
-
-			for (const key in item) {
-				if (item.hasOwnProperty(key)) {
-					item[key] = convert(item[key]);
-				}
-			}
-		}
-		return item;
+export const renameDocsObjectIdField = (docs: Document[] | Document) => {
+	const renameId = (doc: Document) => {
+		doc.id = doc._id;
+		delete doc._id;
+		return doc;
 	};
 
-	return convert(obj) as T;
+	if (Array.isArray(docs)) {
+		return docs.map(renameId);
+	}
+
+	return renameId(docs);
+};
+
+export const transformDocsResponse = (docs: Document[] | Document): any => {
+	const transform = (doc: any) => {
+		if (doc && typeof doc === "object") {
+			if (doc._id) {
+				doc.id = doc._id.toString();
+				delete doc._id;
+			}
+
+			Object.keys(doc).forEach((key) => {
+				if (typeof doc[key] === "object" && doc[key] !== null) {
+					doc[key] = transform(doc[key]);
+				}
+			});
+		}
+		return doc;
+	};
+
+	if (Array.isArray(docs)) {
+		return docs.map(transform);
+	}
+
+	return transform(docs);
 };

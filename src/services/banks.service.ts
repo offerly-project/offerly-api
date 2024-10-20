@@ -10,6 +10,12 @@ import {
 
 export class BanksService {
 	async createNewBank(bank: CreateBankBodyData) {
+		const bankExists = await banksRepository.bankNameExists(bank.name);
+
+		if (bankExists) {
+			throw new BadRequestError("Bank already exists");
+		}
+
 		const newBank: IBank = {
 			country: bank.country,
 			type: bank.type,
@@ -19,19 +25,21 @@ export class BanksService {
 			cards: [],
 		};
 
-		const bankExists = await banksRepository.bankNameExists(newBank.name);
-
-		if (bankExists) {
-			throw new BadRequestError("Bank already exists");
-		}
-
-		return banksRepository.create(newBank);
+		return banksRepository.add(newBank);
 	}
 	async updateBank(id: string, bank: UpdateBankBodyData) {
 		const bankExists = await banksRepository.findById(id);
 		if (!bankExists) {
 			throw new NotFoundError("Bank not found");
 		}
+
+		if (bank.name) {
+			const bankNameExists = await banksRepository.bankNameExists(bank.name);
+			if (bankNameExists) {
+				throw new BadRequestError("Bank name already exists");
+			}
+		}
+
 		const patchData = removeUndefinedValuesFromObject<Partial<IBank>>({
 			country: bank.country,
 			type: bank.type,

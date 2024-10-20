@@ -9,10 +9,10 @@ export const errorsMiddleware = (
 ) => {
 	if (err instanceof CustomError) {
 		console.error(err.toString());
-		res.status(err.status).json(err.toString());
+		res.status(err.status).send(err.toString());
 	} else {
 		console.error(err);
-		res.status(500).json({
+		res.status(500).send({
 			status: 500,
 			message: "Internal server error",
 		});

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { cardsService } from "../services/cards.service";
+import { transformDocsResponse } from "../utils/utils";
 import {
 	CreateCardBodyData,
 	UpdateCardBodyData,
@@ -14,7 +15,7 @@ const getCardsHandler = async (
 	try {
 		const cards = await cardsService.getAllCards();
 
-		res.status(StatusCodes.OK).json(cards);
+		res.status(StatusCodes.OK).send(transformDocsResponse(cards));
 	} catch (error) {
 		next(error);
 	}
@@ -28,7 +29,7 @@ const getCardHandler = async (
 	try {
 		const cards = await cardsService.getCardById(req.params.id);
 
-		res.status(StatusCodes.OK).json(cards);
+		res.status(StatusCodes.OK).send(transformDocsResponse(cards));
 	} catch (error) {
 		next(error);
 	}
@@ -42,7 +43,7 @@ const createCardHandler = async (
 	try {
 		const cardId = await cardsService.createCard(req.body);
 
-		res.status(StatusCodes.CREATED).json({ id: cardId });
+		res.status(StatusCodes.CREATED).send({ id: cardId });
 	} catch (e) {
 		next(e);
 	}
@@ -59,7 +60,7 @@ const updateCardHandler = async (
 
 		await cardsService.updateCard(id, cardData);
 
-		res.status(StatusCodes.OK).json({ message: "Card details updated" });
+		res.status(StatusCodes.OK).send({ message: "Card details updated" });
 	} catch (e) {
 		next(e);
 	}

@@ -1,8 +1,7 @@
 import { Collection, Document, ObjectId, WithId } from "mongodb";
-import { Database, db } from "../configs/db";
+import { db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
 import { ICard } from "../models/card.model";
-import { documentToClient } from "../utils/utils";
 
 export class CardsRepository {
 	private collection: Collection<ICard>;
@@ -29,7 +28,7 @@ export class CardsRepository {
 		},
 	];
 
-	constructor(db: Database) {
+	constructor() {
 		this.collection = db.getCollection<ICard>("cards");
 	}
 
@@ -56,14 +55,13 @@ export class CardsRepository {
 		if (!card) {
 			return null;
 		}
-		return documentToClient(card);
+		return card;
 	}
 
 	async getAll() {
 		return await this.collection
 			.aggregate<WithId<ICard>>([...this._basePipeline])
-			.toArray()
-			.then((cards) => cards.map(documentToClient));
+			.toArray();
 	}
 
 	async create(card: ICard) {
@@ -85,9 +83,7 @@ export class CardsRepository {
 		if (!result.matchedCount) {
 			throw new InternalServerError("Failed to update card");
 		}
-
-		return id;
 	}
 }
 
-export const cardsRepository = new CardsRepository(db);
+export const cardsRepository = new CardsRepository();

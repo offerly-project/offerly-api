@@ -1,7 +1,7 @@
 import { Document, MongoClient } from "mongodb";
 import { env } from "./env";
 
-type Collections = "admins" | "banks" | "cards" | "offers";
+type Collections = "admins" | "banks" | "cards" | "offers" | "stores";
 
 export class Database {
 	private _client: MongoClient;

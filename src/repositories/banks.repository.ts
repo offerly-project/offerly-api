@@ -1,8 +1,7 @@
 import { Collection, Document, ObjectId, WithId } from "mongodb";
-import { Database, db } from "../configs/db";
+import { db } from "../configs/db";
 import { InternalServerError, NotFoundError } from "../errors/errors";
 import { IBank } from "../models/bank.model";
-import { documentToClient } from "../utils/utils";
 
 export class BanksRepository {
 	private collection: Collection<IBank>;
@@ -18,7 +17,7 @@ export class BanksRepository {
 		},
 	];
 
-	constructor(db: Database) {
+	constructor() {
 		this.collection = db.getCollection<IBank>("banks");
 	}
 
@@ -43,10 +42,10 @@ export class BanksRepository {
 			throw new NotFoundError("Bank not found");
 		}
 
-		return documentToClient(bank);
+		return bank;
 	}
 
-	async create(bank: IBank) {
+	async add(bank: IBank) {
 		const result = await this.collection.insertOne(bank);
 
 		if (!result.insertedId) {
@@ -65,15 +64,12 @@ export class BanksRepository {
 		if (!result.matchedCount) {
 			throw new InternalServerError("Failed to update bank");
 		}
-
-		return id;
 	}
 	async getAll() {
 		return await this.collection
 			.aggregate<WithId<IBank>>([...this._basePipeline])
-			.toArray()
-			.then((banks) => banks.map(documentToClient));
+			.toArray();
 	}
 }
 
-export const banksRepository = new BanksRepository(db);
+export const banksRepository = new BanksRepository();

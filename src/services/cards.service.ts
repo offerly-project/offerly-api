@@ -18,7 +18,6 @@ export class CardsService {
 
 	async getCardById(id: string) {
 		const card = await cardsRepository.findById(id);
-		console.log(card);
 
 		if (!card) {
 			throw new NotFoundError("Card with this id does not exist");
@@ -55,9 +54,19 @@ export class CardsService {
 	}
 
 	async updateCard(id: string, card: UpdateCardBodyData) {
-		const cardExists = await cardsRepository.findById(id);
-		if (!cardExists) {
+		const cardDoc = await cardsRepository.findById(id);
+		if (!cardDoc) {
 			throw new NotFoundError("Card not found");
+		}
+
+		if (card.name) {
+			const cardNameExists = await cardsRepository.cardNameExists(
+				card.name,
+				card.bank ? card.bank : cardDoc.bank.toString()
+			);
+			if (cardNameExists) {
+				throw new NotFoundError("Card name already exists");
+			}
 		}
 
 		const patchData: Partial<ICard> = removeUndefinedValuesFromObject({
