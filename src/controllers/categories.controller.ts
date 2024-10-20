@@ -41,7 +41,7 @@ const getCategoryHandler = async (
 ) => {
 	try {
 		const { id } = req.params;
-		const category = await categoriesService.getCategoryById(id);
+		const category = await categoriesService.getCategory(id);
 		res.status(StatusCodes.OK).send(transformDocsResponse(category));
 	} catch (e) {
 		next(e);

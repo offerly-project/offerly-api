@@ -57,7 +57,7 @@ export class StoresService {
 
 	async getStore(id: string) {
 		const store = await storesRepository.findById(id);
-		if (!store) {
+		if (!store || store.length === 0) {
 			throw new NotFoundError("Store not found");
 		}
 		return store;

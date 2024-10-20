@@ -31,7 +31,7 @@ export class CategoriesService {
 		return await categoriesRepostiory.getAll();
 	}
 
-	async getCategoryById(id: string) {
+	async getCategory(id: string) {
 		const category = await categoriesRepostiory.getById(id);
 		if (!category) {
 			throw new NotFoundError("Category not found");

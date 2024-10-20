@@ -12,6 +12,7 @@ import { authRouter } from "./routers/auth.router";
 import { banksRouter } from "./routers/banks.router";
 import { cardsRouter } from "./routers/cards.router";
 import { categoriesRouter } from "./routers/categories.router";
+import { offersRouter } from "./routers/offers.router";
 import { storesRouter } from "./routers/stores.router";
 import { uploadsRouter } from "./routers/uploads.router";
 
@@ -45,6 +46,8 @@ dotenv.config();
 	app.use("/stores", storesRouter);
 
 	app.use("/categories", categoriesRouter);
+
+	app.use("/offers", offersRouter);
 
 	app.use(errorsMiddleware);
 

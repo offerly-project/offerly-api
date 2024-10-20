@@ -11,6 +11,7 @@ type Collections =
 
 export class Database {
 	private _client: MongoClient;
+	ObjectId: any;
 	constructor() {
 		this._client = new MongoClient(env.DB_URL);
 	}

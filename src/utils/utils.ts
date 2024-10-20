@@ -15,10 +15,17 @@ export const validateRequest =
 export const removeUndefinedValuesFromObject = <T extends Record<string, any>>(
 	obj: T
 ): T => {
-	Object.keys(obj).forEach((key) => obj[key] === undefined && delete obj[key]);
+	Object.keys(obj).forEach((key) => {
+		const value = obj[key];
+		if (value && typeof value === "object" && !Array.isArray(value)) {
+			removeUndefinedValuesFromObject(value);
+		}
+		if (value === undefined) {
+			delete obj[key];
+		}
+	});
 	return obj as T;
 };
-
 export const renameDocsObjectIdField = (docs: Document[] | Document) => {
 	const renameId = (doc: Document) => {
 		doc.id = doc._id;
