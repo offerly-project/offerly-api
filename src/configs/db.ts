@@ -1,11 +1,16 @@
 import { Document, MongoClient } from "mongodb";
 import { env } from "./env";
 
-type Collections = "admins" | "banks" | "cards" | "offers" | "stores";
+type Collections =
+	| "admins"
+	| "banks"
+	| "cards"
+	| "offers"
+	| "stores"
+	| "categories";
 
 export class Database {
 	private _client: MongoClient;
-	ObjectID: any;
 	constructor() {
 		this._client = new MongoClient(env.DB_URL);
 	}

@@ -43,7 +43,7 @@ const createCardHandler = async (
 	try {
 		const cardId = await cardsService.createCard(req.body);
 
-		res.status(StatusCodes.CREATED).send({ id: cardId });
+		res.status(StatusCodes.OK).send({ id: cardId });
 	} catch (e) {
 		next(e);
 	}

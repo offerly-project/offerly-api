@@ -11,6 +11,7 @@ import { errorsMiddleware } from "./middlewares/errors.middleware";
 import { authRouter } from "./routers/auth.router";
 import { banksRouter } from "./routers/banks.router";
 import { cardsRouter } from "./routers/cards.router";
+import { categoriesRouter } from "./routers/categories.router";
 import { storesRouter } from "./routers/stores.router";
 import { uploadsRouter } from "./routers/uploads.router";
 
@@ -42,6 +43,8 @@ dotenv.config();
 	app.use("/cards", cardsRouter);
 
 	app.use("/stores", storesRouter);
+
+	app.use("/categories", categoriesRouter);
 
 	app.use(errorsMiddleware);
 
