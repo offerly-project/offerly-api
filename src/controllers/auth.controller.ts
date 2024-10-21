@@ -11,12 +11,12 @@ const adminLoginHandler = async (
 ) => {
 	const { username, password } = req.body;
 	try {
-		const token = await authService.adminLogin(username, password);
+		const { admin, token } = await authService.adminLogin(username, password);
 
-		res
-			.status(StatusCodes.OK)
-			.cookie("jwt", token, COOKIE_OPTIONS)
-			.send({ message: "logged in" });
+		res.status(StatusCodes.OK).cookie("jwt", token, COOKIE_OPTIONS).send({
+			message: "logged in",
+			user: admin,
+		});
 	} catch (e) {
 		next(e);
 	}

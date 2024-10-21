@@ -10,17 +10,17 @@ import { adminsRepository } from "../repositories/admins.repository";
 import { UserRole } from "../ts/global";
 
 export class AuthService {
-	async adminLogin(username: string, password: string): Promise<string> {
-		const user = await adminsRepository.findOneByUsername(username);
-		if (!user) {
+	async adminLogin(username: string, password: string) {
+		const admin = await adminsRepository.findOneByUsername(username);
+		if (!admin) {
 			throw new NotFoundError("user not found");
 		}
-		const validPassword = await this._validateLogin(password, user.password);
+		const validPassword = await this._validateLogin(password, admin.password);
 		if (!validPassword) {
 			throw new BadRequestError("incorrect password");
 		}
-		const token = await this.generateToken(user.username, "admin");
-		return token;
+		const token = await this.generateToken(admin.username, "admin");
+		return { token, admin: admin.username };
 	}
 
 	private async _validateLogin(

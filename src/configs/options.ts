@@ -8,4 +8,5 @@ export const COOKIE_OPTIONS: CookieOptions = {
 
 export const CORS_OPTIONS: CorsOptions = {
 	credentials: true,
+	origin: ["http://localhost:8080"],
 };
