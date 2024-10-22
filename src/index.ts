@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express, { json, urlencoded } from "express";
 import morgan from "morgan";
+import path from "path";
 import { db } from "./configs/db";
 import { env } from "./configs/env";
 import { createUploadDirectories } from "./configs/files";
@@ -51,7 +52,7 @@ dotenv.config();
 
 	app.use(errorsMiddleware);
 
-	app.use("/static", express.static("data"));
+	app.use("/static", express.static(path.join(__dirname, "../data")));
 
 	app.listen(env.PORT, () => {
 		console.log(`Server is running on port ${env.PORT}`);

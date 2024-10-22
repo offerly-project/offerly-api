@@ -13,11 +13,11 @@ export class AuthService {
 	async adminLogin(username: string, password: string) {
 		const admin = await adminsRepository.findOneByUsername(username);
 		if (!admin) {
-			throw new NotFoundError("user not found");
+			throw new NotFoundError("User not found");
 		}
 		const validPassword = await this._validateLogin(password, admin.password);
 		if (!validPassword) {
-			throw new BadRequestError("incorrect password");
+			throw new BadRequestError("Incorrect password");
 		}
 		const token = await this.generateToken(admin.username, "admin");
 		return { token, admin: admin.username };

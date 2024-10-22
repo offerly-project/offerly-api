@@ -37,6 +37,16 @@ export const imageUploadMiddleware =
 					...fields,
 				} as unknown as ImageUploadPayload;
 
+				if (!payload.image) {
+					next(new BadRequestError("Image is required"));
+					return;
+				}
+
+				if (!payload.path) {
+					next(new BadRequestError("Path is required"));
+					return;
+				}
+
 				if (
 					allowedPaths &&
 					allowedPaths.length !== 0 &&
