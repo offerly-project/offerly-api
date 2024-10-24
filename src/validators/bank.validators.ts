@@ -16,7 +16,7 @@ export const createBankSchema = z.object({
 			}
 		),
 		name: z.string({ message: "Name is required" }),
-		logo: z.string({ message: "Logo is required" }),
+		logo: z.string({ message: "Logo is required" }).optional(),
 	}),
 });
 

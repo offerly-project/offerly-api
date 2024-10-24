@@ -25,6 +25,10 @@ export class BanksRepository {
 		return (await this.collection.findOne({ name })) !== null;
 	}
 
+	async findByName(name: string) {
+		return await this.collection.findOne({ name });
+	}
+
 	async findById(id: string) {
 		const bank = await this.collection
 			.aggregate<WithId<IBank>>([

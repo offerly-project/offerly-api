@@ -16,14 +16,14 @@ export class BanksService {
 			throw new BadRequestError("Bank already exists");
 		}
 
-		const newBank: IBank = {
+		const newBank: IBank = removeUndefinedValuesFromObject({
 			country: bank.country,
 			type: bank.type,
 			name: bank.name,
 			logo: bank.logo,
 			status: "enabled",
 			cards: [],
-		};
+		});
 
 		return banksRepository.add(newBank);
 	}
@@ -34,8 +34,8 @@ export class BanksService {
 		}
 
 		if (bank.name) {
-			const bankNameExists = await banksRepository.bankNameExists(bank.name);
-			if (bankNameExists) {
+			const foundBank = await banksRepository.findByName(bank.name);
+			if (foundBank && foundBank._id.toString() !== id) {
 				throw new BadRequestError("Bank name already exists");
 			}
 		}

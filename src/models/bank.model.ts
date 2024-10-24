@@ -8,7 +8,7 @@ export interface IBank extends Document {
 	country: string;
 	type: BankType;
 	name: string;
-	logo: string;
+	logo?: string;
 	status: EntityStatus;
 	cards: ObjectId[];
 }

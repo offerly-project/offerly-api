@@ -30,13 +30,13 @@ dotenv.config();
 
 	app.use(urlencoded({ extended: true }));
 
-	app.use("/uploads", uploadsRouter);
-
 	app.use(cookieParser());
 
 	app.use(json());
 
 	app.use(cors(CORS_OPTIONS));
+
+	app.use("/uploads", uploadsRouter);
 
 	app.use("/auth", authRouter);
 
