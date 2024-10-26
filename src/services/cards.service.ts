@@ -27,7 +27,7 @@ export class CardsService {
 	}
 
 	async createCard(card: CreateCardBodyData) {
-		const bankExists = await banksRepository.bankNameExists(card.bank);
+		const bankExists = await banksRepository.findById(card.bank);
 		if (!bankExists) {
 			throw new NotFoundError("Bank with this name does not exist");
 		}
