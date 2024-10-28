@@ -32,11 +32,8 @@ export class CardsRepository {
 		this.collection = db.getCollection<ICard>("cards");
 	}
 
-	async cardNameExists(name: string, bankId: string) {
-		return (
-			(await this.collection.findOne({ name, bank: new ObjectId(bankId) })) !==
-			null
-		);
+	async findByName(name: string) {
+		return await this.collection.findOne({ name });
 	}
 
 	async findById(id: string) {

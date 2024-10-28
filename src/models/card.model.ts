@@ -5,7 +5,7 @@ export interface ICard extends Document {
 	_id?: ObjectId;
 	name: string;
 	bank: ObjectId;
-	logo: string;
+	logo?: string;
 	status: EntityStatus;
 	grade: string;
 	scheme: string;

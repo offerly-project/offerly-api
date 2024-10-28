@@ -31,15 +31,12 @@ export class CardsService {
 		if (!bankExists) {
 			throw new NotFoundError("Bank with this name does not exist");
 		}
-		const cardNameTaken = await cardsRepository.cardNameExists(
-			card.name,
-			card.bank
-		);
-		if (cardNameTaken) {
+		const cardDoc = await cardsRepository.findByName(card.name);
+		if (cardDoc) {
 			throw new NotFoundError("Card with this name already exists");
 		}
 
-		const newCard: ICard = {
+		const newCard: ICard = removeUndefinedValuesFromObject({
 			name: card.name,
 			bank: new ObjectId(card.bank),
 			logo: card.logo,
@@ -47,7 +44,7 @@ export class CardsService {
 			scheme: card.scheme,
 			status: "enabled",
 			offers: [],
-		};
+		});
 		const cardId = await cardsRepository.create(newCard);
 
 		return cardId;
@@ -60,18 +57,15 @@ export class CardsService {
 		}
 
 		if (card.name) {
-			const cardNameExists = await cardsRepository.cardNameExists(
-				card.name,
-				card.bank ? card.bank : cardDoc.bank.toString()
-			);
-			if (cardNameExists) {
+			const foundCard = await cardsRepository.findByName(card.name);
+			if (foundCard && foundCard._id.toString() !== id) {
 				throw new NotFoundError("Card name already exists");
 			}
 		}
 
 		const patchData: Partial<ICard> = removeUndefinedValuesFromObject({
 			name: card.name,
-			bank: new ObjectId(card.bank),
+			bank: card.bank ? new ObjectId(card.bank) : undefined,
 			logo: card.logo,
 			grade: card.grade,
 			scheme: card.scheme,
