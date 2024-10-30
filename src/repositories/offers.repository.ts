@@ -6,39 +6,7 @@ import { IOffer } from "../models/offer.model";
 export class OffersRepositry {
 	private collection: Collection<IOffer>;
 
-	private _basePipeline = [
-		{
-			$lookup: {
-				from: "stores",
-				localField: "store.id",
-				foreignField: "_id",
-				as: "storeInstance",
-			},
-		},
-		{
-			$unwind: "$storeInstance",
-		},
-		{
-			$project: {
-				storeInstance: {
-					offers: 0,
-					locations: 0,
-				},
-			},
-		},
-		{
-			$addFields: {
-				"store.name": "$storeInstance.name",
-				"store.logo": "$storeInstance.logo",
-				"store.website_link": "$storeInstance.website_link",
-			},
-		},
-		{
-			$project: {
-				storeInstance: 0,
-			},
-		},
-	];
+	private _basePipeline = [];
 	constructor() {
 		this.collection = db.getCollection("offers");
 	}

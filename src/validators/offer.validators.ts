@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { validateCategories } from "./data.validators";
 
 export const createOfferSchema = z.object({
 	body: z.object({
@@ -14,16 +15,10 @@ export const createOfferSchema = z.object({
 		minimum_amount: z.number({ message: "Minimum amount is required" }),
 		cap: z.number().optional(),
 		channel: z.enum(["online", "offline"]),
-		store: z.object({
-			id: z.string({ message: "Store ID is required" }),
-			location: z.string({ message: "Store location is required" }).optional(),
-		}),
 		categories: z
-			.array(z.string({ message: "Category IDs are required" }))
-			.optional(),
-		applicable_cards: z
-			.array(z.string({ message: "Card IDs are required" }))
-			.optional(),
+			.array(z.string({ message: "Categories are required" }))
+			.refine(validateCategories),
+		applicable_cards: z.array(z.string({ message: "Cards are required" })),
 	}),
 });
 
@@ -49,17 +44,9 @@ export const updateOfferSchema = z.object({
 			.optional(),
 		cap: z.number().optional(),
 		channel: z.enum(["online", "offline"]).optional(),
-		store: z
-			.object({
-				id: z.string({ message: "Store ID is required" }),
-				location: z
-					.string({ message: "Store location is required" })
-					.optional(),
-			})
-			.optional(),
 		categories: z
-			.array(z.string({ message: "Category IDs are required" }))
-			.optional(),
+			.array(z.string({ message: "Categories are required" }))
+			.refine(validateCategories),
 		applicable_cards: z
 			.array(z.string({ message: "Card IDs are required" }))
 			.optional(),

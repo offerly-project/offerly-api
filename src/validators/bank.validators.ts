@@ -1,14 +1,12 @@
 import { z } from "zod";
-import Countries from "../../data/countries.json";
 import { BankType } from "../models/bank.model";
+import { validateCountries } from "./data.validators";
 
 export const createBankSchema = z.object({
 	body: z.object({
 		country: z
 			.string({ message: "Country is required" })
-			.refine((country) => Countries.includes(country), {
-				message: "Country is invalid",
-			}),
+			.refine(validateCountries),
 		type: z.enum<BankType, [BankType, BankType, BankType]>(
 			["regular", "digital", "digital-wallet"],
 			{
@@ -22,12 +20,7 @@ export const createBankSchema = z.object({
 
 export const updateBankSchema = z.object({
 	body: z.object({
-		country: z
-			.string()
-			.refine((country) => Countries.includes(country), {
-				message: "Country is invalid",
-			})
-			.optional(),
+		country: z.string().refine(validateCountries).optional(),
 		type: z
 			.enum<BankType, [BankType, BankType, BankType]>(
 				["regular", "digital", "digital-wallet"],

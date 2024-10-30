@@ -2,11 +2,6 @@ import { Document, ObjectId } from "mongodb";
 
 export type OfferChannel = "online" | "offline";
 
-export type OfferStore = {
-	id?: ObjectId;
-	location?: string;
-};
-
 export interface IOffer extends Document {
 	description: string;
 	terms_and_conditions: string;
@@ -20,8 +15,7 @@ export interface IOffer extends Document {
 	cap?: number;
 
 	channel: OfferChannel;
-	store: OfferStore;
 
-	categories: ObjectId[];
+	categories: string[];
 	applicable_cards: ObjectId[];
 }
