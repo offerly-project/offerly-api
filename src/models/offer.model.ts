@@ -11,7 +11,7 @@ export interface IOffer extends Document {
 
 	starting_date?: Date;
 	expiry_date: Date;
-	minimum_amount: number;
+	minimum_amount?: number;
 	cap?: number;
 
 	channel: OfferChannel;

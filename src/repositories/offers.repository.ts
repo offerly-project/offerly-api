@@ -38,11 +38,13 @@ export class OffersRepositry {
 			.toArray();
 	}
 	async update(id: string, data: Partial<IOffer>) {
+		console.log(id);
+
 		const result = await this.collection.updateOne(
 			{ _id: new ObjectId(id) },
 			{ $set: data }
 		);
-		if (!result.modifiedCount) {
+		if (!result.matchedCount) {
 			throw new InternalServerError("Failed to update offer");
 		}
 	}

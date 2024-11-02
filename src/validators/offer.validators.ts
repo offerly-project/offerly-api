@@ -12,7 +12,9 @@ export const createOfferSchema = z.object({
 		discount_code: z.string().optional(),
 		starting_date: z.coerce.date().optional(),
 		expiry_date: z.coerce.date({ message: "Expiry date is required" }),
-		minimum_amount: z.number({ message: "Minimum amount is required" }),
+		minimum_amount: z
+			.number({ message: "Minimum amount is required" })
+			.optional(),
 		cap: z.number().optional(),
 		channel: z.enum(["online", "offline"]),
 		categories: z
