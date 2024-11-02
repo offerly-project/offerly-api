@@ -1,4 +1,5 @@
 import { Document, ObjectId } from "mongodb";
+import { EntityStatus } from "../ts/global";
 
 export type OfferChannel = "online" | "offline";
 
@@ -13,7 +14,7 @@ export interface IOffer extends Document {
 	expiry_date: Date;
 	minimum_amount?: number;
 	cap?: number;
-
+	status: EntityStatus;
 	channel: OfferChannel;
 
 	categories: string[];

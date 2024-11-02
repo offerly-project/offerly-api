@@ -14,3 +14,4 @@ offersRouter.post(
 offersRouter.get("/", offersController.getOffersHandler);
 offersRouter.get("/:id", offersController.getOfferHandler);
 offersRouter.patch("/:id", offersController.updateOfferHandler);
+offersRouter.delete("/:id", offersController.deleteOfferHandler);

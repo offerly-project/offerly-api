@@ -38,14 +38,19 @@ export class OffersRepositry {
 			.toArray();
 	}
 	async update(id: string, data: Partial<IOffer>) {
-		console.log(id);
-
 		const result = await this.collection.updateOne(
 			{ _id: new ObjectId(id) },
 			{ $set: data }
 		);
 		if (!result.matchedCount) {
 			throw new InternalServerError("Failed to update offer");
+		}
+	}
+
+	async delete(id: string) {
+		const result = await this.collection.deleteOne({ _id: new ObjectId(id) });
+		if (!result.deletedCount) {
+			throw new InternalServerError("Failed to delete offer");
 		}
 	}
 }

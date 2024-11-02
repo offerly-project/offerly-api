@@ -26,6 +26,7 @@ export class OffersService {
 				? new Date(data.starting_date)
 				: undefined,
 			cap: data.cap,
+			status: "enabled",
 		});
 
 		const id = await offersRepository.add(offer);
@@ -63,9 +64,14 @@ export class OffersService {
 				? new Date(data.starting_date)
 				: undefined,
 			cap: data.cap,
+			status: data.status,
 		});
 
 		await offersRepository.update(id, patchData);
+	}
+
+	async deleteOffer(id: string) {
+		await offersRepository.delete(id);
 	}
 }
 

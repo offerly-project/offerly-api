@@ -52,6 +52,7 @@ export const updateOfferSchema = z.object({
 		applicable_cards: z
 			.array(z.string({ message: "Card IDs are required" }))
 			.optional(),
+		status: z.enum(["enabled", "disabled"]).optional(),
 	}),
 });
 

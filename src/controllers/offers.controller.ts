@@ -60,9 +60,23 @@ const updateOfferHandler = async (
 	}
 };
 
+const deleteOfferHandler = async (
+	req: Request<{ id: string }>,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		await offersService.deleteOffer(req.params.id);
+		res.status(StatusCodes.OK).send({ message: "Offer deleted" });
+	} catch (e) {
+		next(e);
+	}
+};
+
 export const offersController = {
 	createOfferHandler,
 	getOffersHandler,
 	getOfferHandler,
 	updateOfferHandler,
+	deleteOfferHandler,
 };
