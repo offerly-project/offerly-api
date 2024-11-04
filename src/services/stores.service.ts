@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { BadRequestError, NotFoundError } from "../errors/errors";
+import { ConflictError, NotFoundError } from "../errors/errors";
 import { IStore } from "../models/store.model";
 import { storesRepository } from "../repositories/stores.repository";
 import { removeUndefinedValuesFromObject } from "../utils/utils";
@@ -9,8 +9,6 @@ import {
 } from "../validators/store.validators";
 
 export class StoresService {
-	constructor() {}
-
 	async getAllStores() {
 		return storesRepository.getAll();
 	}
@@ -18,7 +16,7 @@ export class StoresService {
 	async createNewStore(store: CreateStoreBodyData) {
 		const storeExists = await storesRepository.storeNameExists(store.name);
 		if (storeExists) {
-			throw new BadRequestError("Store already exists");
+			throw new ConflictError("Store already exists");
 		}
 		const storeData: IStore = {
 			name: store.name,

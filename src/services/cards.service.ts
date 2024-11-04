@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { NotFoundError } from "../errors/errors";
+import { ConflictError, NotFoundError } from "../errors/errors";
 import { ICard } from "../models/card.model";
 import { banksRepository } from "../repositories/banks.repository";
 import { cardsRepository } from "../repositories/cards.repository";
@@ -33,7 +33,7 @@ export class CardsService {
 		}
 		const cardDoc = await cardsRepository.findByName(card.name);
 		if (cardDoc) {
-			throw new NotFoundError("Card with this name already exists");
+			throw new ConflictError("Card with this name already exists");
 		}
 
 		const newCard: ICard = removeUndefinedValuesFromObject({

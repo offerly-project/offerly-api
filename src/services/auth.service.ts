@@ -7,6 +7,7 @@ import {
 	NotFoundError,
 } from "../errors/errors";
 import { adminsRepository } from "../repositories/admins.repository";
+import { usersRepository } from "../repositories/users.repository";
 import { UserRole } from "../ts/global";
 
 export class AuthService {
@@ -19,17 +20,34 @@ export class AuthService {
 		if (!validPassword) {
 			throw new BadRequestError("Incorrect password");
 		}
-		const token = await this.generateToken(admin.username, "admin");
+		const token = await this.generateToken(admin._id.toString(), "admin");
 		return { token, admin: admin.username };
+	}
+
+	async userLogin(email: string, password: string) {
+		const user = await usersRepository.findByEmail(email);
+		if (!user) {
+			throw new NotFoundError("User not found");
+		}
+		const validPassword = await this._validateLogin(password, user.password);
+		if (!validPassword) {
+			throw new BadRequestError("Incorrect password");
+		}
+		const token = await this.generateToken(user._id.toString(), "user");
+		return {
+			token,
+			user: {
+				email: user.email,
+				full_name: user.full_name,
+			},
+		};
 	}
 
 	private async _validateLogin(
 		password: string,
 		hash: string
 	): Promise<boolean> {
-		return new Promise((resolve, reject) => {
-			bcrypt.compare(password, hash).then(resolve).catch(reject);
-		});
+		return bcrypt.compare(password, hash);
 	}
 	async generateToken(username: string, role: UserRole): Promise<string> {
 		return new Promise((resolve, reject) => {

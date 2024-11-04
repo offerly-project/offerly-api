@@ -6,6 +6,7 @@ type Collections =
 	| "banks"
 	| "cards"
 	| "offers"
+	| "users"
 	| "stores"
 	| "categories";
 

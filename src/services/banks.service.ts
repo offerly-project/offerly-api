@@ -1,5 +1,9 @@
 import { ObjectId } from "mongodb";
-import { BadRequestError, NotFoundError } from "../errors/errors";
+import {
+	BadRequestError,
+	ConflictError,
+	NotFoundError,
+} from "../errors/errors";
 import { IBank } from "../models/bank.model";
 import { banksRepository } from "../repositories/banks.repository";
 import { removeUndefinedValuesFromObject } from "../utils/utils";
@@ -13,7 +17,7 @@ export class BanksService {
 		const bankExists = await banksRepository.bankNameExists(bank.name);
 
 		if (bankExists) {
-			throw new BadRequestError("Bank already exists");
+			throw new ConflictError("Bank already exists");
 		}
 
 		const newBank: IBank = removeUndefinedValuesFromObject({

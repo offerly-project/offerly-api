@@ -1,3 +1,3 @@
-export type UserRole = "admin" | "client";
+export type UserRole = "admin" | "user";
 
 export type EntityStatus = "enabled" | "disabled";

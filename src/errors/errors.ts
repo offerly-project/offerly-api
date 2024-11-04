@@ -38,6 +38,12 @@ export class UnauthorizedError extends CustomError {
 	}
 }
 
+export class ConflictError extends CustomError {
+	constructor(message: string) {
+		super(message, 409);
+	}
+}
+
 export class ZodFriendlyError extends CustomError {
 	error: ZodError;
 	constructor(zodError: ZodError) {

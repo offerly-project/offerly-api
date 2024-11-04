@@ -7,4 +7,12 @@ export const adminLoginSchema = z.object({
 	}),
 });
 
+export const userLoginSchema = z.object({
+	body: z.object({
+		email: z.string({ message: "Email is required" }),
+		password: z.string({ message: "Password is required" }),
+	}),
+});
+
 export type AdminLoginBodyData = z.infer<typeof adminLoginSchema>["body"];
+export type UserLoginBodyData = z.infer<typeof userLoginSchema>["body"];
