@@ -49,9 +49,9 @@ export class AuthService {
 	): Promise<boolean> {
 		return bcrypt.compare(password, hash);
 	}
-	async generateToken(username: string, role: UserRole): Promise<string> {
+	async generateToken(id: string, role: UserRole): Promise<string> {
 		return new Promise((resolve, reject) => {
-			jwt.sign({ username, role }, env.PRIVATE_KEY, ((err, token) => {
+			jwt.sign({ id, role }, env.PRIVATE_KEY, ((err, token) => {
 				if (err || !token) {
 					reject(new InternalServerError("failed to generate token"));
 				}
