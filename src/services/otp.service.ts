@@ -1,16 +1,21 @@
 import { randomBytes } from "crypto";
-import { redis } from "../configs/redis";
 
 export class OTPService {
+	otps: Record<string, string> = {};
 	generateOtp = (length = 4) => {
 		const otpArray = randomBytes(length);
 		return Array.from(otpArray, (num) => num % 10).join("");
 	};
 
-	doesUserHaveOtp = async (email: string) => {
-		const otp = await redis.client.get(`otps:${email}`);
+	saveOtp = async (email: string, otp: string) => {
+		this.otps[email] = otp;
+		setTimeout(() => {
+			delete this.otps[email];
+		}, 1000 * 60);
+	};
 
-		return otp;
+	doesUserHaveOtp = async (email: string) => {
+		return !!this.otps[email];
 	};
 }
 

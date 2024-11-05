@@ -3,7 +3,6 @@ import ejs from "ejs";
 import jwt from "jsonwebtoken";
 import path from "path";
 import { env } from "../configs/env";
-import { redis } from "../configs/redis";
 import {
 	BadRequestError,
 	InternalServerError,
@@ -73,12 +72,7 @@ export class AuthService {
 		}
 
 		const otp = otpService.generateOtp();
-
-		try {
-			await redis.client.setex(`otps:${email}`, 60, otp);
-		} catch {
-			throw new InternalServerError("Failed to generate OTP");
-		}
+		await otpService.saveOtp(email, otp);
 
 		const html = await ejs.renderFile(
 			path.join(__dirname, "../templates/otp.ejs"),

@@ -8,7 +8,6 @@ import { db } from "./configs/db";
 import { env } from "./configs/env";
 import { createUploadDirectories } from "./configs/files";
 import { CORS_OPTIONS } from "./configs/options";
-import { redis } from "./configs/redis";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
 import { authRouter } from "./routers/auth.router";
 import { banksRouter } from "./routers/banks.router";
@@ -24,7 +23,6 @@ dotenv.config();
 	createUploadDirectories();
 
 	await db.connect();
-	await redis.connect();
 
 	const app = express();
 

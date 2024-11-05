@@ -15,8 +15,6 @@ const schema = z.object({
 	SMTP_USER: z.string(),
 	SMTP_PASS: z.string(),
 	SMTP_SECURE: z.string(),
-	REDIS_URL: z.string(),
-	REDIS_PORT: z.string(),
 });
 
 export const env = schema.parse(process.env);
