@@ -4,6 +4,7 @@ import { COOKIE_OPTIONS } from "../configs/options";
 import { authService } from "../services/auth.service";
 import {
 	AdminLoginBodyData,
+	UserForgotPasswordBodyData,
 	UserLoginBodyData,
 } from "../validators/auth.validators";
 
@@ -43,7 +44,24 @@ const userLoginHandler = async (
 	}
 };
 
+const userForgotPasswordHandler = async (
+	req: Request<{}, {}, UserForgotPasswordBodyData>,
+	res: Response,
+	next: NextFunction
+) => {
+	const { email } = req.body;
+	try {
+		await authService.forgotPassword(email);
+		res.status(StatusCodes.OK).send({
+			message: "Password reset link sent to your email",
+		});
+	} catch (e) {
+		next(e);
+	}
+};
+
 export const authController = {
 	adminLoginHandler,
 	userLoginHandler,
+	userForgotPasswordHandler,
 };

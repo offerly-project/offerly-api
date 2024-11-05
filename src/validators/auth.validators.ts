@@ -14,5 +14,14 @@ export const userLoginSchema = z.object({
 	}),
 });
 
+export const userForgotPasswordSchema = z.object({
+	body: z.object({
+		email: z.string({ message: "Email is required" }),
+	}),
+});
+
 export type AdminLoginBodyData = z.infer<typeof adminLoginSchema>["body"];
 export type UserLoginBodyData = z.infer<typeof userLoginSchema>["body"];
+export type UserForgotPasswordBodyData = z.infer<
+	typeof userForgotPasswordSchema
+>["body"];
