@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import ejs from "ejs";
-import jwt from "jsonwebtoken";
+import jwt, { SignOptions } from "jsonwebtoken";
 import path from "path";
 import { env } from "../configs/env";
 import {
@@ -53,9 +53,14 @@ export class AuthService {
 	): Promise<boolean> {
 		return bcrypt.compare(password, hash);
 	}
-	async generateToken(id: string, role: UserRole): Promise<string> {
+
+	async generateToken(
+		id: string,
+		role: UserRole,
+		options: SignOptions = {}
+	): Promise<string> {
 		return new Promise((resolve, reject) => {
-			jwt.sign({ id, role }, env.PRIVATE_KEY, ((err, token) => {
+			jwt.sign({ id, role }, env.PRIVATE_KEY, options, ((err, token) => {
 				if (err || !token) {
 					reject(new InternalServerError("failed to generate token"));
 				}

@@ -8,6 +8,13 @@ export class AdminsRepository {
 		this.collection = db.getCollection<IAdmin>("admins");
 	}
 
+	async findByEmail(email: string) {
+		const admin = await this.collection.findOne({
+			email,
+		});
+		return admin;
+	}
+
 	async findOneByUsername(username: string) {
 		const admin = await this.collection.findOne({
 			username,

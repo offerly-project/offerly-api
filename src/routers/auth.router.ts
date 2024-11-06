@@ -7,29 +7,23 @@ import {
 	userLoginSchema,
 } from "../validators/auth.validators";
 
-export const authRouter = Router();
+export const adminAuthRouter = Router();
 
-const adminRouter = Router();
-
-const userRouter = Router();
-
-authRouter.use("/admin", adminRouter);
-
-authRouter.use("/user", userRouter);
-
-adminRouter.post(
+adminAuthRouter.post(
 	"/login",
 	validateRequest(adminLoginSchema),
 	authController.adminLoginHandler
 );
 
-userRouter.post(
+export const userAuthRouter = Router();
+
+userAuthRouter.post(
 	"/login",
 	validateRequest(userLoginSchema),
 	authController.userLoginHandler
 );
 
-userRouter.post(
+userAuthRouter.post(
 	"/forgot-password",
 	validateRequest(userForgotPasswordSchema),
 	authController.userForgotPasswordHandler

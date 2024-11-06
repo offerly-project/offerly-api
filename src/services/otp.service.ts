@@ -10,12 +10,26 @@ export class OTPService {
 	saveOtp = async (email: string, otp: string) => {
 		this.otps[email] = otp;
 		setTimeout(() => {
-			delete this.otps[email];
+			this.deleteOtp(email);
 		}, 1000 * 60);
 	};
 
-	doesUserHaveOtp = async (email: string) => {
-		return !!this.otps[email];
+	doesUserHaveOtp = (email: string) => {
+		return this.otps[email] !== undefined;
+	};
+
+	verifyOtp = (email: string, otp: string) => {
+		const userOtp = this.otps[email];
+		if (!userOtp) {
+			return false;
+		}
+
+		return userOtp === otp;
+	};
+
+	deleteOtp = async (email: string) => {
+		delete this.otps[email];
+		console.log(this.otps);
 	};
 }
 

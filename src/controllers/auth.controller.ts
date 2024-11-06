@@ -35,9 +35,10 @@ const userLoginHandler = async (
 	try {
 		const { token, user } = await authService.userLogin(email, password);
 
-		res.status(StatusCodes.OK).cookie("jwt", token, COOKIE_OPTIONS).send({
+		res.status(StatusCodes.OK).send({
 			message: "logged in",
 			user,
+			token,
 		});
 	} catch (e) {
 		next(e);

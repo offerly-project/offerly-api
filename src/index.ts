@@ -9,13 +9,8 @@ import { env } from "./configs/env";
 import { createUploadDirectories } from "./configs/files";
 import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
-import { authRouter } from "./routers/auth.router";
-import { banksRouter } from "./routers/banks.router";
-import { cardsRouter } from "./routers/cards.router";
-import { offersRouter } from "./routers/offers.router";
-import { storesRouter } from "./routers/stores.router";
+import { adminRouter, userRouter } from "./routers/routers";
 import { uploadsRouter } from "./routers/uploads.router";
-import { usersRouter } from "./routers/users.router";
 
 dotenv.config();
 
@@ -38,17 +33,9 @@ dotenv.config();
 
 	app.use("/uploads", uploadsRouter);
 
-	app.use("/auth", authRouter);
+	app.use("/admin", adminRouter);
 
-	app.use("/users", usersRouter);
-
-	app.use("/banks", banksRouter);
-
-	app.use("/cards", cardsRouter);
-
-	app.use("/stores", storesRouter);
-
-	app.use("/offers", offersRouter);
+	app.use("/user", userRouter);
 
 	app.use(errorsMiddleware);
 
