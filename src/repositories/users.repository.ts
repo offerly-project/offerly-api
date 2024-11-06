@@ -1,5 +1,6 @@
-import { Collection } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
 import { Database, db } from "../configs/db";
+import { InternalServerError } from "../errors/errors";
 import { IUser } from "../models/user.model";
 
 export class UsersRepository {
@@ -14,6 +15,16 @@ export class UsersRepository {
 
 	async findByEmail(email: string) {
 		return this.collection.findOne({ email });
+	}
+
+	async updatePassword(id: string, password: string) {
+		const result = await this.collection.updateOne(
+			{ _id: new ObjectId(id) },
+			{ $set: { password } }
+		);
+		if (result.modifiedCount === 0) {
+			throw new InternalServerError("Password not updated");
+		}
 	}
 }
 

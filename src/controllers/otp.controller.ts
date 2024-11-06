@@ -3,8 +3,8 @@ import { StatusCodes } from "http-status-codes";
 import { BadRequestError, NotFoundError } from "../errors/errors";
 import { adminsRepository } from "../repositories/admins.repository";
 import { usersRepository } from "../repositories/users.repository";
-import { authService } from "../services/auth.service";
 import { otpService } from "../services/otp.service";
+import { generateToken } from "../utils/utils";
 import { OTPVerificationBody } from "../validators/otp.validators";
 
 const verifyOtpHandler = async (
@@ -20,7 +20,6 @@ const verifyOtpHandler = async (
 			throw new NotFoundError("OTP not found");
 		}
 		const otpValid = otpService.verifyOtp(email, otp);
-		console.log(otpValid);
 
 		if (!otpValid) {
 			throw new BadRequestError("Invalid OTP");
@@ -35,13 +34,9 @@ const verifyOtpHandler = async (
 			throw new NotFoundError("User not found");
 		}
 
-		const token = await authService.generateToken(
-			document?._id.toString(),
-			role,
-			{
-				expiresIn: "2m",
-			}
-		);
+		const token = await generateToken(document?._id.toString(), role, {
+			expiresIn: "2m",
+		});
 
 		res.status(StatusCodes.OK).json({ message: "OTP verified", token });
 	} catch (e) {

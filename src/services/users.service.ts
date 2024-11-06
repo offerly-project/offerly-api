@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import { env } from "../configs/env";
 import { ConflictError, InternalServerError } from "../errors/errors";
 import { IUser } from "../models/user.model";
 import { usersRepository } from "../repositories/users.repository";
@@ -10,9 +11,11 @@ export class UsersService {
 		if (userDoc) {
 			throw new ConflictError("User with same email address already exists");
 		}
-		const hashedPassword = await bcrypt.hash(body.password, 10).catch((e) => {
-			throw new InternalServerError("Failed to hash password");
-		});
+		const hashedPassword = await bcrypt
+			.hash(body.password, +env.SALT_ROUNDS)
+			.catch((e) => {
+				throw new InternalServerError("Failed to hash password");
+			});
 		const user: IUser = {
 			email: body.email,
 			password: hashedPassword,

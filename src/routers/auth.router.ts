@@ -5,6 +5,7 @@ import {
 	adminLoginSchema,
 	userForgotPasswordSchema,
 	userLoginSchema,
+	userResetPasswordSchema,
 } from "../validators/auth.validators";
 
 export const adminAuthRouter = Router();
@@ -27,4 +28,10 @@ userAuthRouter.post(
 	"/forgot-password",
 	validateRequest(userForgotPasswordSchema),
 	authController.userForgotPasswordHandler
+);
+
+userAuthRouter.put(
+	"/reset-password",
+	validateRequest(userResetPasswordSchema),
+	authController.userResetPasswordHandler
 );

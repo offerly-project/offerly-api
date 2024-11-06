@@ -1,11 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { COOKIE_OPTIONS } from "../configs/options";
-import { authService } from "../services/auth.service";
+import { adminAuthService, userAuthService } from "../services/auth.service";
+import { generateToken } from "../utils/utils";
 import {
 	AdminLoginBodyData,
 	UserForgotPasswordBodyData,
 	UserLoginBodyData,
+	UserResetPasswordBodyData,
 } from "../validators/auth.validators";
 
 const adminLoginHandler = async (
@@ -15,7 +17,7 @@ const adminLoginHandler = async (
 ) => {
 	const { username, password } = req.body;
 	try {
-		const { admin, token } = await authService.adminLogin(username, password);
+		const { admin, token } = await adminAuthService.login(username, password);
 
 		res.status(StatusCodes.OK).cookie("jwt", token, COOKIE_OPTIONS).send({
 			message: "logged in",
@@ -33,7 +35,7 @@ const userLoginHandler = async (
 ) => {
 	const { email, password } = req.body;
 	try {
-		const { token, user } = await authService.userLogin(email, password);
+		const { token, user } = await userAuthService.login(email, password);
 
 		res.status(StatusCodes.OK).send({
 			message: "logged in",
@@ -52,9 +54,29 @@ const userForgotPasswordHandler = async (
 ) => {
 	const { email } = req.body;
 	try {
-		await authService.forgotPassword(email);
+		await userAuthService.forgotPassword(email);
 		res.status(StatusCodes.OK).send({
 			message: "Password reset link sent to your email",
+		});
+	} catch (e) {
+		next(e);
+	}
+};
+
+const userResetPasswordHandler = async (
+	req: Request<{}, {}, UserResetPasswordBodyData>,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { password } = req.body;
+		//TODO get user id from token
+		const id = "6728fba8187872fc70f38669";
+		await userAuthService.changePassword(id, password);
+		const token = await generateToken(id, "user");
+		res.status(StatusCodes.OK).send({
+			message: "Password changed successfully",
+			token,
 		});
 	} catch (e) {
 		next(e);
@@ -65,4 +87,5 @@ export const authController = {
 	adminLoginHandler,
 	userLoginHandler,
 	userForgotPasswordHandler,
+	userResetPasswordHandler,
 };

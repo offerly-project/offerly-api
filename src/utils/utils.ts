@@ -1,6 +1,10 @@
+import bcrypt from "bcrypt";
 import { NextFunction, Request, Response } from "express";
+import jwt, { SignOptions } from "jsonwebtoken";
 import { Document } from "mongodb";
-import { ZodFriendlyError } from "../errors/errors";
+import { env } from "../configs/env";
+import { InternalServerError, ZodFriendlyError } from "../errors/errors";
+import { UserRole } from "../ts/global";
 
 export const validateRequest =
 	(schema: Zod.Schema) => (req: Request, res: Response, next: NextFunction) => {
@@ -62,4 +66,26 @@ export const transformDocsResponse = (docs: Document[] | Document): any => {
 	}
 
 	return transform(docs);
+};
+
+export const validatePassword = async (
+	password: string,
+	hash: string
+): Promise<boolean> => {
+	return bcrypt.compare(password, hash);
+};
+
+export const generateToken = (
+	id: string,
+	role: UserRole,
+	options: SignOptions = {}
+): Promise<string> => {
+	return new Promise((resolve, reject) => {
+		jwt.sign({ id, role }, env.PRIVATE_KEY, options, ((err, token) => {
+			if (err || !token) {
+				reject(new InternalServerError("failed to generate token"));
+			}
+			if (token) resolve(token);
+		}) as jwt.SignCallback);
+	});
 };

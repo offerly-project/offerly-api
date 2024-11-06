@@ -7,7 +7,7 @@ export class OTPService {
 		return Array.from(otpArray, (num) => num % 10).join("");
 	};
 
-	saveOtp = async (email: string, otp: string) => {
+	saveOtp = (email: string, otp: string) => {
 		this.otps[email] = otp;
 		setTimeout(() => {
 			this.deleteOtp(email);

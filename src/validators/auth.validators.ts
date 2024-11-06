@@ -20,8 +20,17 @@ export const userForgotPasswordSchema = z.object({
 	}),
 });
 
+export const userResetPasswordSchema = z.object({
+	body: z.object({
+		password: z.string({ message: "Password is required" }),
+	}),
+});
+
 export type AdminLoginBodyData = z.infer<typeof adminLoginSchema>["body"];
 export type UserLoginBodyData = z.infer<typeof userLoginSchema>["body"];
 export type UserForgotPasswordBodyData = z.infer<
 	typeof userForgotPasswordSchema
+>["body"];
+export type UserResetPasswordBodyData = z.infer<
+	typeof userResetPasswordSchema
 >["body"];
