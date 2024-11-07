@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { COOKIE_OPTIONS } from "../configs/options";
 import { adminAuthService, userAuthService } from "../services/auth.service";
 import { generateToken } from "../utils/utils";
 import {
@@ -19,9 +18,10 @@ const adminLoginHandler = async (
 	try {
 		const { admin, token } = await adminAuthService.login(username, password);
 
-		res.status(StatusCodes.OK).cookie("jwt", token, COOKIE_OPTIONS).send({
+		res.status(StatusCodes.OK).send({
 			message: "logged in",
 			user: admin,
+			token,
 		});
 	} catch (e) {
 		next(e);
