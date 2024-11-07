@@ -4,7 +4,7 @@ import jwt, { SignOptions } from "jsonwebtoken";
 import { Document } from "mongodb";
 import { env } from "../configs/env";
 import { InternalServerError, ZodFriendlyError } from "../errors/errors";
-import { UserRole } from "../ts/global";
+import { JwtUserPayload, UserRole } from "../ts/global";
 
 export const validateRequest =
 	(schema: Zod.Schema) => (req: Request, res: Response, next: NextFunction) => {
@@ -73,6 +73,17 @@ export const validatePassword = async (
 	hash: string
 ): Promise<boolean> => {
 	return bcrypt.compare(password, hash);
+};
+
+export const verifyToken = (token: string): Promise<JwtUserPayload> => {
+	return new Promise((resolve, reject) => {
+		jwt.verify(token, env.PRIVATE_KEY, (err, decoded) => {
+			if (err) {
+				reject(new InternalServerError("failed to validate token"));
+			}
+			if (decoded) resolve(decoded as JwtUserPayload);
+		});
+	});
 };
 
 export const generateToken = (

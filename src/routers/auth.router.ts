@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authController } from "../controllers/auth.controller";
+import { authorize, authorizeUser } from "../middlewares/auth.middleware";
 import { validateRequest } from "../utils/utils";
 import {
 	adminLoginSchema,
@@ -32,6 +33,9 @@ userAuthRouter.post(
 
 userAuthRouter.put(
 	"/reset-password",
+	authorizeUser,
 	validateRequest(userResetPasswordSchema),
 	authController.userResetPasswordHandler
 );
+
+userAuthRouter.get("/", authorize);

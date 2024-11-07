@@ -70,8 +70,7 @@ const userResetPasswordHandler = async (
 ) => {
 	try {
 		const { password } = req.body;
-		//TODO get user id from token
-		const id = "6728fba8187872fc70f38669";
+		const id = req.user.id;
 		await userAuthService.changePassword(id, password);
 		const token = await generateToken(id, "user");
 		res.status(StatusCodes.OK).send({
