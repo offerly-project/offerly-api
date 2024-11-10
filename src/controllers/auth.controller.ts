@@ -54,9 +54,10 @@ const userForgotPasswordHandler = async (
 ) => {
 	const { email } = req.body;
 	try {
-		await userAuthService.forgotPassword(email);
+		const otp = await userAuthService.forgotPassword(email);
 		res.status(StatusCodes.OK).send({
 			message: "Password reset link sent to your email",
+			data: otp,
 		});
 	} catch (e) {
 		next(e);

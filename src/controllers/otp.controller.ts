@@ -14,7 +14,7 @@ const verifyOtpHandler = async (
 ) => {
 	try {
 		const { otp, email, role } = req.body;
-		const userHasOtp = otpService.doesUserHaveOtp(email);
+		const userHasOtp = otpService.hasOtp(email);
 
 		if (!userHasOtp) {
 			throw new NotFoundError("OTP not found");
@@ -35,7 +35,7 @@ const verifyOtpHandler = async (
 		}
 
 		const token = await generateToken(document?._id.toString(), role, {
-			expiresIn: "2m",
+			expiresIn: "5m",
 		});
 
 		res.status(StatusCodes.OK).json({ message: "OTP verified", token });

@@ -45,24 +45,20 @@ export class UserAuthService {
 	}
 
 	async forgotPassword(email: string) {
-		const hasOtp = otpService.doesUserHaveOtp(email);
+		const otp = otpService.sendOtp(email);
 
-		if (hasOtp) {
-			throw new BadRequestError("An OTP has already been sent to your email");
+		if (otp.code === null) {
+			throw new BadRequestError(
+				`You can request for OTP only after ${otp.timer} milliseconds of the request`
+			);
 		}
-
-		const otp = otpService.generateOtp();
-		otpService.saveOtp(email, otp);
 
 		const html = await ejs.renderFile(
 			path.join(__dirname, "../templates/otp.ejs"),
-			{ otp }
+			{ otp: otp.code }
 		);
-		try {
-			mailService.sendMail(email, "Password Reset OTP", html);
-		} catch (e) {
-			console.log(e);
-		}
+		mailService.sendMail(email, "Password Reset OTP", html);
+		return otp;
 	}
 
 	async changePassword(id: string, password: string) {
