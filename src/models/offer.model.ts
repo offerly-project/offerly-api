@@ -9,7 +9,7 @@ export interface IOffer extends Document {
 	offer_source_link: string;
 	logo?: string;
 	discount_code?: string;
-
+	title: string;
 	starting_date?: Date;
 	expiry_date: Date;
 	minimum_amount?: number;

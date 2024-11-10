@@ -21,6 +21,7 @@ export const createOfferSchema = z.object({
 			.array(z.string({ message: "Categories are required" }))
 			.refine(validateCategories),
 		applicable_cards: z.array(z.string({ message: "Cards are required" })),
+		title: z.string({ message: "Title is required" }),
 	}),
 });
 
@@ -53,6 +54,7 @@ export const updateOfferSchema = z.object({
 			.array(z.string({ message: "Card IDs are required" }))
 			.optional(),
 		status: z.enum(["enabled", "disabled"]).optional(),
+		title: z.string({ message: "Title is required" }).optional(),
 	}),
 });
 

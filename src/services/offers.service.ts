@@ -27,6 +27,7 @@ export class OffersService {
 				: undefined,
 			cap: data.cap,
 			status: "enabled",
+			title: data.title,
 		});
 
 		const id = await offersRepository.add(offer);
@@ -65,6 +66,7 @@ export class OffersService {
 				: undefined,
 			cap: data.cap,
 			status: data.status,
+			title: data.title,
 		});
 
 		await offersRepository.update(id, patchData);
