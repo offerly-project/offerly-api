@@ -12,7 +12,6 @@ type Collections =
 
 export class Database {
 	private _client: MongoClient;
-	ObjectId: any;
 	constructor() {
 		this._client = new MongoClient(env.DB_URL);
 	}
@@ -30,7 +29,7 @@ export class Database {
 	}
 
 	get db() {
-		return this._client.db(env.DB_NAME);
+		return this._client.db("offerly");
 	}
 
 	getCollection<T extends Document>(name: Collections) {

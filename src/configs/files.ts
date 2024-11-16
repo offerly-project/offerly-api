@@ -8,7 +8,7 @@ export type UploadDirectory = (typeof UPLOAD_DIRECTORIES)[number];
 
 export const createUploadDirectories = () => {
 	UPLOAD_DIRECTORIES.forEach((dir) => {
-		const fullPath = path.join(__dirname, env.DATA_DIR, dir);
+		const fullPath = path.join(env.DATA_DIR, dir);
 
 		if (!fs.existsSync(fullPath)) {
 			fs.mkdirSync(fullPath, { recursive: true });

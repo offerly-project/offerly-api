@@ -1,5 +1,5 @@
-import Categories from "../../data/categories.json";
-import Countries from "../../data/countries.json";
+const Categories: string[] = [];
+const Countries: string[] = [];
 
 export const validateCountries = (countries: string[] | string) => {
 	if (typeof countries === "string") {

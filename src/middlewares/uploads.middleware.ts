@@ -60,7 +60,7 @@ export const imageUploadMiddleware =
 					return;
 				}
 				const oldPath = payload.image.filepath;
-				const targetPath = path.join(__dirname, env.DATA_DIR, payload.path);
+				const targetPath = path.join(env.DATA_DIR, payload.path);
 				const imageBuffer = fs.readFileSync(oldPath);
 				const builder = new ImageBuilder(imageBuffer);
 				if (payload.dims) {
