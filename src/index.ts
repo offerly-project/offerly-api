@@ -36,6 +36,10 @@ dotenv.config();
 
 	app.use("/user", userRouter);
 
+	app.get("/health", (req, res) => {
+		res.json({ status: "ok" });
+	});
+
 	app.use(errorsMiddleware);
 
 	app.use("/static", express.static(env.DATA_DIR));

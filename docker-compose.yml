@@ -1,0 +1,25 @@
+services:
+  node-app:
+    build:
+      args:
+        - DATA_DIR=${DATA_DIR}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_URL=mongodb://db:27017
+    networks:
+      - services-network
+  db:
+    image: mongo:latest
+    volumes:
+      - db-data:/data/db
+    networks:
+      - services-network
+
+networks:
+  services-network:
+
+volumes:
+  db-data:
