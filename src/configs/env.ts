@@ -14,6 +14,7 @@ const schema = z.object({
 	SMTP_USER: z.string(),
 	SMTP_PASS: z.string(),
 	SMTP_SECURE: z.string(),
+	NODE_ENV: z.string().default("development"),
 });
 
 export const env = schema.parse(process.env);

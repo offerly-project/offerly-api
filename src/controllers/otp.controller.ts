@@ -13,7 +13,8 @@ const verifyOtpHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { otp, email, role } = req.body;
+		const { otp, email } = req.body;
+		const role = req.user.role;
 		const userHasOtp = otpService.hasOtp(email);
 
 		if (!userHasOtp) {

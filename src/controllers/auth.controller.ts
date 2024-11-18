@@ -57,7 +57,7 @@ const userForgotPasswordHandler = async (
 		const otp = await userAuthService.forgotPassword(email);
 		res.status(StatusCodes.OK).send({
 			message: "Password reset link sent to your email",
-			data: otp,
+			timer: otp.timer,
 		});
 	} catch (e) {
 		next(e);

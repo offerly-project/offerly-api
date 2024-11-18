@@ -3,13 +3,16 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express, { json, urlencoded } from "express";
 import morgan from "morgan";
+import swaggerUi from "swagger-ui-express";
 import { db } from "./configs/db";
 import { env } from "./configs/env";
 import { createUploadDirectories } from "./configs/files";
 import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
+import { otpRouter } from "./routers/otp.router";
 import { adminRouter, userRouter } from "./routers/routers";
 import { uploadsRouter } from "./routers/uploads.router";
+import swaggerJson from "./swagger.json";
 
 dotenv.config();
 
@@ -32,12 +35,18 @@ dotenv.config();
 
 	app.use("/uploads", uploadsRouter);
 
+	app.use("/otp", otpRouter);
+
 	app.use("/admin", adminRouter);
 
 	app.use("/user", userRouter);
 
+	if (env.NODE_ENV === "development") {
+		app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJson));
+	}
+
 	app.get("/health", (req, res) => {
-		res.json({ status: "ok" });
+		res.json({ status: "healthy!" });
 	});
 
 	app.use(errorsMiddleware);

@@ -1,0 +1,278 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Offerly User API",
+		"version": "1.0.0"
+	},
+	"paths": {
+		"/health": {
+			"get": {
+				"summary": "check health status",
+				"tags": ["health"],
+				"responses": {
+					"200": {
+						"status": "healthy!"
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"summary": "handles user authentication and granting access",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string"
+									},
+									"password": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": ["auth"],
+				"description": "authenticate user",
+				"responses": {
+					"200": {
+						"description": "Successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "logged in"
+										},
+										"user": {
+											"type": "object",
+											"properties": {
+												"email": {
+													"type": "string"
+												},
+												"full_name": {
+													"type": "string"
+												}
+											}
+										},
+										"token": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/forgot-password": {
+			"post": {
+				"summary": "requesting password reset",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": ["auth"],
+				"responses": {
+					"200": {
+						"description": "successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Password reset link sent to your email"
+										},
+										"timer": {
+											"type": "number",
+											"description": "Timer in minutes",
+											"example": 1
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/reset-password": {
+			"post": {
+				"summary": "password reset",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"password": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": ["auth"],
+				"responses": {
+					"200": {
+						"description": "password reset successfully response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Password reset link sent to your email"
+										},
+										"token": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/signup": {
+			"post": {
+				"summary": "create new account",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string"
+									},
+									"password": {
+										"type": "string"
+									},
+									"full_name": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "user created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "User created successfully"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": ["user"]
+			}
+		},
+		"/otp/verify": {
+			"post": {
+				"summary": "otp verification",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string"
+									},
+									"otp": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "otp verified",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "OTP verified"
+										},
+										"token": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": ["user"]
+			}
+		},
+		"/auth": {
+			"get": {
+				"summary": "check authorization",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"tags": ["auth"],
+				"responses": {
+					"200": {
+						"description": "authorized"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	}
+}
