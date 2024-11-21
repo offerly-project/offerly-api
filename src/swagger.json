@@ -16,7 +16,7 @@
 				}
 			}
 		},
-		"/auth/login": {
+		"/user/auth/login": {
 			"post": {
 				"summary": "handles user authentication and granting access",
 				"requestBody": {
@@ -72,7 +72,7 @@
 				}
 			}
 		},
-		"/auth/forgot-password": {
+		"/user/auth/forgot-password": {
 			"post": {
 				"summary": "requesting password reset",
 				"requestBody": {
@@ -115,7 +115,7 @@
 				}
 			}
 		},
-		"/auth/reset-password": {
+		"/user/auth/reset-password": {
 			"post": {
 				"summary": "password reset",
 				"security": [
@@ -161,7 +161,7 @@
 				}
 			}
 		},
-		"/signup": {
+		"/user/signup": {
 			"post": {
 				"summary": "create new account",
 				"requestBody": {
@@ -202,7 +202,7 @@
 						}
 					}
 				},
-				"tags": ["user"]
+				"tags": ["signup"]
 			}
 		},
 		"/otp/verify": {
@@ -246,10 +246,10 @@
 						}
 					}
 				},
-				"tags": ["user"]
+				"tags": ["otp"]
 			}
 		},
-		"/auth": {
+		"/user/auth": {
 			"get": {
 				"summary": "check authorization",
 				"security": [
