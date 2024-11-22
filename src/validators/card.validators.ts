@@ -25,3 +25,13 @@ export const updateCardSchema = z.object({
 export type CreateCardBodyData = z.infer<typeof createCardSchema>["body"];
 
 export type UpdateCardBodyData = z.infer<typeof updateCardSchema>["body"];
+
+export const updateUserCardsSchema = z.object({
+	body: z.object({
+		cards: z.array(z.string({ message: "Card ID is required" })),
+	}),
+});
+
+export type UpdateUserCardsBodyData = z.infer<
+	typeof updateUserCardsSchema
+>["body"];

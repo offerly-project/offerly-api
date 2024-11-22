@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { cardsService } from "../services/cards.service";
+import { usersService } from "../services/users.service";
 import { transformDocsResponse } from "../utils/utils";
 import {
 	CreateCardBodyData,
 	UpdateCardBodyData,
+	UpdateUserCardsBodyData,
 } from "../validators/card.validators";
 
 const getCardsHandler = async (
@@ -73,10 +75,37 @@ export const cardsAdminController = {
 	updateCardHandler,
 };
 
-const getBankCardsHandler = async (
+const getUserCardsHandler = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {};
+) => {
+	try {
+		const userId = req.user.id;
+		const cards = await cardsService.getUserCards(userId);
 
-export const cardsUserController = {};
+		res.status(StatusCodes.OK).send(transformDocsResponse(cards));
+	} catch (e) {
+		next(e);
+	}
+};
+
+const putUserCardsHandler = async (
+	req: Request<{}, {}, UpdateUserCardsBodyData>,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const userId = req.user.id;
+		const { cards } = req.body;
+		await usersService.updateUserCards(userId, cards);
+
+		res.status(StatusCodes.OK).send({
+			message: "User cards updated",
+		});
+	} catch (e) {
+		next(e);
+	}
+};
+
+export const cardsUserController = { getUserCardsHandler, putUserCardsHandler };

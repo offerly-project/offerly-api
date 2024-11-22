@@ -17,6 +17,10 @@ export class UsersRepository {
 		return this.collection.findOne({ email });
 	}
 
+	async findById(id: string) {
+		return this.collection.findOne({ _id: new ObjectId(id) });
+	}
+
 	async updatePassword(id: string, password: string) {
 		const result = await this.collection.updateOne(
 			{ _id: new ObjectId(id) },
@@ -24,6 +28,15 @@ export class UsersRepository {
 		);
 		if (result.modifiedCount === 0) {
 			throw new InternalServerError("Password not updated");
+		}
+	}
+	async updateCards(id: string, cards: string[]) {
+		const result = await this.collection.updateOne(
+			{ _id: new ObjectId(id) },
+			{ $set: { cards: cards.map((card) => new ObjectId(card)) } }
+		);
+		if (result.modifiedCount === 0) {
+			throw new InternalServerError("Cards not updated");
 		}
 	}
 }

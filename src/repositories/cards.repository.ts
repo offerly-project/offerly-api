@@ -28,6 +28,23 @@ export class CardsRepository {
 		},
 	];
 
+	private _userCardsPipeline: Document[] = [
+		{
+			$lookup: {
+				from: "cards",
+				localField: "cards",
+				foreignField: "_id",
+				as: "cards",
+			},
+		},
+		{
+			$project: {
+				cards: 0,
+				offers: 0,
+			},
+		},
+	];
+
 	constructor() {
 		this.collection = db.getCollection<ICard>("cards");
 	}
@@ -72,8 +89,15 @@ export class CardsRepository {
 	}
 
 	async findCards(ids: string[]) {
-		return await this.collection
-			.find({ _id: { $in: ids.map((id) => new ObjectId(id)) } })
+		return this.collection
+			.aggregate([
+				{
+					$match: {
+						_id: { $in: ids.map((id) => new ObjectId(id)) },
+					},
+				},
+				...this._userCardsPipeline,
+			])
 			.toArray();
 	}
 

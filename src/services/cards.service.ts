@@ -3,6 +3,7 @@ import { ConflictError, NotFoundError } from "../errors/errors";
 import { ICard } from "../models/card.model";
 import { banksRepository } from "../repositories/banks.repository";
 import { cardsRepository } from "../repositories/cards.repository";
+import { usersRepository } from "../repositories/users.repository";
 import { removeUndefinedValuesFromObject } from "../utils/utils";
 import {
 	CreateCardBodyData,
@@ -84,6 +85,14 @@ export class CardsService {
 		});
 
 		await cardsRepository.update(id, patchData);
+	}
+
+	async getUserCards(userId: string) {
+		const user = await usersRepository.findById(userId);
+		if (!user) {
+			throw new NotFoundError("User not found");
+		}
+		return cardsRepository.findCards(user.cards.map((card) => card.toString()));
 	}
 }
 

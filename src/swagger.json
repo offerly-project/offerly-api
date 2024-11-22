@@ -328,7 +328,7 @@
 		},
 		"/user/banks/{id}/cards": {
 			"get": {
-				"summary": "get banks",
+				"summary": "get bank cards",
 				"parameters": [
 					{
 						"in": "path",
@@ -344,7 +344,7 @@
 						"bearerAuth": []
 					}
 				],
-				"tags": ["banks"],
+				"tags": ["cards"],
 				"responses": {
 					"200": {
 						"description": "list of bank cards",
@@ -361,7 +361,62 @@
 											"logo": {
 												"$ref": "#/components/schemas/CardLogo"
 											},
-											"schema": {
+											"scheme": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											},
+											"status": {
+												"$ref": "#/components/schemas/EntityStatus"
+											},
+											"grade": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/cards": {
+			"get": {
+				"summary": "get user cards",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"tags": ["cards"],
+				"responses": {
+					"200": {
+						"description": "cards with their details are returned",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"name": {
+												"type": "string"
+											},
+											"logo": {
+												"$ref": "#/components/schemas/CardLogo"
+											},
+											"bank": {
+												"type": "string"
+											},
+											"grade": {
+												"type": "string"
+											},
+											"status": {
+												"$ref": "#/components/schemas/EntityStatus"
+											},
+											"scheme": {
 												"type": "string"
 											},
 											"id": {

@@ -27,7 +27,10 @@ const _authorize = (roles: UserRole[]) => {
 	};
 };
 
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MjhmYmE4MTg3ODcyZmM3MGYzODY2OSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzMwOTk1ODM2fQ.ksoyCsDeKKYBl_GfXGORLLvm7vPq0RGMLbCY4pMQ238
+/**
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDA2NWE4MTAyMzkwODRjMTgxNjczMCIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzMyMjczNTg2fQ.1cTN4vP8qjO3mWwC6aM44cXlLpsETdfyoggd9BIQ7Uc"
+ * 
+ */
 
 export const authorizeAdmin = _authorize(["admin"]);
 

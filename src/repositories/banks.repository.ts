@@ -40,6 +40,13 @@ export class BanksRepository {
 				name: 1,
 				logo: 1,
 				scheme: 1,
+				grade: 1,
+				status: 1,
+			},
+		},
+		{
+			$project: {
+				offers: 0,
 			},
 		},
 	];

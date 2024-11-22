@@ -5,7 +5,7 @@ import { validateRequest } from "../utils/utils";
 import { signupUserSchema } from "../validators/users.validators";
 import { adminAuthRouter, userAuthRouter } from "./auth.router";
 import { banksAdminRouter, banksUserRouter } from "./banks.router";
-import { cardsAdminRouter } from "./cards.router";
+import { cardsAdminRouter, cardsUserRouter } from "./cards.router";
 import { offersAdminRouter } from "./offers.router";
 
 export const adminRouter = Router();
@@ -23,6 +23,8 @@ export const userRouter = Router();
 userRouter.use("/auth", userAuthRouter);
 
 userRouter.use("/banks", banksUserRouter);
+
+userRouter.use("/cards", cardsUserRouter);
 
 userRouter.post(
 	"/signup",

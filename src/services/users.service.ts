@@ -1,7 +1,12 @@
 import bcrypt from "bcrypt";
 import { env } from "../configs/env";
-import { ConflictError, InternalServerError } from "../errors/errors";
+import {
+	ConflictError,
+	InternalServerError,
+	NotFoundError,
+} from "../errors/errors";
 import { IUser } from "../models/user.model";
+import { cardsRepository } from "../repositories/cards.repository";
 import { usersRepository } from "../repositories/users.repository";
 import { SignupUserBodyData } from "../validators/users.validators";
 
@@ -24,6 +29,17 @@ export class UsersService {
 			favorites: [],
 		};
 		await usersRepository.create(user);
+	}
+	async updateUserCards(userId: string, cards: string[]) {
+		const user = await usersRepository.findById(userId);
+		if (!user) {
+			throw new ConflictError("User with this id does not exist");
+		}
+		const cardsDocs = await cardsRepository.findCards(cards);
+		if (cardsDocs.length !== cards.length) {
+			throw new NotFoundError("cards not found");
+		}
+		await usersRepository.updateCards(userId, cards);
 	}
 }
 
