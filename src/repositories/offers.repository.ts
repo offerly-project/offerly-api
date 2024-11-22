@@ -6,7 +6,28 @@ import { IOffer } from "../models/offer.model";
 export class OffersRepositry {
 	private collection: Collection<IOffer>;
 
-	private _basePipeline = [];
+	private _offerCardsPipeline = [
+		{
+			$project: {
+				applicable_cards: 1,
+			},
+		},
+		{
+			$lookup: {
+				from: "cards",
+				localField: "applicable_cards",
+				foreignField: "_id",
+				as: "applicable_cards",
+			},
+		},
+		{
+			$project: {
+				_id: 0,
+				applicable_cards: 1,
+			},
+		},
+	];
+
 	constructor() {
 		this.collection = db.getCollection("offers");
 	}
@@ -26,16 +47,13 @@ export class OffersRepositry {
 						_id: new ObjectId(id),
 					},
 				},
-				...this._basePipeline,
 			])
 			.toArray()
 			.then((offers) => offers[0]);
 	}
 
 	async getAll() {
-		return this.collection
-			.aggregate<WithId<IOffer>>(this._basePipeline)
-			.toArray();
+		return this.collection.aggregate<WithId<IOffer>>().toArray();
 	}
 	async update(id: string, data: Partial<IOffer>) {
 		const result = await this.collection.updateOne(
@@ -48,10 +66,16 @@ export class OffersRepositry {
 	}
 
 	async delete(id: string) {
-		const result = await this.collection.deleteOne({ _id: new ObjectId(id) });
-		if (!result.deletedCount) {
+		const offer = await this.collection.findOneAndDelete({
+			_id: new ObjectId(id),
+		});
+		if (!offer) {
 			throw new InternalServerError("Failed to delete offer");
 		}
+
+		const cards = offer.applicable_cards.map((card) => card.toString());
+
+		return cards;
 	}
 }
 

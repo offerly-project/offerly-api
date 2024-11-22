@@ -30,3 +30,5 @@ banksAdminRouter.patch(
 export const banksUserRouter = Router();
 
 banksUserRouter.get("/", banksUserController.getUserBanksHandler);
+
+banksUserRouter.get("/:id/cards", banksUserController.getUserBankCardHandler);

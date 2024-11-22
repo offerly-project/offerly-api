@@ -3,6 +3,7 @@ import { db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
 import { IStore } from "../models/store.model";
 
+// NON-MVP CODE
 export class StoresRepository {
 	private collection: Collection<IStore>;
 

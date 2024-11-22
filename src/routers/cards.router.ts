@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { cardsController } from "../controllers/cards.controller";
+import { cardsAdminController } from "../controllers/cards.controller";
 import { validateRequest } from "../utils/utils";
 import {
 	createCardSchema,
@@ -8,17 +8,17 @@ import {
 
 export const cardsAdminRouter = Router();
 
-cardsAdminRouter.get("/", cardsController.getCardsHandler);
-cardsAdminRouter.get("/:id", cardsController.getCardHandler);
+cardsAdminRouter.get("/", cardsAdminController.getCardsHandler);
+cardsAdminRouter.get("/:id", cardsAdminController.getCardHandler);
 
 cardsAdminRouter.post(
 	"/",
 	validateRequest(createCardSchema),
-	cardsController.createCardHandler
+	cardsAdminController.createCardHandler
 );
 
 cardsAdminRouter.patch(
 	"/:id",
 	validateRequest(updateCardSchema),
-	cardsController.updateCardHandler
+	cardsAdminController.updateCardHandler
 );

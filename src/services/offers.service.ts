@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { NotFoundError } from "../errors/errors";
 import { IOffer } from "../models/offer.model";
+import { cardsRepository } from "../repositories/cards.repository";
 import { offersRepository } from "../repositories/offers.repository";
 import { removeUndefinedValuesFromObject } from "../utils/utils";
 import {
@@ -10,6 +11,12 @@ import {
 
 export class OffersService {
 	async createOffer(data: CreateOfferBodyData) {
+		const cards = await cardsRepository.findCards(data.applicable_cards);
+
+		if (cards.length !== data.applicable_cards.length) {
+			throw new NotFoundError("cards not found");
+		}
+
 		const offer: IOffer = removeUndefinedValuesFromObject({
 			description: data.description,
 			terms_and_conditions: data.terms_and_conditions,
@@ -31,6 +38,8 @@ export class OffersService {
 		});
 
 		const id = await offersRepository.add(offer);
+
+		await cardsRepository.addOfferToCards(id.toString(), data.applicable_cards);
 
 		return id;
 	}
@@ -73,7 +82,8 @@ export class OffersService {
 	}
 
 	async deleteOffer(id: string) {
-		await offersRepository.delete(id);
+		const cards = await offersRepository.delete(id);
+		await cardsRepository.removeOfferFromCards(id, cards);
 	}
 }
 

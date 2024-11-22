@@ -84,4 +84,20 @@ const getUserBanksHandler = async (
 	}
 };
 
-export const banksUserController = { getUserBanksHandler };
+const getUserBankCardHandler = async (
+	req: Request<{ id: string }>,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const cards = await banksService.getBankCardsById(req.params.id);
+		res.status(StatusCodes.OK).send(transformDocsResponse(cards));
+	} catch (e) {
+		next(e);
+	}
+};
+
+export const banksUserController = {
+	getUserBanksHandler,
+	getUserBankCardHandler,
+};

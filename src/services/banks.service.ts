@@ -71,6 +71,9 @@ export class BanksService {
 		}
 		return bank;
 	}
+	async getBankCardsById(id: string) {
+		return banksRepository.getCardsByBankId(id);
+	}
 }
 
 export const banksService = new BanksService();

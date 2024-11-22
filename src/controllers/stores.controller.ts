@@ -7,6 +7,8 @@ import {
 	UpdateStoreBodyData,
 } from "../validators/store.validators";
 
+// NON-MVP CODE
+
 const createStoreHandler = async (
 	req: Request<{}, {}, CreateStoreBodyData>,
 	res: Response,

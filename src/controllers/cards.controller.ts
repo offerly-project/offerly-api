@@ -66,9 +66,17 @@ const updateCardHandler = async (
 	}
 };
 
-export const cardsController = {
+export const cardsAdminController = {
 	getCardsHandler,
 	createCardHandler,
 	getCardHandler,
 	updateCardHandler,
 };
+
+const getBankCardsHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {};
+
+export const cardsUserController = {};

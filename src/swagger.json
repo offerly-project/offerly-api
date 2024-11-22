@@ -309,6 +309,9 @@
 												"example": "Emirates NBD"
 											},
 											"logo": {
+												"$ref": "#/components/schemas/BankLogo"
+											},
+											"id": {
 												"type": "string"
 											},
 											"type": {
@@ -322,10 +325,72 @@
 					}
 				}
 			}
+		},
+		"/user/banks/{id}/cards": {
+			"get": {
+				"summary": "get banks",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"schema": {
+							"type": "string"
+						},
+						"required": true
+					}
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"tags": ["banks"],
+				"responses": {
+					"200": {
+						"description": "list of bank cards",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"name": {
+												"type": "string"
+											},
+											"logo": {
+												"$ref": "#/components/schemas/CardLogo"
+											},
+											"schema": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	},
 	"components": {
 		"schemas": {
+			"BankLogo": {
+				"type": "string",
+				"example": "/banks/---.png"
+			},
+			"CardLogo": {
+				"type": "string",
+				"example": "/cards/---.png"
+			},
+			"OfferLogo": {
+				"type": "string",
+				"example": "/offers/---.png"
+			},
 			"EntityStatus": {
 				"type": "string",
 				"enum": ["enabled", "disabled"]

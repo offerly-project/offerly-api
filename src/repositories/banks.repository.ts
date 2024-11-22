@@ -17,6 +17,33 @@ export class BanksRepository {
 		},
 	];
 
+	private _bankCardsPipeline: Document[] = [
+		{
+			$lookup: {
+				from: "cards",
+				localField: "cards",
+				foreignField: "_id",
+				as: "cards",
+			},
+		},
+		{
+			$unwind: "$cards",
+		},
+		{
+			$replaceRoot: {
+				newRoot: "$cards",
+			},
+		},
+		{
+			$project: {
+				_id: 1,
+				name: 1,
+				logo: 1,
+				scheme: 1,
+			},
+		},
+	];
+
 	private _userBanksPipeline: Document[] = [
 		{
 			$project: {
@@ -25,11 +52,11 @@ export class BanksRepository {
 				type: 1,
 				country: 1,
 				status: 1,
+				_id: 1,
 			},
 		},
 		{
 			$project: {
-				_id: 0,
 				cards: 0,
 			},
 		},
@@ -45,6 +72,16 @@ export class BanksRepository {
 
 	async findByName(name: string) {
 		return await this.collection.findOne({ name });
+	}
+
+	async getBankCardsIds(id: string) {
+		const bank = await this.collection.findOne({ _id: new ObjectId(id) });
+
+		if (!bank) {
+			throw new NotFoundError("Bank not found");
+		}
+
+		return bank.cards;
 	}
 
 	async findById(id: string) {
@@ -97,6 +134,19 @@ export class BanksRepository {
 	async getAll() {
 		return await this.collection
 			.aggregate<WithId<IBank>>([...this._basePipeline])
+			.toArray();
+	}
+
+	async getCardsByBankId(name: string) {
+		return this.collection
+			.aggregate([
+				{
+					$match: {
+						_id: new ObjectId(name),
+					},
+				},
+				...this._bankCardsPipeline,
+			])
 			.toArray();
 	}
 }

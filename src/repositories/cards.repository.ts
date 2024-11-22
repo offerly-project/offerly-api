@@ -71,6 +71,12 @@ export class CardsRepository {
 		return result.insertedId;
 	}
 
+	async findCards(ids: string[]) {
+		return await this.collection
+			.find({ _id: { $in: ids.map((id) => new ObjectId(id)) } })
+			.toArray();
+	}
+
 	async update(id: string, card: Partial<ICard>) {
 		const result = await this.collection.updateOne(
 			{ _id: new ObjectId(id) },
@@ -80,6 +86,21 @@ export class CardsRepository {
 		if (!result.matchedCount) {
 			throw new InternalServerError("Failed to update card");
 		}
+	}
+
+	addOfferToCards(offerId: string, cards: string[]) {
+		return this.collection.updateMany(
+			{ _id: { $in: cards.map((card) => new ObjectId(card)) } },
+			{ $addToSet: { offers: new ObjectId(offerId) } }
+		);
+	}
+
+	removeOfferFromCards(offerId: string, cards: string[]) {
+		return this.collection.updateMany(
+			{ _id: { $in: cards.map((card) => new ObjectId(card)) } },
+			//@ts-ignore
+			{ $pull: { offers: new ObjectId(offerId) } }
+		);
 	}
 }
 

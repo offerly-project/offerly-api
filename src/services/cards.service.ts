@@ -27,8 +27,8 @@ export class CardsService {
 	}
 
 	async createCard(card: CreateCardBodyData) {
-		const bankExists = await banksRepository.findById(card.bank);
-		if (!bankExists) {
+		const bankDoc = await banksRepository.findById(card.bank);
+		if (!bankDoc) {
 			throw new NotFoundError("Bank with this name does not exist");
 		}
 		const cardDoc = await cardsRepository.findByName(card.name);
@@ -46,6 +46,16 @@ export class CardsService {
 			offers: [],
 		});
 		const cardId = await cardsRepository.create(newCard);
+
+		const bankCards = (await banksRepository.getBankCardsIds(card.bank)) || [];
+
+		await banksRepository.update(card.bank, {
+			...bankDoc,
+			cards: [
+				...bankCards.map((card) => new ObjectId(card.id)),
+				new ObjectId(cardId),
+			],
+		});
 
 		return cardId;
 	}
