@@ -60,6 +60,10 @@ export class BanksService {
 		return banksRepository.getAll();
 	}
 
+	async getUserBanks() {
+		return banksRepository.getUserBanks();
+	}
+
 	async getBank(id: string) {
 		const bank = await banksRepository.findById(id);
 		if (!bank) {

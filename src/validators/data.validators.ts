@@ -1,22 +1,23 @@
-const Categories: string[] = [];
-const Countries: string[] = [];
+import { ConstantsService } from "../services/constants.service";
 
-export const validateCountries = (countries: string[] | string) => {
+export const validateCountries = async (countries: string[] | string) => {
+	const COUNTRIES = await ConstantsService.getCountries();
 	if (typeof countries === "string") {
-		return Countries.includes(countries);
+		return COUNTRIES.includes(countries);
 	}
 
 	return countries.every((country) => {
-		return Countries.includes(country);
+		return COUNTRIES.includes(country);
 	});
 };
 
-export const validateCategories = (categories: string[] | string) => {
+export const validateCategories = async (categories: string[] | string) => {
+	const CATEGORIES = await ConstantsService.getCategories();
 	if (typeof categories === "string") {
-		return Categories.includes(categories);
+		return CATEGORIES.includes(categories);
 	}
 
 	return categories.every((category) => {
-		return Categories.includes(category);
+		return CATEGORIES.includes(category);
 	});
 };

@@ -1,25 +1,32 @@
 import { Router } from "express";
-import { banksController } from "../controllers/banks.controller";
+import {
+	banksAdminController,
+	banksUserController,
+} from "../controllers/banks.controller";
 import { validateRequest } from "../utils/utils";
 import {
 	createBankSchema,
 	updateBankSchema,
 } from "../validators/bank.validators";
 
-export const banksRouter = Router();
+export const banksAdminRouter = Router();
 
-banksRouter.get("/", banksController.getBanksHandler);
+banksAdminRouter.get("/", banksAdminController.getBanksHandler);
 
-banksRouter.get("/:id", banksController.getBankHandler);
+banksAdminRouter.get("/:id", banksAdminController.getBankHandler);
 
-banksRouter.post(
+banksAdminRouter.post(
 	"/",
 	validateRequest(createBankSchema),
-	banksController.createBankHandler
+	banksAdminController.createBankHandler
 );
 
-banksRouter.patch(
+banksAdminRouter.patch(
 	"/:id",
 	validateRequest(updateBankSchema),
-	banksController.updateBankHandler
+	banksAdminController.updateBankHandler
 );
+
+export const banksUserRouter = Router();
+
+banksUserRouter.get("/", banksUserController.getUserBanksHandler);

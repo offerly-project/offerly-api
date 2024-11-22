@@ -10,7 +10,6 @@ dotenv.config({ path: path.join(__dirname, "../.env") });
 
 const schema = z.object({
 	DB_URL: z.string(),
-	DB_NAME: z.string(),
 	SALT_ROUNDS: z.string(),
 });
 

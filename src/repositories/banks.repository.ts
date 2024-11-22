@@ -17,6 +17,24 @@ export class BanksRepository {
 		},
 	];
 
+	private _userBanksPipeline: Document[] = [
+		{
+			$project: {
+				name: 1,
+				logo: 1,
+				type: 1,
+				country: 1,
+				status: 1,
+			},
+		},
+		{
+			$project: {
+				_id: 0,
+				cards: 0,
+			},
+		},
+	];
+
 	constructor() {
 		this.collection = db.getCollection<IBank>("banks");
 	}
@@ -69,6 +87,13 @@ export class BanksRepository {
 			throw new InternalServerError("Failed to update bank");
 		}
 	}
+
+	async getUserBanks() {
+		return this.collection
+			.aggregate<IBank[]>(this._userBanksPipeline)
+			.toArray();
+	}
+
 	async getAll() {
 		return await this.collection
 			.aggregate<WithId<IBank>>([...this._basePipeline])

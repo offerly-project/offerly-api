@@ -4,26 +4,25 @@ import { authorizeAdmin } from "../middlewares/auth.middleware";
 import { validateRequest } from "../utils/utils";
 import { signupUserSchema } from "../validators/users.validators";
 import { adminAuthRouter, userAuthRouter } from "./auth.router";
-import { banksRouter } from "./banks.router";
-import { cardsRouter } from "./cards.router";
-import { offersRouter } from "./offers.router";
-import { storesRouter } from "./stores.router";
+import { banksAdminRouter, banksUserRouter } from "./banks.router";
+import { cardsAdminRouter } from "./cards.router";
+import { offersAdminRouter } from "./offers.router";
 
 export const adminRouter = Router();
 
 adminRouter.use("/auth", adminAuthRouter);
 
-adminRouter.use("/banks", authorizeAdmin, banksRouter);
+adminRouter.use("/banks", authorizeAdmin, banksAdminRouter);
 
-adminRouter.use("/cards", authorizeAdmin, cardsRouter);
+adminRouter.use("/cards", authorizeAdmin, cardsAdminRouter);
 
-adminRouter.use("/stores", authorizeAdmin, storesRouter);
-
-adminRouter.use("/offers", authorizeAdmin, offersRouter);
+adminRouter.use("/offers", authorizeAdmin, offersAdminRouter);
 
 export const userRouter = Router();
 
 userRouter.use("/auth", userAuthRouter);
+
+userRouter.use("/banks", banksUserRouter);
 
 userRouter.post(
 	"/signup",

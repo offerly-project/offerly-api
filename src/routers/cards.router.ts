@@ -6,18 +6,18 @@ import {
 	updateCardSchema,
 } from "../validators/card.validators";
 
-export const cardsRouter = Router();
+export const cardsAdminRouter = Router();
 
-cardsRouter.get("/", cardsController.getCardsHandler);
-cardsRouter.get("/:id", cardsController.getCardHandler);
+cardsAdminRouter.get("/", cardsController.getCardsHandler);
+cardsAdminRouter.get("/:id", cardsController.getCardHandler);
 
-cardsRouter.post(
+cardsAdminRouter.post(
 	"/",
 	validateRequest(createCardSchema),
 	cardsController.createCardHandler
 );
 
-cardsRouter.patch(
+cardsAdminRouter.patch(
 	"/:id",
 	validateRequest(updateCardSchema),
 	cardsController.updateCardHandler

@@ -64,9 +64,24 @@ const getBankHandler = async (
 	}
 };
 
-export const banksController = {
+export const banksAdminController = {
 	createBankHandler,
 	updateBankHandler,
 	getBanksHandler,
 	getBankHandler,
 };
+
+const getUserBanksHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const banks = await banksService.getUserBanks();
+		res.status(StatusCodes.OK).send(transformDocsResponse(banks));
+	} catch (e) {
+		next(e);
+	}
+};
+
+export const banksUserController = { getUserBanksHandler };

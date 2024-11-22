@@ -11,7 +11,20 @@
 				"tags": ["health"],
 				"responses": {
 					"200": {
-						"status": "healthy!"
+						"description": "api health check",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"example": "healthy!"
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			}
@@ -264,9 +277,64 @@
 					}
 				}
 			}
+		},
+		"/user/banks": {
+			"get": {
+				"summary": "get banks",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"tags": ["banks"],
+				"responses": {
+					"200": {
+						"description": "list of banks",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"country": {
+												"type": "string",
+												"example": "UAE"
+											},
+											"status": {
+												"$ref": "#/components/schemas/EntityStatus"
+											},
+											"name": {
+												"type": "string",
+												"example": "Emirates NBD"
+											},
+											"logo": {
+												"type": "string"
+											},
+											"type": {
+												"$ref": "#/components/schemas/BankType"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	},
 	"components": {
+		"schemas": {
+			"EntityStatus": {
+				"type": "string",
+				"enum": ["enabled", "disabled"]
+			},
+			"BankType": {
+				"type": "string",
+				"enum": ["regular", "digital", "digital-wallet"]
+			}
+		},
 		"securitySchemes": {
 			"bearerAuth": {
 				"type": "http",

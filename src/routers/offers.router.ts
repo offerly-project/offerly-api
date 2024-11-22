@@ -3,15 +3,15 @@ import { offersController } from "../controllers/offers.controller";
 import { validateRequest } from "../utils/utils";
 import { createOfferSchema } from "../validators/offer.validators";
 
-export const offersRouter = Router();
+export const offersAdminRouter = Router();
 
-offersRouter.post(
+offersAdminRouter.post(
 	"/",
 	validateRequest(createOfferSchema),
 	offersController.createOfferHandler
 );
 
-offersRouter.get("/", offersController.getOffersHandler);
-offersRouter.get("/:id", offersController.getOfferHandler);
-offersRouter.patch("/:id", offersController.updateOfferHandler);
-offersRouter.delete("/:id", offersController.deleteOfferHandler);
+offersAdminRouter.get("/", offersController.getOffersHandler);
+offersAdminRouter.get("/:id", offersController.getOfferHandler);
+offersAdminRouter.patch("/:id", offersController.updateOfferHandler);
+offersAdminRouter.delete("/:id", offersController.deleteOfferHandler);
