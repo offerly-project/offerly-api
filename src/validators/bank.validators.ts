@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { BankType } from "../models/bank.model";
-import { validateCountries } from "./data.validators";
+import { languagesSchema, validateCountries } from "./data.validators";
 
 export const createBankSchema = z.object({
 	body: z.object({
@@ -13,7 +13,7 @@ export const createBankSchema = z.object({
 				message: "Type should be regular, digital, or digital-wallet",
 			}
 		),
-		name: z.string({ message: "Name is required" }),
+		name: languagesSchema,
 		logo: z.string({ message: "Logo is required" }).optional(),
 	}),
 });
@@ -29,7 +29,7 @@ export const updateBankSchema = z.object({
 				}
 			)
 			.optional(),
-		name: z.string({ message: "Name is required" }).optional(),
+		name: languagesSchema.optional(),
 		logo: z.string({ message: "Logo is required" }).optional(),
 		status: z.enum(["enabled", "disabled"]).optional(),
 		cards: z.array(z.string()).optional(),

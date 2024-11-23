@@ -8,5 +8,6 @@ chmod -R 777 $DIR
 cd $DIR
 touch countries.json
 touch categories.json
+touch languages.json
 echo "[]" > countries.json
 echo "[]" > categories.json

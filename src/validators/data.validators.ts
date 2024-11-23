@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { ConstantsService } from "../services/constants.service";
 
 export const validateCountries = async (countries: string[] | string) => {
@@ -21,3 +22,8 @@ export const validateCategories = async (categories: string[] | string) => {
 		return CATEGORIES.includes(category);
 	});
 };
+
+export const languagesSchema = z.object({
+	en: z.string({ message: "English  is required" }).min(1),
+	ar: z.string({ message: "Arabic  is required" }).min(1),
+});

@@ -16,3 +16,8 @@ declare module "express-serve-static-core" {
 		user: JwtUserPayload;
 	}
 }
+
+export type Translation = {
+	en: string;
+	ar: string;
+};

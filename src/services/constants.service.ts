@@ -22,4 +22,15 @@ export class ConstantsService {
 			});
 		});
 	}
+
+	static async getLanguages(): Promise<string[]> {
+		return new Promise((resolve, reject) => {
+			fs.readFile(env.DATA_DIR + "/languages.json", "utf-8", (err, data) => {
+				if (err) {
+					reject(err);
+				}
+				return resolve(JSON.parse(data));
+			});
+		});
+	}
 }

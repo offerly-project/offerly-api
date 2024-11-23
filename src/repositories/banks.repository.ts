@@ -2,6 +2,7 @@ import { Collection, Document, ObjectId, WithId } from "mongodb";
 import { db } from "../configs/db";
 import { InternalServerError, NotFoundError } from "../errors/errors";
 import { IBank } from "../models/bank.model";
+import { Translation } from "../ts/global";
 
 export class BanksRepository {
 	private collection: Collection<IBank>;
@@ -73,12 +74,18 @@ export class BanksRepository {
 		this.collection = db.getCollection<IBank>("banks");
 	}
 
-	async bankNameExists(name: string) {
-		return (await this.collection.findOne({ name })) !== null;
+	async bankNameExists(name: Translation) {
+		return (
+			(await this.collection.findOne({
+				$or: [{ "name.en": name.en }, { "name.ar": name.ar }],
+			})) !== null
+		);
 	}
 
-	async findByName(name: string) {
-		return await this.collection.findOne({ name });
+	async findByName(name: Translation) {
+		return await this.collection.findOne({
+			$or: [{ "name.en": name.en }, { "name.ar": name.ar }],
+		});
 	}
 
 	async getBankCardsIds(id: string) {
@@ -144,12 +151,12 @@ export class BanksRepository {
 			.toArray();
 	}
 
-	async getCardsByBankId(name: string) {
+	async getCardsByBankId(id: string) {
 		return this.collection
 			.aggregate([
 				{
 					$match: {
-						_id: new ObjectId(name),
+						_id: new ObjectId(id),
 					},
 				},
 				...this._bankCardsPipeline,
