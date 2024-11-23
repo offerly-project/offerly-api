@@ -1,13 +1,13 @@
 import { Document, ObjectId } from "mongodb";
-import { EntityStatus } from "../ts/global";
+import { EntityStatus, Translation } from "../ts/global";
 
 export interface ICard extends Document {
 	_id?: ObjectId;
-	name: string;
+	name: Translation;
 	bank: ObjectId;
 	logo?: string;
 	status: EntityStatus;
-	grade: string;
-	scheme: string;
+	grade: Translation;
+	scheme: Translation;
 	offers: ObjectId[];
 }

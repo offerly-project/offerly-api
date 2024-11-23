@@ -2,6 +2,8 @@ import { Collection, Document, ObjectId, WithId } from "mongodb";
 import { db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
 import { ICard } from "../models/card.model";
+import { Translation } from "../ts/global";
+import { languageSearchQuery } from "../utils/utils";
 
 export class CardsRepository {
 	private collection: Collection<ICard>;
@@ -49,8 +51,8 @@ export class CardsRepository {
 		this.collection = db.getCollection<ICard>("cards");
 	}
 
-	async findByName(name: string) {
-		return await this.collection.findOne({ name });
+	async findByName(name: Translation) {
+		return await this.collection.findOne(languageSearchQuery("name", name));
 	}
 
 	async findById(id: string) {

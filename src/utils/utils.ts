@@ -4,7 +4,7 @@ import jwt, { SignOptions } from "jsonwebtoken";
 import { Document } from "mongodb";
 import { env } from "../configs/env";
 import { InternalServerError, ZodFriendlyError } from "../errors/errors";
-import { JwtUserPayload, UserRole } from "../ts/global";
+import { JwtUserPayload, Translation, UserRole } from "../ts/global";
 
 export const validateRequest =
 	(schema: Zod.Schema) => (req: Request, res: Response, next: NextFunction) => {
@@ -74,6 +74,10 @@ export const validatePassword = async (
 ): Promise<boolean> => {
 	return bcrypt.compare(password, hash);
 };
+
+export const languageSearchQuery = (key: string, value: Translation) => ({
+	$or: [{ [`${key}.en`]: value.en }, { [`${key}.ar`]: value.ar }],
+});
 
 export const verifyToken = (token: string): Promise<JwtUserPayload> => {
 	return new Promise((resolve, reject) => {

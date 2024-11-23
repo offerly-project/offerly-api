@@ -3,6 +3,7 @@ import { db } from "../configs/db";
 import { InternalServerError, NotFoundError } from "../errors/errors";
 import { IBank } from "../models/bank.model";
 import { Translation } from "../ts/global";
+import { languageSearchQuery } from "../utils/utils";
 
 export class BanksRepository {
 	private collection: Collection<IBank>;
@@ -76,16 +77,13 @@ export class BanksRepository {
 
 	async bankNameExists(name: Translation) {
 		return (
-			(await this.collection.findOne({
-				$or: [{ "name.en": name.en }, { "name.ar": name.ar }],
-			})) !== null
+			(await this.collection.findOne(languageSearchQuery("name", name))) !==
+			null
 		);
 	}
 
 	async findByName(name: Translation) {
-		return await this.collection.findOne({
-			$or: [{ "name.en": name.en }, { "name.ar": name.ar }],
-		});
+		return await this.collection.findOne(languageSearchQuery("name", name));
 	}
 
 	async getBankCardsIds(id: string) {

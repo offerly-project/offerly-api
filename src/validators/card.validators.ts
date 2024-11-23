@@ -1,22 +1,23 @@
 import { z } from "zod";
+import { languagesSchema } from "./data.validators";
 
 export const createCardSchema = z.object({
 	body: z.object({
 		bank: z.string({ message: "Card Bank is required" }),
-		name: z.string({ message: "Card Name is required" }),
+		name: languagesSchema,
 		logo: z.string({ message: "Card Logo is required" }).optional(),
-		grade: z.string({ message: "Card Grade is required" }),
-		scheme: z.string({ message: "Card Scheme is required" }),
+		grade: languagesSchema,
+		scheme: languagesSchema,
 	}),
 });
 
 export const updateCardSchema = z.object({
 	body: z.object({
 		bank: z.string().optional(),
-		name: z.string().optional(),
+		name: languagesSchema.optional(),
 		logo: z.string().optional(),
-		grade: z.string().optional(),
-		scheme: z.string().optional(),
+		grade: languagesSchema.optional(),
+		scheme: languagesSchema.optional(),
 		status: z.enum(["enabled", "disabled"]).optional(),
 		offers: z.array(z.string()).optional(),
 	}),
