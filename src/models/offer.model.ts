@@ -1,15 +1,15 @@
 import { Document, ObjectId } from "mongodb";
-import { EntityStatus } from "../ts/global";
+import { EntityStatus, Translation } from "../ts/global";
 
 export type OfferChannel = "online" | "offline";
 
 export interface IOffer extends Document {
-	description: string;
-	terms_and_conditions: string;
+	description: Translation;
+	terms_and_conditions: Translation;
 	offer_source_link: string;
 	logo?: string;
 	discount_code?: string;
-	title: string;
+	title: Translation;
 	starting_date?: Date;
 	expiry_date: Date;
 	minimum_amount?: number;

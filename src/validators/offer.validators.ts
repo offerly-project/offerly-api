@@ -1,12 +1,10 @@
 import { z } from "zod";
-import { validateCategories } from "./data.validators";
+import { languagesSchema, validateCategories } from "./data.validators";
 
 export const createOfferSchema = z.object({
 	body: z.object({
-		description: z.string({ message: "Description is required" }),
-		terms_and_conditions: z.string({
-			message: "Terms and conditions are required",
-		}),
+		description: languagesSchema,
+		terms_and_conditions: languagesSchema,
 		offer_source_link: z.string({ message: "Offer source link is required" }),
 		logo: z.string().optional(),
 		discount_code: z.string().optional(),
@@ -21,18 +19,14 @@ export const createOfferSchema = z.object({
 			.array(z.string({ message: "Categories are required" }))
 			.refine(validateCategories),
 		applicable_cards: z.array(z.string({ message: "Cards are required" })),
-		title: z.string({ message: "Title is required" }),
+		title: languagesSchema,
 	}),
 });
 
 export const updateOfferSchema = z.object({
 	body: z.object({
-		description: z.string({ message: "Description is required" }).optional(),
-		terms_and_conditions: z
-			.string({
-				message: "Terms and conditions are required",
-			})
-			.optional(),
+		description: languagesSchema.optional(),
+		terms_and_conditions: languagesSchema.optional(),
 		offer_source_link: z
 			.string({ message: "Offer source link is required" })
 			.optional(),
@@ -54,7 +48,7 @@ export const updateOfferSchema = z.object({
 			.array(z.string({ message: "Card IDs are required" }))
 			.optional(),
 		status: z.enum(["enabled", "disabled"]).optional(),
-		title: z.string({ message: "Title is required" }).optional(),
+		title: languagesSchema.optional(),
 	}),
 });
 
