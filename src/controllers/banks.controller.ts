@@ -84,7 +84,7 @@ const getUserBanksHandler = async (
 	}
 };
 
-const getUserBankCardHandler = async (
+const getUserBankCardsHandler = async (
 	req: Request<{ id: string }>,
 	res: Response,
 	next: NextFunction
@@ -99,5 +99,5 @@ const getUserBankCardHandler = async (
 
 export const banksUserController = {
 	getUserBanksHandler,
-	getUserBankCardHandler,
+	getUserBankCardsHandler,
 };

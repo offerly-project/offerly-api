@@ -7,7 +7,8 @@ import { InternalServerError, ZodFriendlyError } from "../errors/errors";
 import { JwtUserPayload, Translation, UserRole } from "../ts/global";
 
 export const validateRequest =
-	(schema: Zod.Schema) => (req: Request, res: Response, next: NextFunction) => {
+	(schema: Zod.Schema) =>
+	(req: Request<any, any, any, any>, res: Response, next: NextFunction) => {
 		schema
 			.parseAsync(req)
 			.then(() => next())

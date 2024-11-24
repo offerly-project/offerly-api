@@ -4,6 +4,7 @@ import { offersService } from "../services/offers.service";
 import { transformDocsResponse } from "../utils/utils";
 import {
 	CreateOfferBodyData,
+	OffersQuery,
 	UpdateOfferBodyData,
 } from "../validators/offer.validators";
 
@@ -73,10 +74,24 @@ const deleteOfferHandler = async (
 	}
 };
 
+const getUserOffersHandler = async (
+	req: Request<{}, {}, {}, OffersQuery>,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const offers = await offersService.getUserOffers(req.query);
+		res.status(StatusCodes.OK).send(transformDocsResponse(offers));
+	} catch (e) {
+		next(e);
+	}
+};
+
 export const offersController = {
 	createOfferHandler,
 	getOffersHandler,
 	getOfferHandler,
 	updateOfferHandler,
 	deleteOfferHandler,
+	getUserOffersHandler,
 };

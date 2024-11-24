@@ -31,4 +31,4 @@ export const banksUserRouter = Router();
 
 banksUserRouter.get("/", banksUserController.getUserBanksHandler);
 
-banksUserRouter.get("/:id/cards", banksUserController.getUserBankCardHandler);
+banksUserRouter.get("/:id/cards", banksUserController.getUserBankCardsHandler);

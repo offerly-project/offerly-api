@@ -6,6 +6,7 @@ import { offersRepository } from "../repositories/offers.repository";
 import { removeUndefinedValuesFromObject } from "../utils/utils";
 import {
 	CreateOfferBodyData,
+	OffersQuery,
 	UpdateOfferBodyData,
 } from "../validators/offer.validators";
 
@@ -84,6 +85,11 @@ export class OffersService {
 	async deleteOffer(id: string) {
 		const cards = await offersRepository.delete(id);
 		await cardsRepository.removeOfferFromCards(id, cards);
+	}
+
+	async getUserOffers(query: OffersQuery) {
+		const offers = await offersRepository.getOffersByQuery(query);
+		return offers;
 	}
 }
 

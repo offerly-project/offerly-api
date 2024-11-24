@@ -1,3 +1,4 @@
+import { isNumber } from "lodash";
 import { z } from "zod";
 import { languagesSchema, validateCategories } from "./data.validators";
 
@@ -54,3 +55,25 @@ export const updateOfferSchema = z.object({
 
 export type CreateOfferBodyData = z.infer<typeof createOfferSchema>["body"];
 export type UpdateOfferBodyData = z.infer<typeof updateOfferSchema>["body"];
+
+export const getUserOffersSchema = z.object({
+	query: z.object({
+		card: z.string(),
+		q: z.string().optional(),
+		category: z.string().refine(validateCategories),
+		page: z.string().refine((value) => {
+			if (!isNumber(+value)) {
+				return false;
+			}
+			return +value >= 1;
+		}),
+		limit: z.string().refine((value) => {
+			if (!isNumber(+value)) {
+				return false;
+			}
+			return +value <= 20 && +value >= 1;
+		}),
+	}),
+});
+
+export type OffersQuery = z.infer<typeof getUserOffersSchema>["query"];

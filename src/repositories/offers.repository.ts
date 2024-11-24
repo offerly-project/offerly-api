@@ -2,31 +2,10 @@ import { Collection, ObjectId, WithId } from "mongodb";
 import { db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
 import { IOffer } from "../models/offer.model";
+import { OffersQuery } from "../validators/offer.validators";
 
 export class OffersRepositry {
 	private collection: Collection<IOffer>;
-
-	private _offerCardsPipeline = [
-		{
-			$project: {
-				applicable_cards: 1,
-			},
-		},
-		{
-			$lookup: {
-				from: "cards",
-				localField: "applicable_cards",
-				foreignField: "_id",
-				as: "applicable_cards",
-			},
-		},
-		{
-			$project: {
-				_id: 0,
-				applicable_cards: 1,
-			},
-		},
-	];
 
 	constructor() {
 		this.collection = db.getCollection("offers");
@@ -76,6 +55,60 @@ export class OffersRepositry {
 		const cards = offer.applicable_cards.map((card) => card.toString());
 
 		return cards;
+	}
+
+	getOffersByQuery(query: OffersQuery) {
+		const { card, category, page, limit, q } = query;
+		const cardFilter = { applicable_cards: { $in: [new ObjectId(card)] } };
+		const categoryFilter = category ? { categories: { $in: [category] } } : {};
+		const skip = (+page - 1) * +limit;
+
+		const searchFilter = q
+			? {
+					$or: [
+						{ "title.en": { $regex: q, $options: "i" } },
+						{ "title.ar": { $regex: q, $options: "i" } },
+						{ "terms_and_conditions.en": { $regex: q, $options: "i" } },
+						{ "terms_and_conditions.ar": { $regex: q, $options: "i" } },
+						{ "description.en": { $regex: q, $options: "i" } },
+						{ "description.ar": { $regex: q, $options: "i" } },
+					],
+			  }
+			: {};
+
+		return this.collection
+			.aggregate<WithId<IOffer>>([
+				{
+					$match: {
+						...cardFilter,
+						...categoryFilter,
+						...searchFilter,
+					},
+				},
+				{
+					$skip: skip,
+				},
+				{
+					$limit: +limit,
+				},
+				{
+					$project: {
+						_id: 1,
+						title: 1,
+						description: 1,
+						logo: 1,
+						offer_source_link: 1,
+						status: 1,
+						terms_and_conditions: 1,
+						expiry_date: 1,
+						minimum_amount: 1,
+						cap: 1,
+						channel: 1,
+						starting_date: 1,
+					},
+				},
+			])
+			.toArray();
 	}
 }
 
