@@ -8,12 +8,18 @@ const _authorize = (roles: UserRole[]) => {
 		const authHeader = req.headers.authorization;
 
 		if (!authHeader) {
-			throw new UnauthorizedError("Authorization header is missing");
+			next(new UnauthorizedError("Authorization header is missing"));
+			return;
 		}
 
 		const token = authHeader && authHeader.split(" ")[1];
 
-		const userData = await verifyToken(token);
+		if (!token) {
+			next(new UnauthorizedError("Token is missing"));
+			return;
+		}
+
+		const userData = await verifyToken(token!);
 
 		if (roles && !roles.includes(userData.role)) {
 			throw new UnauthorizedError(
@@ -26,11 +32,6 @@ const _authorize = (roles: UserRole[]) => {
 		next();
 	};
 };
-
-/**
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDA2NWE4MTAyMzkwODRjMTgxNjczMCIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzMyMjczNTg2fQ.1cTN4vP8qjO3mWwC6aM44cXlLpsETdfyoggd9BIQ7Uc"
- * 
- */
 
 export const authorizeAdmin = _authorize(["admin"]);
 

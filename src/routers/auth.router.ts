@@ -1,6 +1,7 @@
 import { Router } from "express";
+import { StatusCodes } from "http-status-codes";
 import { authController } from "../controllers/auth.controller";
-import { authorize, authorizeUser } from "../middlewares/auth.middleware";
+import { authorizeAdmin, authorizeUser } from "../middlewares/auth.middleware";
 import { validateRequest } from "../utils/utils";
 import {
 	adminLoginSchema,
@@ -16,6 +17,10 @@ adminAuthRouter.post(
 	validateRequest(adminLoginSchema),
 	authController.adminLoginHandler
 );
+
+adminAuthRouter.get("/", authorizeAdmin, (req, res) => {
+	res.status(StatusCodes.OK).send();
+});
 
 export const userAuthRouter = Router();
 
@@ -38,4 +43,6 @@ userAuthRouter.put(
 	authController.userResetPasswordHandler
 );
 
-userAuthRouter.get("/", authorize);
+adminAuthRouter.get("/", authorizeUser, (req, res) => {
+	res.status(StatusCodes.OK).send();
+});
