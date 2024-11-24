@@ -430,6 +430,175 @@
 					}
 				}
 			}
+		},
+		"/user/offers": {
+			"get": {
+				"tags": ["offers"],
+				"summary": "Fetch Offers",
+				"description": "Retrieve offers based on applicable cards, categories, search query, and pagination.",
+				"parameters": [
+					{
+						"name": "card",
+						"in": "query",
+						"description": "Filter offers by applicable card ID.",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "objectId",
+							"example": "6482d6b5e9c8f8b5f3c781d5"
+						}
+					},
+					{
+						"name": "category",
+						"in": "query",
+						"description": "Filter offers by category.",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"example": "electronics"
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"description": "Specify the page number for pagination.",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"minimum": 1,
+							"example": 1
+						}
+					},
+					{
+						"name": "limit",
+						"in": "query",
+						"description": "Number of offers to return per page.",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"minimum": 1,
+							"maximum": 100,
+							"example": 10
+						}
+					},
+					{
+						"name": "q",
+						"in": "query",
+						"description": "Search query to filter offers by title, terms, or description in any language.",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"example": "discount"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful response with a list of offers.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"data": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"id": {
+														"type": "string",
+														"format": "objectId",
+														"example": "6482d6b5e9c8f8b5f3c781d4"
+													},
+													"applicable_cards": {
+														"type": "array",
+														"items": {
+															"type": "string",
+															"format": "objectId"
+														},
+														"example": ["6482d6b5e9c8f8b5f3c781d5"]
+													},
+													"categories": {
+														"type": "array",
+														"items": {
+															"type": "string"
+														},
+														"example": ["electronics"]
+													},
+													"title": {
+														"type": "object",
+														"properties": {
+															"en": {
+																"type": "string",
+																"example": "Discount on gadgets"
+															},
+															"ar": {
+																"type": "string",
+																"example": "خصم على الأدوات"
+															}
+														}
+													},
+													"terms_and_conditions": {
+														"type": "object",
+														"properties": {
+															"en": {
+																"type": "string",
+																"example": "Limited time offer"
+															},
+															"ar": {
+																"type": "string",
+																"example": "عرض لفترة محدودة"
+															}
+														}
+													},
+													"description": {
+														"type": "object",
+														"properties": {
+															"en": {
+																"type": "string",
+																"example": "Save 20% on all gadgets"
+															},
+															"ar": {
+																"type": "string",
+																"example": "وفر 20٪ على جميع الأدوات"
+															}
+														}
+													}
+												}
+											}
+										},
+										"metadata": {
+											"properties": {
+												"total": {
+													"type": "integer",
+													"description": "Total number of offers matching the filters.",
+													"example": 100
+												},
+												"page": {
+													"type": "integer",
+													"description": "Current page number.",
+													"example": 1
+												},
+												"limit": {
+													"type": "integer",
+													"description": "Number of offers per page.",
+													"example": 10
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid request parameters."
+					},
+					"500": {
+						"description": "Internal server error."
+					}
+				}
+			}
 		}
 	},
 	"components": {

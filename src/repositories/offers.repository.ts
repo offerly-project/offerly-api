@@ -86,29 +86,45 @@ export class OffersRepositry {
 					},
 				},
 				{
-					$skip: skip,
-				},
-				{
-					$limit: +limit,
-				},
-				{
-					$project: {
-						_id: 1,
-						title: 1,
-						description: 1,
-						logo: 1,
-						offer_source_link: 1,
-						status: 1,
-						terms_and_conditions: 1,
-						expiry_date: 1,
-						minimum_amount: 1,
-						cap: 1,
-						channel: 1,
-						starting_date: 1,
+					$facet: {
+						metadata: [
+							{ $count: "total" },
+							{ $addFields: { page: +page, limit: +limit } },
+						],
+						data: [
+							{ $skip: skip },
+							{ $limit: +limit },
+							{
+								$project: {
+									_id: 1,
+									title: 1,
+									description: 1,
+									logo: 1,
+									offer_source_link: 1,
+									status: 1,
+									terms_and_conditions: 1,
+									expiry_date: 1,
+									minimum_amount: 1,
+									cap: 1,
+									channel: 1,
+									starting_date: 1,
+								},
+							},
+						],
 					},
 				},
+				{
+					$unwind: "$metadata",
+				},
 			])
-			.toArray();
+			.toArray()
+			.then(
+				(result) =>
+					result[0] || {
+						metadata: [{ total: 0, page: +page, limit: +limit }],
+						data: [],
+					}
+			);
 	}
 }
 
