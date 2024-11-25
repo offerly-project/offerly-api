@@ -1,4 +1,4 @@
-import { Collection, ObjectId } from "mongodb";
+import { Collection, ObjectId, PullOperator } from "mongodb";
 import { Database, db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
 import { IUser } from "../models/user.model";
@@ -30,13 +30,29 @@ export class UsersRepository {
 			throw new InternalServerError("Password not updated");
 		}
 	}
-	async updateCards(id: string, cards: string[]) {
+	async updateCards(userId: string, cards: string[]) {
 		const result = await this.collection.updateOne(
-			{ _id: new ObjectId(id) },
-			{ $set: { cards: cards.map((card) => new ObjectId(card)) } }
+			{ _id: new ObjectId(userId) },
+			{
+				$addToSet: {
+					cards: { $each: cards.map((card) => new ObjectId(card)) },
+				},
+			}
 		);
 		if (result.modifiedCount === 0) {
 			throw new InternalServerError("Cards not updated");
+		}
+	}
+
+	async removeCards(userId: string, cards: string[]) {
+		const result = await this.collection.updateOne(
+			{ _id: new ObjectId(userId) },
+			{
+				$pull: { cards: { $in: cards.map((card) => new ObjectId(card)) } },
+			} as unknown as PullOperator<IUser>
+		);
+		if (result.modifiedCount === 0) {
+			throw new InternalServerError("Cards not removed");
 		}
 	}
 }

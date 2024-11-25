@@ -7,8 +7,8 @@ import { authorizeUser } from "../middlewares/auth.middleware";
 import { validateRequest } from "../utils/utils";
 import {
 	createCardSchema,
+	mutateUserCardsschema,
 	updateCardSchema,
-	updateUserCardsSchema,
 } from "../validators/card.validators";
 
 export const cardsAdminRouter = Router();
@@ -36,9 +36,16 @@ cardsUserRouter.get(
 	cardsUserController.getUserCardsHandler
 );
 
-cardsUserRouter.put(
+cardsUserRouter.patch(
 	"/",
 	authorizeUser,
-	validateRequest(updateUserCardsSchema),
-	cardsUserController.putUserCardsHandler
+	validateRequest(mutateUserCardsschema),
+	cardsUserController.patchUserCardsHandler
+);
+
+cardsUserRouter.delete(
+	"/",
+	authorizeUser,
+	validateRequest(mutateUserCardsschema),
+	cardsUserController.deleteUserCardsHandler
 );

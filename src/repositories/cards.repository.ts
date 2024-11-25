@@ -1,4 +1,4 @@
-import { Collection, Document, ObjectId, WithId } from "mongodb";
+import { Collection, Document, ObjectId, PullOperator, WithId } from "mongodb";
 import { db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
 import { ICard } from "../models/card.model";
@@ -124,8 +124,9 @@ export class CardsRepository {
 	removeOfferFromCards(offerId: string, cards: string[]) {
 		return this.collection.updateMany(
 			{ _id: { $in: cards.map((card) => new ObjectId(card)) } },
-			//@ts-ignore
-			{ $pull: { offers: new ObjectId(offerId) } }
+			{
+				$pull: { offers: new ObjectId(offerId) },
+			} as unknown as PullOperator<ICard>
 		);
 	}
 }

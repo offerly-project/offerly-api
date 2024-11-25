@@ -5,8 +5,8 @@ import { usersService } from "../services/users.service";
 import { transformDocsResponse } from "../utils/utils";
 import {
 	CreateCardBodyData,
+	MutateUserCardsBodyData,
 	UpdateCardBodyData,
-	UpdateUserCardsBodyData,
 } from "../validators/card.validators";
 
 const getCardsHandler = async (
@@ -90,8 +90,8 @@ const getUserCardsHandler = async (
 	}
 };
 
-const putUserCardsHandler = async (
-	req: Request<{}, {}, UpdateUserCardsBodyData>,
+const patchUserCardsHandler = async (
+	req: Request<{}, {}, MutateUserCardsBodyData>,
 	res: Response,
 	next: NextFunction
 ) => {
@@ -108,4 +108,26 @@ const putUserCardsHandler = async (
 	}
 };
 
-export const cardsUserController = { getUserCardsHandler, putUserCardsHandler };
+const deleteUserCardsHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const userId = req.user.id;
+		const { cards } = req.body;
+		await usersService.deleteUserCards(userId, cards);
+
+		res.status(StatusCodes.OK).send({
+			message: "User cards removed",
+		});
+	} catch (e) {
+		next(e);
+	}
+};
+
+export const cardsUserController = {
+	getUserCardsHandler,
+	patchUserCardsHandler,
+	deleteUserCardsHandler,
+};
