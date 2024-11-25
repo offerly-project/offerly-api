@@ -1,3 +1,4 @@
+import { isNumber } from "lodash";
 import { z } from "zod";
 import { languagesSchema } from "./data.validators";
 
@@ -27,12 +28,30 @@ export type CreateCardBodyData = z.infer<typeof createCardSchema>["body"];
 
 export type UpdateCardBodyData = z.infer<typeof updateCardSchema>["body"];
 
-export const mutateUserCardsschema = z.object({
+export const patchUserCardsschema = z.object({
 	body: z.object({
 		cards: z.array(z.string({ message: "Card ID is required" })),
 	}),
 });
 
 export type MutateUserCardsBodyData = z.infer<
-	typeof mutateUserCardsschema
+	typeof patchUserCardsschema
 >["body"];
+
+export const deleteCardSchema = z.object({
+	query: z.object({
+		cards: z.string({ message: "Card ID is required" }).refine(
+			(value) => {
+				const values = value.split(",");
+				const allNumbers = values.every((val) => isNumber(Number(val)));
+
+				return allNumbers;
+			},
+			{
+				message: "card ids should be separated by commas",
+			}
+		),
+	}),
+});
+
+export type DeleteCardQueryData = z.infer<typeof deleteCardSchema>["query"];

@@ -7,7 +7,8 @@ import { authorizeUser } from "../middlewares/auth.middleware";
 import { validateRequest } from "../utils/utils";
 import {
 	createCardSchema,
-	mutateUserCardsschema,
+	deleteCardSchema,
+	patchUserCardsschema,
 	updateCardSchema,
 } from "../validators/card.validators";
 
@@ -39,13 +40,13 @@ cardsUserRouter.get(
 cardsUserRouter.patch(
 	"/",
 	authorizeUser,
-	validateRequest(mutateUserCardsschema),
+	validateRequest(patchUserCardsschema),
 	cardsUserController.patchUserCardsHandler
 );
 
 cardsUserRouter.delete(
 	"/",
 	authorizeUser,
-	validateRequest(mutateUserCardsschema),
+	validateRequest(deleteCardSchema),
 	cardsUserController.deleteUserCardsHandler
 );

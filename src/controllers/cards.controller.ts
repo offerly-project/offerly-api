@@ -5,6 +5,7 @@ import { usersService } from "../services/users.service";
 import { transformDocsResponse } from "../utils/utils";
 import {
 	CreateCardBodyData,
+	DeleteCardQueryData,
 	MutateUserCardsBodyData,
 	UpdateCardBodyData,
 } from "../validators/card.validators";
@@ -109,17 +110,17 @@ const patchUserCardsHandler = async (
 };
 
 const deleteUserCardsHandler = async (
-	req: Request,
+	req: Request<{}, {}, {}, DeleteCardQueryData>,
 	res: Response,
 	next: NextFunction
 ) => {
 	try {
 		const userId = req.user.id;
-		const { cards } = req.body;
+		const cards = req.query.cards.split(",");
 		await usersService.deleteUserCards(userId, cards);
 
 		res.status(StatusCodes.OK).send({
-			message: "User cards removed",
+			message: "User cards deleted",
 		});
 	} catch (e) {
 		next(e);

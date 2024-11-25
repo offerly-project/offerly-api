@@ -383,6 +383,70 @@
 			}
 		},
 		"/user/cards": {
+			"patch": {
+				"summary": "patch user cards",
+				"tags": ["cards"],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "user cards patched (appended)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "User cards updated"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"summary": "delete user cards",
+				"tags": ["cards"],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "user cards deleted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "User cards deleted"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"in": "query",
+						"name": "cards",
+						"schema": {
+							"type": "string"
+						},
+						"description": "cards ids separated by commas"
+					}
+				]
+			},
 			"get": {
 				"summary": "get user cards",
 				"security": [
