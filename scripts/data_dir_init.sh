@@ -51,6 +51,14 @@ touch "$DIRECTORY/categories.json"
 touch "$DIRECTORY/languages.json" 
 
 
-echo "$COUNTRIES" > "$DIRECTORY/countries.json"
-echo "$CATEGORIES" > "$DIRECTORY/categories.json"
-echo "$LANGUAGES" > "$DIRECTORY/languages.json"
+if [ ! -s "$DIRECTORY/countries.json" ] || [ "$COUNTRIES" != "[]" ]; then
+  echo "$COUNTRIES" > "$DIRECTORY/countries.json"
+fi
+
+if [ ! -s "$DIRECTORY/categories.json" ] || [ "$CATEGORIES" != "[]" ]; then
+  echo "$CATEGORIES" > "$DIRECTORY/categories.json"
+fi
+
+if [ ! -s "$DIRECTORY/languages.json" ] || [ "$LANGUAGES" != "[]" ]; then
+  echo "$LANGUAGES" > "$DIRECTORY/languages.json"
+fi

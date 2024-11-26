@@ -6,8 +6,7 @@ CATEGORIES='["Food", "Groceries"]'
 LANGUAGES='["en", "ar"]'
 
 
-docker build --build-arg DATA_DIR="$DATA_DIR" --build-arg COUNTRIES="$COUNTRIES" --build-arg CATEGORIES="$CATEGORIES" --build-arg LANGUAGES="$LANGUAGES" -t offerly-node-app ../
-
+docker build --build-arg DATA_DIR="$DATA_DIR" --build-arg COUNTRIES="$COUNTRIES" --build-arg CATEGORIES="$CATEGORIES" --build-arg LANGUAGES="$LANGUAGES" -v offerly-static-data="$DATA_DIR" -t offerly-node-app ../
 
 docker rm -f offerly-node-app-c
 
