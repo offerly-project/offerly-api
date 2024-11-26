@@ -1,9 +1,9 @@
 
 DB_URL=$1
 DATA_DIR='/etc/offerly-data'
-COUNTRIES='["USA", "UAE"]'
-CATEGORIES='["Food", "Groceries"]'
-LANGUAGES='["en", "ar"]'
+COUNTRIES='[]'
+CATEGORIES='[]'
+LANGUAGES='[]'
 
 
 docker build --build-arg DATA_DIR="$DATA_DIR" --build-arg COUNTRIES="$COUNTRIES" --build-arg CATEGORIES="$CATEGORIES" --build-arg LANGUAGES="$LANGUAGES" -v offerly-static-data="$DATA_DIR" -t offerly-node-app ../
