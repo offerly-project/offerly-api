@@ -6,7 +6,6 @@ import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import { db } from "./configs/db";
 import { env } from "./configs/env";
-import { createUploadDirectories } from "./configs/files";
 import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
 import { otpRouter } from "./routers/otp.router";
@@ -17,8 +16,6 @@ import swaggerJson from "./swagger.json";
 dotenv.config();
 
 (async function () {
-	createUploadDirectories();
-
 	await db.connect();
 
 	const app = express();

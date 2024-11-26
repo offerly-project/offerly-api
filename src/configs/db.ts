@@ -13,6 +13,8 @@ type Collections =
 export class Database {
 	private _client: MongoClient;
 	constructor() {
+		console.log(env.DB_URL);
+
 		this._client = new MongoClient(env.DB_URL);
 	}
 

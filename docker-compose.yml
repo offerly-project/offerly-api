@@ -3,6 +3,9 @@ services:
     build:
       args:
         - DATA_DIR=${DATA_DIR}
+        - COUNTRIES=${COUNTRIES}
+        - CATEGORIES=${CATEGORIES}
+        - LANGUAGES=${LANGUAGES}
     ports:
       - "8000:8000"
     depends_on:
@@ -14,7 +17,7 @@ services:
   db:
     image: mongo:latest
     volumes:
-      - db-data:/data/db
+      - offerly-db-data:/data/db
     networks:
       - services-network
 
@@ -22,4 +25,5 @@ networks:
   services-network:
 
 volumes:
-  db-data:
+  offerly-db-data:
+  offerly-static-data:
