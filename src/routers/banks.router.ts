@@ -3,6 +3,7 @@ import {
 	banksAdminController,
 	banksUserController,
 } from "../controllers/banks.controller";
+import { authorizeUser } from "../middlewares/auth.middleware";
 import { validateRequest } from "../utils/utils";
 import {
 	createBankSchema,
@@ -29,6 +30,14 @@ banksAdminRouter.patch(
 
 export const banksUserRouter = Router();
 
-banksUserRouter.get("/", banksUserController.getUserBanksHandler);
+banksUserRouter.get(
+	"/",
+	authorizeUser,
+	banksUserController.getUserBanksHandler
+);
 
-banksUserRouter.get("/:id/cards", banksUserController.getUserBankCardsHandler);
+banksUserRouter.get(
+	"/:id/cards",
+	authorizeUser,
+	banksUserController.getUserBankCardsHandler
+);
