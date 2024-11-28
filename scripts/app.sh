@@ -17,5 +17,5 @@ docker run --network=offerly-network \
   --name offerly-node-app-c \
   -e DB_URL=$DB_URL \
   -e DATA_DIR=$DATA_DIR \
-  -v offerly-static-data=$DATA_DIR \
+  -v offerly-static-data:$DATA_DIR \
   offerly-node-app
