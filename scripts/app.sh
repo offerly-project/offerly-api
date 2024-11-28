@@ -1,8 +1,8 @@
 
 DB_URL=$1
 DATA_DIR='/offerly-data'
-COUNTRIES='["United Arab Emirates","USA","Germany","UK"]'
-CATEGORIES='["Food","Groceries"]'
+COUNTRIES='["Saudi Arabia"]'
+CATEGORIES='["Shopping","Travel","Restaurants & Cafes","Entertainment","Car Services","Health & Wellness","Others","Ignore","Groceries"]'
 LANGUAGES='["ar","en"]'
 
 
