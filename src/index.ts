@@ -46,9 +46,11 @@ dotenv.config();
 		res.json({ status: "healthy!" });
 	});
 
-	app.use(errorsMiddleware);
+	console.log(env.DATA_DIR);
 
 	app.use("/static", express.static(env.DATA_DIR));
+
+	app.use(errorsMiddleware);
 
 	app.listen(env.PORT, () => {
 		console.log(`Server is running on port ${env.PORT}`);
