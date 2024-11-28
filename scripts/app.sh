@@ -2,7 +2,7 @@
 DB_URL=$1
 DATA_DIR='/offerly-data'
 COUNTRIES='["Saudi Arabia"]'
-CATEGORIES='["Shopping","Travel","Restaurants & Cafes","Entertainment","Car Services","Health & Wellness","Others","Ignore","Groceries"]'
+CATEGORIES='["Shopping","Travel","Restaurants & Cafes","Entertainment","Car Services","Health & Wellness","Others","Groceries"]'
 LANGUAGES='["ar","en"]'
 
 
@@ -17,5 +17,5 @@ docker run --network=offerly-network \
   --name offerly-node-app-c \
   -e DB_URL=$DB_URL \
   -e DATA_DIR=$DATA_DIR \
-  -v offerly-static-data="$DATA_DIR" \
+  -v offerly-static-data=$DATA_DIR \
   offerly-node-app

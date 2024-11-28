@@ -31,4 +31,6 @@ RUN sh /app/data_dir_init.sh -d "${DATA_DIR}" -c "${COUNTRIES}" -a "${CATEGORIES
 
 EXPOSE 8000
 
+RUN apt update && apt install nano
+
 CMD ["npm", "run", "start"]
