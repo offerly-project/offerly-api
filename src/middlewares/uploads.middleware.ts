@@ -26,7 +26,9 @@ export const imageUploadMiddleware =
 	(req: Request, res: Response, next: NextFunction) => {
 		try {
 			const { allowCustomDimensions, allowedPaths } = options;
-			const form = new formidable.IncomingForm();
+			const form = new formidable.IncomingForm({
+				uploadDir: "/offerly-tmp",
+			});
 
 			form.parse(req, async (err, fields, files) => {
 				if (err) {
