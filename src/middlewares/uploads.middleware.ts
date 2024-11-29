@@ -61,6 +61,10 @@ export const imageUploadMiddleware =
 				}
 				const oldPath = payload.image.filepath;
 				const targetPath = path.join(env.DATA_DIR, payload.path);
+				if (!oldPath) {
+					next(new BadRequestError("File not uploaded"));
+					return;
+				}
 				const imageBuffer = fs.readFileSync(oldPath);
 				const builder = new ImageBuilder(imageBuffer);
 				if (payload.dims) {
