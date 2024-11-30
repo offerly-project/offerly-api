@@ -24,7 +24,7 @@ export class OffersService {
 			offer_source_link: data.offer_source_link,
 			expiry_date: new Date(data.expiry_date),
 			minimum_amount: data.minimum_amount,
-			channel: data.channel,
+			channels: data.channels,
 			categories: data.categories,
 			applicable_cards:
 				data.applicable_cards?.map((id) => new ObjectId(id)) || [],
@@ -66,7 +66,7 @@ export class OffersService {
 			offer_source_link: data.offer_source_link,
 			expiry_date: data.expiry_date ? new Date(data.expiry_date) : undefined,
 			minimum_amount: data.minimum_amount,
-			channel: data.channel,
+			channel: data.channels,
 			categories: data.categories,
 			applicable_cards: data.applicable_cards?.map((id) => new ObjectId(id)),
 			logo: data.logo,

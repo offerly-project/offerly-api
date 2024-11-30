@@ -1,5 +1,6 @@
 import { isNumber } from "lodash";
 import { z } from "zod";
+import { entityStatuses } from "../constants";
 import { languagesSchema } from "./data.validators";
 
 export const createCardSchema = z.object({
@@ -19,7 +20,7 @@ export const updateCardSchema = z.object({
 		logo: z.string().optional(),
 		grade: languagesSchema.optional(),
 		scheme: languagesSchema.optional(),
-		status: z.enum(["enabled", "disabled"]).optional(),
+		status: z.enum(entityStatuses).optional(),
 		offers: z.array(z.string()).optional(),
 	}),
 });

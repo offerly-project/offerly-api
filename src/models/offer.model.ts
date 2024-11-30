@@ -1,7 +1,7 @@
 import { Document, ObjectId } from "mongodb";
 import { EntityStatus, Translation } from "../ts/global";
 
-export type OfferChannel = "online" | "offline";
+export type OfferChannel = "online" | "in-store";
 
 export interface IOffer extends Document {
 	description: Translation;
@@ -15,7 +15,7 @@ export interface IOffer extends Document {
 	minimum_amount?: number;
 	cap?: number;
 	status: EntityStatus;
-	channel: OfferChannel;
+	channels: OfferChannel[];
 
 	categories: string[];
 	applicable_cards: ObjectId[];

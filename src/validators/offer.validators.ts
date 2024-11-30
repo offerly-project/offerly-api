@@ -1,5 +1,6 @@
 import { isNumber } from "lodash";
 import { z } from "zod";
+import { channels, entityStatuses } from "../constants";
 import { languagesSchema, validateCategories } from "./data.validators";
 
 export const createOfferSchema = z.object({
@@ -15,7 +16,7 @@ export const createOfferSchema = z.object({
 			.number({ message: "Minimum amount is required" })
 			.optional(),
 		cap: z.number().optional(),
-		channel: z.enum(["online", "offline"]),
+		channels: z.array(z.enum(channels)),
 		categories: z
 			.array(z.string({ message: "Categories are required" }))
 			.refine(validateCategories),
@@ -41,14 +42,14 @@ export const updateOfferSchema = z.object({
 			.number({ message: "Minimum amount is required" })
 			.optional(),
 		cap: z.number().optional(),
-		channel: z.enum(["online", "offline"]).optional(),
+		channels: z.enum(channels).optional(),
 		categories: z
 			.array(z.string({ message: "Categories are required" }))
 			.refine(validateCategories),
 		applicable_cards: z
 			.array(z.string({ message: "Card IDs are required" }))
 			.optional(),
-		status: z.enum(["enabled", "disabled"]).optional(),
+		status: z.enum(entityStatuses).optional(),
 		title: languagesSchema.optional(),
 	}),
 });

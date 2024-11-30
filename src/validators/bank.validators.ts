@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { entityStatuses } from "../constants";
 import { BankType } from "../models/bank.model";
 import { languagesSchema, validateCountries } from "./data.validators";
 
@@ -31,7 +32,7 @@ export const updateBankSchema = z.object({
 			.optional(),
 		name: languagesSchema.optional(),
 		logo: z.string({ message: "Logo is required" }).optional(),
-		status: z.enum(["enabled", "disabled"]).optional(),
+		status: z.enum(entityStatuses).optional(),
 		cards: z.array(z.string()).optional(),
 	}),
 });
