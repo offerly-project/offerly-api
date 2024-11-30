@@ -2,13 +2,14 @@ COUNTRIES="[]"
 CATEGORIES="[]"
 LANGUAGES="[]"
 
-while getopts "hv:a:d:c:l:" opt; do
+while getopts "hv:a:d:c:l:u:d:" opt; do
   case $opt in
     h)
       echo "Usage: data_dir_init.sh [-h] [-v] [-d <directory>] [-c <countries>] [-l <languages>]"
       echo "  -h  Display this help message."
       echo "  -v  Verbose mode."
-      echo "  -d  Specify the directory to create."
+      echo "  -d  Data directory"
+      echo "  -u  Uploads directory"
       echo "  -c  Specify countries (JSON format)."
       echo "  -a  Specify categories (JSON format)."
       echo "  -l  Specify languages (JSON format)."
@@ -22,6 +23,9 @@ while getopts "hv:a:d:c:l:" opt; do
       ;;
     a)
       CATEGORIES=$OPTARG
+      ;;
+    u)
+      UPLOADS_DIRECTORY=$OPTARG
       ;;
     l)
       LANGUAGES=$OPTARG
@@ -39,12 +43,19 @@ if [ -z "$DIRECTORY" ]; then
   exit 1
 fi
 
+if [ -z "$UPLOADS_DIRECTORY" ]; then
+  echo "Error: Uploads directory is required (-u <directory>)"
+  exit 1
+fi
 
-mkdir -p "$DIRECTORY" 
-mkdir -p "$DIRECTORY/banks" 
-mkdir -p "$DIRECTORY/cards" 
-mkdir -p "$DIRECTORY/offers" 
 
+
+mkdir -p "$UPLOADS_DIRECTORY" 
+mkdir -p "$UPLOADS_DIRECTORY/banks" 
+mkdir -p "$UPLOADS_DIRECTORY/cards" 
+mkdir -p "$UPLOADS_DIRECTORY/offers" 
+
+mkdir -p "$DIRECTORY"
 
 touch "$DIRECTORY/countries.json" 
 touch "$DIRECTORY/categories.json" 

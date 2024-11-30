@@ -3,6 +3,7 @@ services:
     build:
       args:
         - DATA_DIR=${DATA_DIR}
+        - UPLOADS_DIR=${UPLOADS_DIR}
         - COUNTRIES=${COUNTRIES}
         - CATEGORIES=${CATEGORIES}
         - LANGUAGES=${LANGUAGES}
@@ -14,6 +15,8 @@ services:
       - DB_URL=mongodb://db:27017
     networks:
       - services-network
+    volumes:
+      - offerly-uploads:${UPLOADS_DIR}
   db:
     image: mongo:latest
     volumes:
@@ -26,4 +29,4 @@ networks:
 
 volumes:
   offerly-db-data:
-  offerly-static-data:
+  offerly-uploads:

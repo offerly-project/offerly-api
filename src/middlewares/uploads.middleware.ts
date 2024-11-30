@@ -60,7 +60,7 @@ export const imageUploadMiddleware =
 					return;
 				}
 				const oldPath = payload.image.filepath;
-				const targetPath = path.join(env.DATA_DIR, payload.path);
+				const targetPath = path.join(env.UPLOADS_DIR, payload.path);
 				if (!oldPath) {
 					next(new BadRequestError("File not uploaded"));
 					return;
