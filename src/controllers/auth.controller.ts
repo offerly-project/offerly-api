@@ -75,7 +75,7 @@ const userResetPasswordHandler = async (
 		await userAuthService.changePassword(id, password);
 		const token = await generateToken(id, "user");
 		res.status(StatusCodes.OK).send({
-			message: "Password changed successfully",
+			message: "Password reset successfully",
 			token,
 		});
 	} catch (e) {

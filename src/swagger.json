@@ -391,6 +391,24 @@
 						"bearerAuth": []
 					}
 				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"cards": {
+										"type": "array",
+										"items": {
+											"type": "string",
+											"example": ["12451231", "5231312"]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
 				"responses": {
 					"200": {
 						"description": "user cards patched (appended)",
