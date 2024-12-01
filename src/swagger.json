@@ -645,6 +645,30 @@
 																"example": "وفر 20٪ على جميع الأدوات"
 															}
 														}
+													},
+													"logo": {
+														"$ref": "#/components/schemas/OfferLogo"
+													},
+													"offer_source_link": {
+														"type": "string"
+													},
+													"status": {
+														"$ref": "#/components/schemas/EntityStatus"
+													},
+													"expiry_date": {
+														"type": "string"
+													},
+													"minimum_amount": {
+														"type": "string"
+													},
+													"cap": {
+														"type": "string"
+													},
+													"channel": {
+														"type": "string"
+													},
+													"starting_date": {
+														"type": "string"
 													}
 												}
 											}
@@ -696,6 +720,10 @@
 			"OfferLogo": {
 				"type": "string",
 				"example": "/offers/---.png"
+			},
+			"Channel": {
+				"type": "string",
+				"enum": ["online", "in-store"]
 			},
 			"EntityStatus": {
 				"type": "string",
