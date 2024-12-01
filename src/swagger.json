@@ -305,8 +305,7 @@
 												"$ref": "#/components/schemas/EntityStatus"
 											},
 											"name": {
-												"type": "string",
-												"example": "Emirates NBD"
+												"$ref": "#/components/schemas/Translation"
 											},
 											"logo": {
 												"$ref": "#/components/schemas/BankLogo"
@@ -356,13 +355,13 @@
 										"type": "object",
 										"properties": {
 											"name": {
-												"type": "string"
+												"$ref": "#/components/schemas/Translation"
 											},
 											"logo": {
 												"$ref": "#/components/schemas/CardLogo"
 											},
 											"scheme": {
-												"type": "string"
+												"$ref": "#/components/schemas/Translation"
 											},
 											"id": {
 												"type": "string"
@@ -371,7 +370,7 @@
 												"$ref": "#/components/schemas/EntityStatus"
 											},
 											"grade": {
-												"type": "string"
+												"$ref": "#/components/schemas/Translation"
 											}
 										}
 									}
@@ -484,7 +483,7 @@
 										"type": "object",
 										"properties": {
 											"name": {
-												"type": "string"
+												"$ref": "#/components/schemas/Translation"
 											},
 											"logo": {
 												"$ref": "#/components/schemas/CardLogo"
@@ -493,13 +492,13 @@
 												"type": "string"
 											},
 											"grade": {
-												"type": "string"
+												"$ref": "#/components/schemas/Translation"
 											},
 											"status": {
 												"$ref": "#/components/schemas/EntityStatus"
 											},
 											"scheme": {
-												"type": "string"
+												"$ref": "#/components/schemas/Translation"
 											},
 											"id": {
 												"type": "string"
@@ -608,43 +607,13 @@
 														"example": ["electronics"]
 													},
 													"title": {
-														"type": "object",
-														"properties": {
-															"en": {
-																"type": "string",
-																"example": "Discount on gadgets"
-															},
-															"ar": {
-																"type": "string",
-																"example": "خصم على الأدوات"
-															}
-														}
+														"$ref": "#/components/schemas/Translation"
 													},
 													"terms_and_conditions": {
-														"type": "object",
-														"properties": {
-															"en": {
-																"type": "string",
-																"example": "Limited time offer"
-															},
-															"ar": {
-																"type": "string",
-																"example": "عرض لفترة محدودة"
-															}
-														}
+														"$ref": "#/components/schemas/Translation"
 													},
 													"description": {
-														"type": "object",
-														"properties": {
-															"en": {
-																"type": "string",
-																"example": "Save 20% on all gadgets"
-															},
-															"ar": {
-																"type": "string",
-																"example": "وفر 20٪ على جميع الأدوات"
-															}
-														}
+														"$ref": "#/components/schemas/Translation"
 													},
 													"logo": {
 														"$ref": "#/components/schemas/OfferLogo"
@@ -728,6 +697,17 @@
 			"EntityStatus": {
 				"type": "string",
 				"enum": ["enabled", "disabled"]
+			},
+			"Translation": {
+				"type": "object",
+				"properties": {
+					"en": {
+						"type": "string"
+					},
+					"ar": {
+						"type": "string"
+					}
+				}
 			},
 			"BankType": {
 				"type": "string",
