@@ -40,29 +40,8 @@ export class CardsRepository {
 			},
 		},
 		{
-			$lookup: {
-				from: "banks",
-				localField: "bank",
-				foreignField: "_id",
-				as: "bank",
-			},
-		},
-		{
-			$unwind: {
-				path: "$bank",
-				preserveNullAndEmptyArrays: true,
-			},
-		},
-		{
 			$project: {
-				bank: {
-					_id: 1,
-					country: 1,
-					type: 1,
-					name: 1,
-					logo: 1,
-					status: 1,
-				},
+				cards: 0,
 				offers: 0,
 			},
 		},
