@@ -40,9 +40,20 @@ export class CardsRepository {
 			},
 		},
 		{
+			$lookup: {
+				from: "banks",
+				localField: "bank",
+				foreignField: "_id",
+				as: "bank",
+			},
+		},
+		{
 			$project: {
 				cards: 0,
 				offers: 0,
+				bank: {
+					cards: 0,
+				},
 			},
 		},
 	];
