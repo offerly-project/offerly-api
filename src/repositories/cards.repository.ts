@@ -48,12 +48,22 @@ export class CardsRepository {
 			},
 		},
 		{
+			$unwind: {
+				path: "$bank",
+				preserveNullAndEmptyArrays: true,
+			},
+		},
+		{
 			$project: {
-				cards: 0,
-				offers: 0,
 				bank: {
-					cards: 0,
+					_id: 1,
+					country: 1,
+					type: 1,
+					name: 1,
+					logo: 1,
+					status: 1,
 				},
+				offers: 0,
 			},
 		},
 	];
