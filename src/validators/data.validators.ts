@@ -14,6 +14,7 @@ export const validateCountries = async (countries: string[] | string) => {
 
 export const validateCategories = async (categories: string[] | string) => {
 	const CATEGORIES = await ConstantsService.getCategories();
+	console.log(categories, CATEGORIES);
 	if (typeof categories === "string") {
 		return CATEGORIES.includes(categories);
 	}

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { offersController } from "../controllers/offers.controller";
 import { authorizeUser } from "../middlewares/auth.middleware";
+import { queryMiddleware } from "../middlewares/query.middleware";
 import { validateRequest } from "../utils/utils";
 import {
 	createOfferSchema,
@@ -25,6 +26,7 @@ export const offersUserRouter = Router();
 offersUserRouter.get(
 	"/",
 	authorizeUser,
+	queryMiddleware,
 	validateRequest(getUserOffersSchema),
 	offersController.getUserOffersHandler
 );
