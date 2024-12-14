@@ -28,31 +28,42 @@ export class BanksRepository {
 				as: "cards",
 			},
 		},
+
 		{
-			$unwind: "$cards",
+			$lookup: {
+				from: "banks",
+				localField: "_id",
+				foreignField: "_id",
+				as: "bank",
+			},
+		},
+
+		{
+			$unwind: "$bank",
 		},
 		{
-			$replaceRoot: {
-				newRoot: "$cards",
+			$project: {
+				_id: 0,
+				bank: {
+					name: "$bank.name",
+					logo: "$bank.logo",
+					country: "$bank.country",
+					type: "$bank.type",
+					status: "$bank.status",
+					_id: "$bank._id",
+				},
+				cards: 1,
 			},
 		},
 		{
 			$project: {
-				_id: 1,
-				name: 1,
-				logo: 1,
-				scheme: 1,
-				grade: 1,
-				status: 1,
-			},
-		},
-		{
-			$project: {
-				offers: 0,
+				cards: {
+					bank: 0,
+					offers: 0,
+				},
 			},
 		},
 	];
-
 	private _userBanksPipeline: Document[] = [
 		{
 			$project: {
@@ -150,7 +161,7 @@ export class BanksRepository {
 	}
 
 	async getCardsByBankId(id: string) {
-		return this.collection
+		const docs = await this.collection
 			.aggregate([
 				{
 					$match: {
@@ -160,6 +171,7 @@ export class BanksRepository {
 				...this._bankCardsPipeline,
 			])
 			.toArray();
+		return docs[0];
 	}
 }
 

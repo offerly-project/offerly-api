@@ -350,27 +350,55 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "array",
-									"items": {
-										"type": "object",
-										"properties": {
-											"name": {
-												"$ref": "#/components/schemas/Translation"
-											},
-											"logo": {
-												"$ref": "#/components/schemas/CardLogo"
-											},
-											"scheme": {
-												"$ref": "#/components/schemas/Translation"
-											},
-											"id": {
-												"type": "string"
-											},
-											"status": {
-												"$ref": "#/components/schemas/EntityStatus"
-											},
-											"grade": {
-												"$ref": "#/components/schemas/Translation"
+									"type": "object",
+									"properties": {
+										"bank": {
+											"type": "object",
+											"properties": {
+												"name": {
+													"$ref": "#/components/schemas/Translation"
+												},
+												"logo": {
+													"$ref": "#/components/schemas/BankLogo"
+												},
+												"country": {
+													"type": "string"
+												},
+												"type": {
+													"$ref": "#/components/schemas/BankType"
+												},
+												"status": {
+													"$ref": "#/components/schemas/EntityStatus"
+												},
+												"id": {
+													"type": "string"
+												}
+											}
+										},
+										"cards": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"name": {
+														"$ref": "#/components/schemas/Translation"
+													},
+													"logo": {
+														"$ref": "#/components/schemas/CardLogo"
+													},
+													"scheme": {
+														"$ref": "#/components/schemas/Translation"
+													},
+													"id": {
+														"type": "string"
+													},
+													"status": {
+														"$ref": "#/components/schemas/EntityStatus"
+													},
+													"grade": {
+														"$ref": "#/components/schemas/Translation"
+													}
+												}
 											}
 										}
 									}
@@ -489,7 +517,24 @@
 												"$ref": "#/components/schemas/CardLogo"
 											},
 											"bank": {
-												"type": "string"
+												"type": "object",
+												"properties": {
+													"country": {
+														"type": "string"
+													},
+													"type": {
+														"$ref": "#/components/schemas/BankType"
+													},
+													"name": {
+														"$ref": "#/components/schemas/Translation"
+													},
+													"logo": {
+														"$ref": "#/components/schemas/BankLogo"
+													},
+													"status": {
+														"$ref": "#/components/schemas/EntityStatus"
+													}
+												}
 											},
 											"grade": {
 												"$ref": "#/components/schemas/Translation"

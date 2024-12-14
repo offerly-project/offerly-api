@@ -45,6 +45,25 @@ export class CardsRepository {
 				offers: 0,
 			},
 		},
+		{
+			$lookup: {
+				from: "banks",
+				localField: "bank",
+				foreignField: "_id",
+				as: "bank",
+			},
+		},
+		{
+			$unwind: "$bank",
+		},
+		{
+			$project: {
+				bank: {
+					cards: 0,
+					_id: 0,
+				},
+			},
+		},
 	];
 
 	constructor() {
