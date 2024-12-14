@@ -60,7 +60,6 @@ export class CardsRepository {
 			$project: {
 				bank: {
 					cards: 0,
-					_id: 0,
 				},
 			},
 		},
