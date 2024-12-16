@@ -11,7 +11,7 @@ export const createOfferSchema = z.object({
 		logo: z.string().optional(),
 		discount_code: z.string().optional(),
 		starting_date: z.coerce.date().optional(),
-		expiry_date: z.coerce.date({ message: "Expiry date is required" }),
+		expiry_date: z.string(),
 		minimum_amount: z
 			.number({ message: "Minimum amount is required" })
 			.optional(),
@@ -35,9 +35,7 @@ export const updateOfferSchema = z.object({
 		logo: z.string().optional(),
 		discount_code: z.string().optional(),
 		starting_date: z.coerce.date().optional(),
-		expiry_date: z.coerce
-			.date({ message: "Expiry date is required" })
-			.optional(),
+		expiry_date: z.string().optional(),
 		minimum_amount: z
 			.number({ message: "Minimum amount is required" })
 			.optional(),
