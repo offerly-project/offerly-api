@@ -108,6 +108,7 @@ export class OffersRepositry {
 									cap: 1,
 									channels: 1,
 									starting_date: 1,
+									categories: 1,
 								},
 							},
 						],
