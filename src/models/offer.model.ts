@@ -16,7 +16,6 @@ export interface IOffer extends Document {
 	cap?: number;
 	status: EntityStatus;
 	channels: OfferChannel[];
-
 	categories: string[];
 	applicable_cards: ObjectId[];
 }

@@ -106,7 +106,7 @@ export class OffersRepositry {
 									expiry_date: 1,
 									minimum_amount: 1,
 									cap: 1,
-									channel: 1,
+									channels: 1,
 									starting_date: 1,
 								},
 							},
