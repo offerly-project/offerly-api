@@ -409,6 +409,169 @@
 				}
 			}
 		},
+		"/user/favorites": {
+			"patch": {
+				"summary": "patch user favorite offers",
+				"tags": ["cards"],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"offers": {
+										"type": "array",
+										"items": {
+											"type": "string",
+											"example": ["12451231", "5231312"]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "user offers patched (appended)",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "User offers updated"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"summary": "delete user offers",
+				"tags": ["cards"],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "user offers deleted",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "User offers deleted"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"in": "query",
+						"name": "offers",
+						"schema": {
+							"type": "string"
+						},
+						"description": "offers ids separated by commas"
+					}
+				]
+			},
+			"get": {
+				"summary": "get user favorites",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"tags": ["cards"],
+				"responses": {
+					"200": {
+						"description": "Successful response with a list of offers.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string",
+												"format": "objectId",
+												"example": "6482d6b5e9c8f8b5f3c781d4"
+											},
+											"applicable_cards": {
+												"type": "array",
+												"items": {
+													"type": "string",
+													"format": "objectId"
+												},
+												"example": ["6482d6b5e9c8f8b5f3c781d5"]
+											},
+											"categories": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												},
+												"example": ["electronics"]
+											},
+											"title": {
+												"$ref": "#/components/schemas/Translation"
+											},
+											"terms_and_conditions": {
+												"$ref": "#/components/schemas/Translation"
+											},
+											"description": {
+												"$ref": "#/components/schemas/Translation"
+											},
+											"logo": {
+												"$ref": "#/components/schemas/OfferLogo"
+											},
+											"offer_source_link": {
+												"type": "string"
+											},
+											"status": {
+												"$ref": "#/components/schemas/EntityStatus"
+											},
+											"expiry_date": {
+												"type": "string"
+											},
+											"minimum_amount": {
+												"type": "string"
+											},
+											"cap": {
+												"type": "string"
+											},
+											"channel": {
+												"type": "string"
+											},
+											"starting_date": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/user/cards": {
 			"patch": {
 				"summary": "patch user cards",
