@@ -19,7 +19,7 @@ export const createOfferSchema = z.object({
 		channels: z.array(z.enum(channels)),
 		categories: z
 			.array(z.string({ message: "Categories are required" }))
-			.refine(validateCategories),
+			.refine(validateCategories()),
 		applicable_cards: z.array(z.string({ message: "Cards are required" })),
 		title: languagesSchema,
 	}),
@@ -43,7 +43,7 @@ export const updateOfferSchema = z.object({
 		channels: z.enum(channels).optional(),
 		categories: z
 			.array(z.string({ message: "Categories are required" }))
-			.refine(validateCategories),
+			.refine(validateCategories()),
 		applicable_cards: z
 			.array(z.string({ message: "Card IDs are required" }))
 			.optional(),
@@ -59,7 +59,7 @@ export const getUserOffersSchema = z.object({
 	query: z.object({
 		card: z.string(),
 		q: z.string().optional(),
-		category: z.string().refine(validateCategories),
+		category: z.string().optional().refine(validateCategories(true)),
 		page: z.string().refine((value) => {
 			if (!isNumber(+value)) {
 				return false;
