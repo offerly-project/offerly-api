@@ -1,3 +1,4 @@
+import { isNumber } from "lodash";
 import { z } from "zod";
 import { ConstantsService } from "../services/constants.service";
 
@@ -28,3 +29,16 @@ export const languagesSchema = z.object({
 	en: z.string({ message: "English  is required" }).min(1),
 	ar: z.string({ message: "Arabic  is required" }).min(1),
 });
+
+export const commaSeparatedStringSchema = (message: string) =>
+	z.string({ message: "Card ID is required" }).refine(
+		(value) => {
+			const values = value.split(",");
+			const allNumbers = values.every((val) => isNumber(Number(val)));
+
+			return allNumbers;
+		},
+		{
+			message,
+		}
+	);

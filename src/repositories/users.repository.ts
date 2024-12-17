@@ -5,6 +5,25 @@ import { IUser } from "../models/user.model";
 
 export class UsersRepository {
 	collection: Collection<IUser>;
+
+	private _favoritesPipeline = [
+		{
+			$lookup: {
+				from: "offers",
+				localField: "favorites",
+				foreignField: "_id",
+				as: "favorites",
+			},
+		},
+		{
+			$project: {
+				favorites: {
+					applicable_cards: 0,
+				},
+			},
+		},
+	];
+
 	constructor(db: Database) {
 		this.collection = db.getCollection("users");
 	}
@@ -54,6 +73,37 @@ export class UsersRepository {
 		if (result.modifiedCount === 0) {
 			throw new InternalServerError("Cards not removed");
 		}
+	}
+	async getFavoriteOffers(userId: string) {
+		return this.collection
+			.aggregate([
+				{
+					$match: {
+						_id: new ObjectId(userId),
+					},
+				},
+				...this._favoritesPipeline,
+			])
+			.toArray();
+	}
+
+	async patchFavoriteOffers(userId: string, offers: string[]) {
+		await this.collection.updateOne(
+			{ _id: new ObjectId(userId) },
+			{
+				$set: {
+					favorites: offers.map((offer) => new ObjectId(offer)),
+				},
+			}
+		);
+	}
+
+	async removeFavoriteOffers(userId: string, offers: string[]) {
+		await this.collection.updateOne({ _id: new ObjectId(userId) }, {
+			$pull: {
+				favorites: { $in: offers.map((offer) => new ObjectId(offer)) },
+			},
+		} as unknown as PullOperator<IUser>);
 	}
 }
 

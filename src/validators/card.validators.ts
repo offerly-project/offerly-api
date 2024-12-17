@@ -1,7 +1,6 @@
-import { isNumber } from "lodash";
 import { z } from "zod";
 import { entityStatuses } from "../constants";
-import { languagesSchema } from "./data.validators";
+import { commaSeparatedStringSchema, languagesSchema } from "./data.validators";
 
 export const createCardSchema = z.object({
 	body: z.object({
@@ -41,17 +40,7 @@ export type MutateUserCardsBodyData = z.infer<
 
 export const deleteCardSchema = z.object({
 	query: z.object({
-		cards: z.string({ message: "Card ID is required" }).refine(
-			(value) => {
-				const values = value.split(",");
-				const allNumbers = values.every((val) => isNumber(Number(val)));
-
-				return allNumbers;
-			},
-			{
-				message: "card ids should be separated by commas",
-			}
-		),
+		cards: commaSeparatedStringSchema("card ids should be separated by commas"),
 	}),
 });
 

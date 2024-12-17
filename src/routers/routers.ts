@@ -6,6 +6,7 @@ import { signupUserSchema } from "../validators/users.validators";
 import { adminAuthRouter, userAuthRouter } from "./auth.router";
 import { banksAdminRouter, banksUserRouter } from "./banks.router";
 import { cardsAdminRouter, cardsUserRouter } from "./cards.router";
+import { userFavoriteOffersRouter } from "./favorites.router";
 import { offersAdminRouter, offersUserRouter } from "./offers.router";
 
 export const adminRouter = Router();
@@ -27,6 +28,8 @@ userRouter.use("/banks", banksUserRouter);
 userRouter.use("/cards", cardsUserRouter);
 
 userRouter.use("/offers", offersUserRouter);
+
+userRouter.use("/favorites", userFavoriteOffersRouter);
 
 userRouter.post(
 	"/signup",
