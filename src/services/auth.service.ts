@@ -40,6 +40,7 @@ export class UserAuthService {
 			user: {
 				email: user.email,
 				full_name: user.full_name,
+				favorites: user.favorites,
 			},
 		};
 	}
