@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.cardsUserRouter = exports.cardsAdminRouter = void 0;
+const express_1 = require("express");
+const cards_controller_1 = require("../controllers/cards.controller");
+const auth_middleware_1 = require("../middlewares/auth.middleware");
+const utils_1 = require("../utils/utils");
+const card_validators_1 = require("../validators/card.validators");
+exports.cardsAdminRouter = (0, express_1.Router)();
+exports.cardsAdminRouter.get("/", cards_controller_1.cardsAdminController.getCardsHandler);
+exports.cardsAdminRouter.get("/:id", cards_controller_1.cardsAdminController.getCardHandler);
+exports.cardsAdminRouter.post("/", (0, utils_1.validateRequest)(card_validators_1.createCardSchema), cards_controller_1.cardsAdminController.createCardHandler);
+exports.cardsAdminRouter.patch("/:id", (0, utils_1.validateRequest)(card_validators_1.updateCardSchema), cards_controller_1.cardsAdminController.updateCardHandler);
+exports.cardsUserRouter = (0, express_1.Router)();
+exports.cardsUserRouter.get("/", auth_middleware_1.authorizeUser, cards_controller_1.cardsUserController.getUserCardsHandler);
+exports.cardsUserRouter.patch("/", auth_middleware_1.authorizeUser, (0, utils_1.validateRequest)(card_validators_1.patchUserCardsschema), cards_controller_1.cardsUserController.patchUserCardsHandler);
+exports.cardsUserRouter.delete("/", auth_middleware_1.authorizeUser, (0, utils_1.validateRequest)(card_validators_1.deleteCardSchema), cards_controller_1.cardsUserController.deleteUserCardsHandler);

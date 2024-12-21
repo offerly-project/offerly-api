@@ -1,0 +1,925 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Offerly User API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/health": {
+            "get": {
+                "summary": "check health status",
+                "tags": ["health"],
+                "responses": {
+                    "200": {
+                        "description": "api health check",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "healthy!"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/login": {
+            "post": {
+                "summary": "handles user authentication and granting access",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": ["auth"],
+                "description": "authenticate user",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "logged in"
+                                        },
+                                        "user": {
+                                            "type": "object",
+                                            "properties": {
+                                                "email": {
+                                                    "type": "string"
+                                                },
+                                                "full_name": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/forgot-password": {
+            "post": {
+                "summary": "requesting password reset",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": ["auth"],
+                "responses": {
+                    "200": {
+                        "description": "successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset link sent to your email"
+                                        },
+                                        "timer": {
+                                            "type": "number",
+                                            "description": "Timer in minutes",
+                                            "example": 1
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/auth/reset-password": {
+            "post": {
+                "summary": "password reset",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": ["auth"],
+                "responses": {
+                    "200": {
+                        "description": "password reset successfully response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset link sent to your email"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/signup": {
+            "post": {
+                "summary": "create new account",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "full_name": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "user created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User created successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": ["signup"]
+            }
+        },
+        "/otp/verify": {
+            "post": {
+                "summary": "otp verification",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "otp": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "otp verified",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "OTP verified"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": ["otp"]
+            }
+        },
+        "/user/auth": {
+            "get": {
+                "summary": "check authorization",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": ["auth"],
+                "responses": {
+                    "200": {
+                        "description": "authorized"
+                    }
+                }
+            }
+        },
+        "/user/banks": {
+            "get": {
+                "summary": "get banks",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": ["banks"],
+                "responses": {
+                    "200": {
+                        "description": "list of banks",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "country": {
+                                                "type": "string",
+                                                "example": "UAE"
+                                            },
+                                            "status": {
+                                                "$ref": "#/components/schemas/EntityStatus"
+                                            },
+                                            "name": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "logo": {
+                                                "$ref": "#/components/schemas/BankLogo"
+                                            },
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "type": {
+                                                "$ref": "#/components/schemas/BankType"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/banks/{id}/cards": {
+            "get": {
+                "summary": "get bank cards",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": ["cards"],
+                "responses": {
+                    "200": {
+                        "description": "list of bank cards",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "bank": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "$ref": "#/components/schemas/Translation"
+                                                },
+                                                "logo": {
+                                                    "$ref": "#/components/schemas/BankLogo"
+                                                },
+                                                "country": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "$ref": "#/components/schemas/BankType"
+                                                },
+                                                "status": {
+                                                    "$ref": "#/components/schemas/EntityStatus"
+                                                },
+                                                "id": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "cards": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "$ref": "#/components/schemas/Translation"
+                                                    },
+                                                    "logo": {
+                                                        "$ref": "#/components/schemas/CardLogo"
+                                                    },
+                                                    "scheme": {
+                                                        "$ref": "#/components/schemas/Translation"
+                                                    },
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "status": {
+                                                        "$ref": "#/components/schemas/EntityStatus"
+                                                    },
+                                                    "grade": {
+                                                        "$ref": "#/components/schemas/Translation"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/favorites": {
+            "patch": {
+                "summary": "patch user favorite offers",
+                "tags": ["cards"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "offers": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": ["12451231", "5231312"]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "user offers patched (appended)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User offers updated"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "delete user offers",
+                "tags": ["cards"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "user offers deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User offers deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "offers",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "offers ids separated by commas"
+                    }
+                ]
+            },
+            "get": {
+                "summary": "get user favorites",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": ["cards"],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with a list of offers.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "format": "objectId",
+                                                "example": "6482d6b5e9c8f8b5f3c781d4"
+                                            },
+                                            "applicable_cards": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "format": "objectId"
+                                                },
+                                                "example": ["6482d6b5e9c8f8b5f3c781d5"]
+                                            },
+                                            "categories": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "example": ["electronics"]
+                                            },
+                                            "title": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "terms_and_conditions": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "description": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "logo": {
+                                                "$ref": "#/components/schemas/OfferLogo"
+                                            },
+                                            "offer_source_link": {
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "$ref": "#/components/schemas/EntityStatus"
+                                            },
+                                            "expiry_date": {
+                                                "type": "string"
+                                            },
+                                            "minimum_amount": {
+                                                "type": "string"
+                                            },
+                                            "cap": {
+                                                "type": "string"
+                                            },
+                                            "channel": {
+                                                "type": "string"
+                                            },
+                                            "starting_date": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/cards": {
+            "patch": {
+                "summary": "patch user cards",
+                "tags": ["cards"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "cards": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "example": ["12451231", "5231312"]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "user cards patched (appended)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User cards updated"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "delete user cards",
+                "tags": ["cards"],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "user cards deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User cards deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "cards",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "cards ids separated by commas"
+                    }
+                ]
+            },
+            "get": {
+                "summary": "get user cards",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": ["cards"],
+                "responses": {
+                    "200": {
+                        "description": "cards with their details are returned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "logo": {
+                                                "$ref": "#/components/schemas/CardLogo"
+                                            },
+                                            "bank": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "country": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "$ref": "#/components/schemas/BankType"
+                                                    },
+                                                    "name": {
+                                                        "$ref": "#/components/schemas/Translation"
+                                                    },
+                                                    "logo": {
+                                                        "$ref": "#/components/schemas/BankLogo"
+                                                    },
+                                                    "status": {
+                                                        "$ref": "#/components/schemas/EntityStatus"
+                                                    }
+                                                }
+                                            },
+                                            "grade": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "status": {
+                                                "$ref": "#/components/schemas/EntityStatus"
+                                            },
+                                            "scheme": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "id": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/offers": {
+            "get": {
+                "tags": ["offers"],
+                "summary": "Fetch Offers",
+                "description": "Retrieve offers based on applicable cards, categories, search query, and pagination.",
+                "parameters": [
+                    {
+                        "name": "card",
+                        "in": "query",
+                        "description": "Filter offers by applicable card ID.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "objectId",
+                            "example": "6482d6b5e9c8f8b5f3c781d5"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Filter offers by category.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "electronics"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Specify the page number for pagination.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of offers to return per page.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search query to filter offers by title, terms, or description in any language.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "discount"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response with a list of offers.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "format": "objectId",
+                                                        "example": "6482d6b5e9c8f8b5f3c781d4"
+                                                    },
+                                                    "categories": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        },
+                                                        "example": ["electronics"]
+                                                    },
+                                                    "title": {
+                                                        "$ref": "#/components/schemas/Translation"
+                                                    },
+                                                    "terms_and_conditions": {
+                                                        "$ref": "#/components/schemas/Translation"
+                                                    },
+                                                    "description": {
+                                                        "$ref": "#/components/schemas/Translation"
+                                                    },
+                                                    "logo": {
+                                                        "$ref": "#/components/schemas/OfferLogo"
+                                                    },
+                                                    "offer_source_link": {
+                                                        "type": "string"
+                                                    },
+                                                    "status": {
+                                                        "$ref": "#/components/schemas/EntityStatus"
+                                                    },
+                                                    "expiry_date": {
+                                                        "type": "string"
+                                                    },
+                                                    "minimum_amount": {
+                                                        "type": "string"
+                                                    },
+                                                    "cap": {
+                                                        "type": "string"
+                                                    },
+                                                    "channel": {
+                                                        "type": "string"
+                                                    },
+                                                    "starting_date": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "metadata": {
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer",
+                                                    "description": "Total number of offers matching the filters.",
+                                                    "example": 100
+                                                },
+                                                "page": {
+                                                    "type": "integer",
+                                                    "description": "Current page number.",
+                                                    "example": 1
+                                                },
+                                                "limit": {
+                                                    "type": "integer",
+                                                    "description": "Number of offers per page.",
+                                                    "example": 10
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request parameters."
+                    },
+                    "500": {
+                        "description": "Internal server error."
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BankLogo": {
+                "type": "string",
+                "example": "/banks/---.png"
+            },
+            "CardLogo": {
+                "type": "string",
+                "example": "/cards/---.png"
+            },
+            "OfferLogo": {
+                "type": "string",
+                "example": "/offers/---.png"
+            },
+            "Channel": {
+                "type": "string",
+                "enum": ["online", "in-store"]
+            },
+            "EntityStatus": {
+                "type": "string",
+                "enum": ["enabled", "disabled"]
+            },
+            "Translation": {
+                "type": "object",
+                "properties": {
+                    "en": {
+                        "type": "string"
+                    },
+                    "ar": {
+                        "type": "string"
+                    }
+                }
+            },
+            "BankType": {
+                "type": "string",
+                "enum": ["regular", "digital", "digital-wallet"]
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
