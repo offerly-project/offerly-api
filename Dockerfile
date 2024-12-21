@@ -34,6 +34,7 @@ EXPOSE 8000
 
 RUN apt update && apt install nano
 
-COPY ./templates /app/build/templates
+COPY ./src/templates /app/build/templates
+
 
 CMD ["npm", "run", "start"]
