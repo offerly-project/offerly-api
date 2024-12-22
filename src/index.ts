@@ -24,17 +24,11 @@ dotenv.config();
 
 	app.use(urlencoded({ extended: true }));
 
-	// app.use(queryMiddleware);
-
 	app.use(cookieParser());
 
 	app.use(json());
 
 	app.use(cors(CORS_OPTIONS));
-
-	app.use((req, res) => {
-		res.send(req.query);
-	});
 
 	app.use("/uploads", uploadsRouter);
 
@@ -54,6 +48,7 @@ dotenv.config();
 
 	console.log(env.DATA_DIR);
 	console.log(env.UPLOADS_DIR);
+
 	app.use("/uploads", express.static(env.UPLOADS_DIR));
 	app.use("/static", express.static(env.DATA_DIR));
 
