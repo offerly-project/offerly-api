@@ -8,7 +8,6 @@ import { db } from "./configs/db";
 import { env } from "./configs/env";
 import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
-import { queryMiddleware } from "./middlewares/query.middleware";
 import { otpRouter } from "./routers/otp.router";
 import { adminRouter, userRouter } from "./routers/routers";
 import { uploadsRouter } from "./routers/uploads.router";
@@ -25,7 +24,7 @@ dotenv.config();
 
 	app.use(urlencoded({ extended: true }));
 
-	app.use(queryMiddleware);
+	// app.use(queryMiddleware);
 
 	app.use(cookieParser());
 
