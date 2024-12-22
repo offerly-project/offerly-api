@@ -5,8 +5,12 @@ export const queryMiddleware = (
 	res: Response,
 	next: NextFunction
 ) => {
-	Object.entries(req.query).forEach(([key, value]) => {
-		if (typeof value === "string") req.query[key] = value.replace("and", "&");
-	});
+	const decodedQuery = Object.entries(req.query).reduce((acc, [key, value]) => {
+		acc[key] = decodeURIComponent(value as string);
+		return acc;
+	}, {} as Record<string, string>);
+
+	req.query = decodedQuery;
+
 	next();
 };
