@@ -12,7 +12,7 @@ export interface IOffer extends Document {
 	title: Translation;
 	starting_date?: Date;
 	expiry_date: Date;
-	minimum_amount?: number;
+	minimum_amount?: string;
 	cap?: string;
 	status: EntityStatus;
 	channels: OfferChannel[];

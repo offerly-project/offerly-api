@@ -7,20 +7,16 @@ export const createOfferSchema = z.object({
 	body: z.object({
 		description: languagesSchema,
 		terms_and_conditions: languagesSchema,
-		offer_source_link: z.string({ message: "Offer source link is required" }),
+		offer_source_link: z.string(),
 		logo: z.string().optional(),
 		discount_code: z.string().optional(),
 		starting_date: z.coerce.date().optional(),
 		expiry_date: z.string(),
-		minimum_amount: z
-			.number({ message: "Minimum amount is required" })
-			.optional(),
+		minimum_amount: z.string().optional(),
 		cap: z.string().optional(),
 		channels: z.array(z.enum(channels)),
-		categories: z
-			.array(z.string({ message: "Categories are required" }))
-			.refine(validateCategories()),
-		applicable_cards: z.array(z.string({ message: "Cards are required" })),
+		categories: z.array(z.string()).refine(validateCategories()),
+		applicable_cards: z.array(z.string()),
 		title: languagesSchema,
 	}),
 });
@@ -29,24 +25,16 @@ export const updateOfferSchema = z.object({
 	body: z.object({
 		description: languagesSchema.optional(),
 		terms_and_conditions: languagesSchema.optional(),
-		offer_source_link: z
-			.string({ message: "Offer source link is required" })
-			.optional(),
+		offer_source_link: z.string().optional(),
 		logo: z.string().optional(),
 		discount_code: z.string().optional(),
 		starting_date: z.coerce.date().optional(),
 		expiry_date: z.string().optional(),
-		minimum_amount: z
-			.number({ message: "Minimum amount is required" })
-			.optional(),
+		minimum_amount: z.string().optional(),
 		cap: z.string().optional(),
 		channels: z.enum(channels).optional(),
-		categories: z
-			.array(z.string({ message: "Categories are required" }))
-			.refine(validateCategories()),
-		applicable_cards: z
-			.array(z.string({ message: "Card IDs are required" }))
-			.optional(),
+		categories: z.array(z.string()).optional().refine(validateCategories()),
+		applicable_cards: z.array(z.string()).optional(),
 		status: z.enum(entityStatuses).optional(),
 		title: languagesSchema.optional(),
 	}),

@@ -5,6 +5,7 @@ import { validateRequest } from "../utils/utils";
 import {
 	createOfferSchema,
 	getUserOffersSchema,
+	updateOfferSchema,
 } from "../validators/offer.validators";
 
 export const offersAdminRouter = Router();
@@ -17,7 +18,11 @@ offersAdminRouter.post(
 
 offersAdminRouter.get("/", offersController.getOffersHandler);
 offersAdminRouter.get("/:id", offersController.getOfferHandler);
-offersAdminRouter.patch("/:id", offersController.updateOfferHandler);
+offersAdminRouter.patch(
+	"/:id",
+	validateRequest(updateOfferSchema),
+	offersController.updateOfferHandler
+);
 offersAdminRouter.delete("/:id", offersController.deleteOfferHandler);
 
 export const offersUserRouter = Router();
