@@ -8,5 +8,5 @@ export const otpRouter = Router();
 otpRouter.post(
 	"/verify",
 	validateRequest(otpVerificationSchema),
-	otpController.verifyOtpHandler
+	otpController.verifyUserOtpHandler
 );
