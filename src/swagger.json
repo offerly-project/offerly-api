@@ -262,18 +262,18 @@
 				"tags": ["otp"]
 			}
 		},
-		"/user/auth": {
+		"/user/user": {
 			"get": {
-				"summary": "check authorization",
+				"summary": "get user data",
 				"security": [
 					{
 						"bearerAuth": []
 					}
 				],
-				"tags": ["auth"],
+				"tags": ["user"],
 				"responses": {
 					"200": {
-						"description": "authorized"
+						"description": "retrieve user data"
 					}
 				}
 			}
@@ -798,6 +798,14 @@
 														"type": "string",
 														"format": "objectId",
 														"example": "6482d6b5e9c8f8b5f3c781d4"
+													},
+													"applicable_cards": {
+														"type": "array",
+														"items": {
+															"type": "string",
+															"format": "objectId"
+														},
+														"example": ["6482d6b5e9c8f8b5f3c781d5"]
 													},
 													"categories": {
 														"type": "array",
