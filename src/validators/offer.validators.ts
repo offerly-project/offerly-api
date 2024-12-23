@@ -15,7 +15,7 @@ export const createOfferSchema = z.object({
 		minimum_amount: z
 			.number({ message: "Minimum amount is required" })
 			.optional(),
-		cap: z.number().optional(),
+		cap: z.string().optional(),
 		channels: z.array(z.enum(channels)),
 		categories: z
 			.array(z.string({ message: "Categories are required" }))
@@ -39,7 +39,7 @@ export const updateOfferSchema = z.object({
 		minimum_amount: z
 			.number({ message: "Minimum amount is required" })
 			.optional(),
-		cap: z.number().optional(),
+		cap: z.string().optional(),
 		channels: z.enum(channels).optional(),
 		categories: z
 			.array(z.string({ message: "Categories are required" }))
