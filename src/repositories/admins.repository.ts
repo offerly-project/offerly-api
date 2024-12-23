@@ -1,4 +1,4 @@
-import { Collection } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
 import { db } from "../configs/db";
 import { IAdmin } from "../models/admin.model";
 
@@ -8,14 +8,14 @@ export class AdminsRepository {
 		this.collection = db.getCollection<IAdmin>("admins");
 	}
 
-	async findByEmail(email: string) {
+	async findById(id: string) {
 		const admin = await this.collection.findOne({
-			email,
+			_id: new ObjectId(id),
 		});
 		return admin;
 	}
 
-	async findOneByUsername(username: string) {
+	async findByUsername(username: string) {
 		const admin = await this.collection.findOne({
 			username,
 		});

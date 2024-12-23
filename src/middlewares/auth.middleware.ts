@@ -9,31 +9,35 @@ const _authorize = (roles: UserRole[]) => {
 		res: Response,
 		next: NextFunction
 	) => {
-		const authHeader = req.headers.authorization;
+		try {
+			const authHeader = req.headers.authorization;
 
-		if (!authHeader) {
-			next(new UnauthorizedError("Authorization header is missing"));
-			return;
+			if (!authHeader) {
+				next(new UnauthorizedError("Authorization header is missing"));
+				return;
+			}
+
+			const token = authHeader && authHeader.split(" ")[1];
+
+			if (!token) {
+				next(new UnauthorizedError("Token is missing"));
+				return;
+			}
+
+			const userData = await verifyToken(token!);
+
+			if (roles && !roles.includes(userData.role)) {
+				throw new UnauthorizedError(
+					"You are not authorized to access this resource"
+				);
+			}
+
+			req.user = userData;
+
+			next();
+		} catch (e) {
+			next(e);
 		}
-
-		const token = authHeader && authHeader.split(" ")[1];
-
-		if (!token) {
-			next(new UnauthorizedError("Token is missing"));
-			return;
-		}
-
-		const userData = await verifyToken(token!);
-
-		if (roles && !roles.includes(userData.role)) {
-			throw new UnauthorizedError(
-				"You are not authorized to access this resource"
-			);
-		}
-
-		req.user = userData;
-
-		next();
 	};
 };
 

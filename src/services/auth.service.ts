@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import ejs from "ejs";
+import { omit } from "lodash";
 import path from "path";
 import { env } from "../configs/env";
 import { BadRequestError, NotFoundError } from "../errors/errors";
@@ -11,7 +12,7 @@ import { otpService } from "./otp.service";
 
 export class AdminAuthService {
 	async login(username: string, password: string) {
-		const admin = await adminsRepository.findOneByUsername(username);
+		const admin = await adminsRepository.findByUsername(username);
 		if (!admin) {
 			throw new NotFoundError("User not found");
 		}
@@ -20,7 +21,7 @@ export class AdminAuthService {
 			throw new BadRequestError("Incorrect password");
 		}
 		const token = await generateToken(admin._id.toString(), "admin");
-		return { token, admin: admin.username };
+		return { token, admin: omit(admin, ["password", "_id"]) };
 	}
 }
 
@@ -37,11 +38,7 @@ export class UserAuthService {
 		const token = await generateToken(user._id.toString(), "user");
 		return {
 			token,
-			user: {
-				email: user.email,
-				full_name: user.full_name,
-				favorites: user.favorites,
-			},
+			user: omit(user, ["password", "_id"]),
 		};
 	}
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { usersController } from "../controllers/users.controller";
-import { authorizeAdmin } from "../middlewares/auth.middleware";
+import { authorizeAdmin, authorizeUser } from "../middlewares/auth.middleware";
 import { validateRequest } from "../utils/utils";
 import { signupUserSchema } from "../validators/users.validators";
 import { adminAuthRouter, userAuthRouter } from "./auth.router";
@@ -8,6 +8,7 @@ import { banksAdminRouter, banksUserRouter } from "./banks.router";
 import { cardsAdminRouter, cardsUserRouter } from "./cards.router";
 import { userFavoriteOffersRouter } from "./favorites.router";
 import { offersAdminRouter, offersUserRouter } from "./offers.router";
+import { userAdminRouter, userUserRouter } from "./user.router";
 
 export const adminRouter = Router();
 
@@ -18,6 +19,8 @@ adminRouter.use("/banks", authorizeAdmin, banksAdminRouter);
 adminRouter.use("/cards", authorizeAdmin, cardsAdminRouter);
 
 adminRouter.use("/offers", authorizeAdmin, offersAdminRouter);
+
+adminRouter.use("/user", authorizeAdmin, userAdminRouter);
 
 export const userRouter = Router();
 
@@ -30,6 +33,8 @@ userRouter.use("/cards", cardsUserRouter);
 userRouter.use("/offers", offersUserRouter);
 
 userRouter.use("/favorites", userFavoriteOffersRouter);
+
+userRouter.use("/user", authorizeUser, userUserRouter);
 
 userRouter.post(
 	"/signup",

@@ -28,7 +28,7 @@ const verifyOtpHandler = async (
 
 		const document =
 			role === "admin"
-				? await adminsRepository.findOneByUsername(email)
+				? await adminsRepository.findByUsername(email)
 				: await usersRepository.findByEmail(email);
 
 		if (!document) {

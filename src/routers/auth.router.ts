@@ -43,6 +43,6 @@ userAuthRouter.put(
 	authController.userResetPasswordHandler
 );
 
-adminAuthRouter.get("/", authorizeUser, (req, res) => {
+userAuthRouter.get("/", authorizeUser, (req, res) => {
 	res.status(StatusCodes.OK).send();
 });
