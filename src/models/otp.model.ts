@@ -10,7 +10,7 @@ export class OTP {
 	private intervals = [1, 5, 15, 30, 60].map((minutes) => minutes * 60 * 1000);
 
 	validateOtp(otp: string) {
-		const valid = this.code === otp && this.usable;
+		const valid = +this.code === +otp && this.usable;
 		if (valid) this.setToUnusable();
 		return valid;
 	}
