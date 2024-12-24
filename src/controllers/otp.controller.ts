@@ -19,7 +19,7 @@ const verifyUserOtpHandler = async (
 		if (!userHasOtp) {
 			throw new NotFoundError("OTP not found");
 		}
-		const otpValid = otpService.verifyOtp(email, otp);
+		const otpValid = await otpService.verifyOtp(email, otp);
 
 		if (!otpValid) {
 			throw new BadRequestError("Invalid OTP");

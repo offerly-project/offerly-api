@@ -1,56 +1,62 @@
+import bcrypt from "bcrypt";
 import { randomBytes } from "crypto";
+import { env } from "../configs/env";
+
+export const OTP_EXPIRY = 0.5 * (60 * 1000);
+
+export const OTP_EXPIRY_SECONDS = OTP_EXPIRY / 1000;
+
+export const OTP_LENGTH = 4;
 
 export class OTP {
-	code!: string;
-	requestable: boolean;
-	requestNumber: number;
-	requestTimer!: number;
-	usable: boolean;
+	private _code: string | null = null;
+	private _pending = true;
 
-	private intervals = [1, 5, 15, 30, 60].map((minutes) => minutes * 60 * 1000);
-
-	validateOtp(otp: string) {
-		const valid = +this.code === +otp && this.usable;
-		if (valid) this.setToUnusable();
-		return valid;
-	}
-
-	constructor() {
-		this.requestNumber = 0;
-		this.requestable = true;
-		this.usable = true;
-	}
-
-	setToUnusable() {
-		this.usable = false;
-	}
-
-	private _generateOtp = (length = 4) => {
-		const otpArray = randomBytes(length);
+	private _generateOtp = () => {
+		const otpArray = randomBytes(OTP_LENGTH);
 		return Array.from(otpArray, (num) => num % 10).join("");
 	};
 
-	canRequest() {
-		return this.requestNumber < this.intervals.length;
-	}
-
-	startTimer() {
-		const timer = this.intervals[this.requestNumber];
-		this.requestTimer = timer;
-
-		this.requestable = false;
+	private _startTimer = () => {
 		setTimeout(() => {
-			this.requestable = true;
-			this.requestNumber++;
-		}, timer);
-	}
+			this._code = null;
+			this._pending = false;
+		}, OTP_EXPIRY);
+	};
 
-	requestOtp() {
-		if (!this.canRequest()) throw new Error("Maximum OTP requests reached");
+	init = () => {
+		this._pending = true;
+		return new Promise<{ code: string; expiry: number }>((resolve, reject) => {
+			const otpGenerated = this._generateOtp();
+			bcrypt.hash(otpGenerated, +env.SALT_ROUNDS, (err, hash) => {
+				if (err) {
+					reject(err);
+				}
 
-		const otp = this._generateOtp();
-		this.code = otp;
-		this.startTimer();
-		return otp;
-	}
+				this._code = hash;
+				this._startTimer();
+				resolve({ code: otpGenerated, expiry: OTP_EXPIRY_SECONDS });
+			});
+		});
+	};
+
+	canRequest = () => {
+		return !this._pending;
+	};
+
+	verify = (code: string) => {
+		return new Promise<boolean>((resolve, reject) => {
+			if (!this._code) {
+				resolve(false);
+				return;
+			}
+			bcrypt.compare(code, this._code, (err, same) => {
+				if (err) {
+					reject(err);
+				}
+
+				resolve(same);
+			});
+		});
+	};
 }

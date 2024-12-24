@@ -1,51 +1,41 @@
-import { OTP } from "../models/otp.model";
+import { BadRequestError } from "../errors/errors";
+import { OTP, OTP_EXPIRY_SECONDS } from "../models/otp.model";
 
 export class OTPService {
-	otps: Record<string, OTP> = {};
+	private _otps: Record<string, OTP> = {};
 
-	hasOtp = (email: string) => {
-		return !!this.otps[email];
-	};
-
-	sendOtp = (email: string) => {
-		if (this.otps[email]) {
-			if (this.otps[email].requestable) {
-				this.otps[email].requestOtp();
-				return {
-					code: this.otps[email].code,
-					timer: this.otps[email].requestTimer,
-				};
+	requestOtp = (email: string) => {
+		const otpInstance = this._otps[email];
+		if (otpInstance) {
+			if (otpInstance.canRequest()) {
+				return otpInstance.init();
 			} else {
-				return {
-					code: null,
-					timer: this.otps[email].requestTimer,
-				};
+				throw new BadRequestError(
+					`Please wait for ${OTP_EXPIRY_SECONDS} seconds before requesting another OTP`
+				);
 			}
 		} else {
-			this.otps[email] = new OTP();
-			this.otps[email].requestOtp();
-			setTimeout(() => {
-				this.deleteOtp(email);
-			}, 75 * 60 * 1000);
-			return {
-				code: this.otps[email].code,
-				timer: this.otps[email].requestTimer,
-			};
+			this._otps[email] = new OTP();
+			return this._otps[email].init();
 		}
 	};
 
-	verifyOtp = (email: string, otp: string) => {
-		const userOtp = this.otps[email];
-		if (!userOtp) {
+	hasOtp = (email: string) => {
+		return !!this._otps[email];
+	};
+
+	verifyOtp = async (email: string, code: string) => {
+		const otpInstance = this._otps[email];
+		if (!otpInstance) {
 			return false;
 		}
-		const verified = userOtp.validateOtp(otp);
+		const verified = await otpInstance.verify(code);
+
+		if (verified) {
+			delete this._otps[email];
+		}
 
 		return verified;
-	};
-
-	deleteOtp = async (email: string) => {
-		delete this.otps[email];
 	};
 }
 

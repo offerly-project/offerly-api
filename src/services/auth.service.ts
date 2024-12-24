@@ -43,13 +43,7 @@ export class UserAuthService {
 	}
 
 	async forgotPassword(email: string) {
-		const otp = otpService.sendOtp(email);
-
-		if (otp.code === null) {
-			throw new BadRequestError(
-				`You can request for OTP only after ${otp.timer} milliseconds of the request`
-			);
-		}
+		const otp = await otpService.requestOtp(email);
 
 		const html = await ejs.renderFile(
 			path.join(__dirname, "../templates/otp.ejs"),

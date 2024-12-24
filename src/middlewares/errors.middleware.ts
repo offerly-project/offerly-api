@@ -10,6 +10,7 @@ export const errorsMiddleware = (
 	next: NextFunction
 ) => {
 	console.error(err.toString());
+	console.error(err.stack);
 	if (err instanceof CustomError) {
 		res.status(err.status).send(err.toString());
 	} else if (BSONError.isBSONError(err)) {
