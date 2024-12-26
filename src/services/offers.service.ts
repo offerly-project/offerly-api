@@ -17,6 +17,7 @@ export class OffersService {
 		if (cards.length !== data.applicable_cards.length) {
 			throw new NotFoundError("cards not found");
 		}
+		data.expiry_date = data.expiry_date?.split("/").reverse().join("-");
 
 		const offer: IOffer = removeUndefinedValuesFromObject({
 			description: data.description,
@@ -60,6 +61,7 @@ export class OffersService {
 	}
 
 	async updateOffer(id: string, data: UpdateOfferBodyData) {
+		data.expiry_date = data.expiry_date?.split("/").reverse().join("-");
 		const patchData: Partial<IOffer> = removeUndefinedValuesFromObject({
 			description: data.description,
 			terms_and_conditions: data.terms_and_conditions,
