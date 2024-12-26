@@ -129,7 +129,7 @@
 			}
 		},
 		"/user/auth/reset-password": {
-			"post": {
+			"put": {
 				"summary": "password reset",
 				"security": [
 					{
