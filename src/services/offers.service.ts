@@ -1,3 +1,4 @@
+import moment from "moment";
 import { ObjectId } from "mongodb";
 import { NotFoundError } from "../errors/errors";
 import { IOffer } from "../models/offer.model";
@@ -64,7 +65,9 @@ export class OffersService {
 			description: data.description,
 			terms_and_conditions: data.terms_and_conditions,
 			offer_source_link: data.offer_source_link,
-			expiry_date: data.expiry_date ? new Date(data.expiry_date) : undefined,
+			expiry_date: data.expiry_date
+				? moment(data.expiry_date).toDate()
+				: undefined,
 			minimum_amount: data.minimum_amount,
 			channel: data.channels,
 			categories: data.categories,
@@ -72,7 +75,7 @@ export class OffersService {
 			logo: data.logo,
 			discount_code: data.discount_code,
 			starting_date: data.starting_date
-				? new Date(data.starting_date)
+				? moment(data.starting_date).toDate()
 				: undefined,
 			cap: data.cap,
 			status: data.status,
