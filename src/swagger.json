@@ -115,9 +115,9 @@
 											"type": "string",
 											"example": "Password reset link sent to your email"
 										},
-										"timer": {
+										"expiry": {
 											"type": "number",
-											"description": "Timer in minutes",
+											"description": "Timer in seconds",
 											"example": 1
 										}
 									}
@@ -129,7 +129,7 @@
 			}
 		},
 		"/user/auth/reset-password": {
-			"put": {
+			"post": {
 				"summary": "password reset",
 				"security": [
 					{
@@ -165,6 +165,59 @@
 										},
 										"token": {
 											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/user": {
+			"get": {
+				"summary": "get user data",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"tags": ["user"],
+				"responses": {
+					"200": {
+						"description": "retrieve user data"
+					}
+				}
+			},
+			"patch": {
+				"tags": ["user"],
+				"summary": "patch user data",
+				"requestBody": {
+					"content": {
+						"applicaton/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"full_name": {
+										"type": "string",
+										"example": "John Doe"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "user patched",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "User data patched"
 										}
 									}
 								}
@@ -260,22 +313,6 @@
 					}
 				},
 				"tags": ["otp"]
-			}
-		},
-		"/user/user": {
-			"get": {
-				"summary": "get user data",
-				"security": [
-					{
-						"bearerAuth": []
-					}
-				],
-				"tags": ["user"],
-				"responses": {
-					"200": {
-						"description": "retrieve user data"
-					}
-				}
 			}
 		},
 		"/user/banks": {

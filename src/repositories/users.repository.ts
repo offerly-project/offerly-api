@@ -105,6 +105,15 @@ export class UsersRepository {
 			},
 		} as unknown as PullOperator<IUser>);
 	}
+	async update(userId: string, data: Partial<IUser>) {
+		const result = await this.collection.updateOne(
+			{ _id: new ObjectId(userId) },
+			{ $set: data }
+		);
+		if (result.modifiedCount === 0) {
+			throw new InternalServerError("User not updated");
+		}
+	}
 }
 
 export const usersRepository = new UsersRepository(db);

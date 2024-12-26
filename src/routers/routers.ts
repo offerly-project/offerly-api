@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { usersController } from "../controllers/users.controller";
+import { userController } from "../controllers/user.controller";
 import { authorizeAdmin, authorizeUser } from "../middlewares/auth.middleware";
 import { validateRequest } from "../utils/utils";
-import { signupUserSchema } from "../validators/users.validators";
+import { signupUserSchema } from "../validators/user.validators";
 import { adminAuthRouter, userAuthRouter } from "./auth.router";
 import { banksAdminRouter, banksUserRouter } from "./banks.router";
 import { cardsAdminRouter, cardsUserRouter } from "./cards.router";
@@ -39,5 +39,5 @@ userRouter.use("/user", authorizeUser, userUserRouter);
 userRouter.post(
 	"/signup",
 	validateRequest(signupUserSchema),
-	usersController.createUserHandler
+	userController.createUserHandler
 );

@@ -8,7 +8,11 @@ import {
 import { IUser } from "../models/user.model";
 import { cardsRepository } from "../repositories/cards.repository";
 import { usersRepository } from "../repositories/users.repository";
-import { SignupUserBodyData } from "../validators/users.validators";
+import { removeUndefinedValuesFromObject } from "../utils/utils";
+import {
+	PatchUserBodyData,
+	SignupUserBodyData,
+} from "../validators/user.validators";
 
 export class UsersService {
 	async signupUser(body: SignupUserBodyData) {
@@ -53,6 +57,17 @@ export class UsersService {
 			throw new NotFoundError("cards not found");
 		}
 		await usersRepository.removeCards(userId, cards);
+	}
+
+	async updateUser(userId: string, data: Partial<PatchUserBodyData>) {
+		const user = await usersRepository.findById(userId);
+		if (!user) {
+			throw new NotFoundError("User not found");
+		}
+		const userPatch: Partial<IUser> = removeUndefinedValuesFromObject({
+			full_name: data.full_name,
+		});
+		await usersRepository.update(userId, userPatch);
 	}
 }
 
