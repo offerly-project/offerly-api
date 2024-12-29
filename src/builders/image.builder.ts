@@ -12,14 +12,14 @@ export class ImageBuilder {
 		if (isNaN(width) || isNaN(height)) {
 			throw new Error("Invalid dimensions");
 		}
-		const dominant = await this._image.stats();
+
 		this._image.resize(width, height, {
 			fit: "contain",
 			background: {
-				r: dominant.dominant.r,
-				g: dominant.dominant.g,
-				b: dominant.dominant.b,
-				alpha: 1,
+				r: 0,
+				g: 0,
+				b: 0,
+				alpha: 0,
 			},
 		});
 	}
