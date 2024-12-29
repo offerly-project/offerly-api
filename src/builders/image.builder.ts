@@ -11,7 +11,10 @@ export class ImageBuilder {
 		if (isNaN(width) || isNaN(height)) {
 			throw new Error("Invalid dimensions");
 		}
-		this._image.resize(width, height);
+		this._image.resize(width, height, {
+			fit: "contain",
+			background: { r: 0, g: 0, b: 0, alpha: 0 },
+		});
 	}
 
 	build() {
