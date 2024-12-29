@@ -29,3 +29,5 @@ userUserRouter.patch(
 	validateRequest(patchUserSchema),
 	userController.patchUserHandler
 );
+
+userUserRouter.delete("/", authorizeUser, userController.deleteUserHandler);

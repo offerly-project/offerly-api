@@ -9,6 +9,7 @@ import { usersRepository } from "../repositories/users.repository";
 import { generateToken, validatePassword } from "../utils/utils";
 import { mailService } from "./mail.service";
 import { otpService } from "./otp.service";
+import { ANNONYMOUS_KEY } from "./users.service";
 
 export class AdminAuthService {
 	async login(username: string, password: string) {
@@ -27,6 +28,9 @@ export class AdminAuthService {
 
 export class UserAuthService {
 	async login(email: string, password: string) {
+		if (email === ANNONYMOUS_KEY) {
+			throw new BadRequestError("Anonymous user cannot login");
+		}
 		const user = await usersRepository.findByEmail(email);
 		if (!user) {
 			throw new NotFoundError("User not found");

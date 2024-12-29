@@ -38,7 +38,23 @@ const patchUserHandler = async (
 	}
 };
 
+const deleteUserHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { user } = req;
+		const id = user.id;
+		await usersService.deleteUser(id);
+		res.status(200).send({ message: "User deleted successfully" });
+	} catch (e) {
+		next(e);
+	}
+};
+
 export const userController = {
 	createUserHandler,
 	patchUserHandler,
+	deleteUserHandler,
 };

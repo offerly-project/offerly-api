@@ -175,6 +175,20 @@
 			}
 		},
 		"/user/user": {
+			"delete": {
+				"summary": "delete user",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"tags": ["user"],
+				"responses": {
+					"200": {
+						"description": "user deleted"
+					}
+				}
+			},
 			"get": {
 				"summary": "get user data",
 				"security": [
