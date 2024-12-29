@@ -68,7 +68,7 @@ export const imageUploadMiddleware =
 				const imageBuffer = fs.readFileSync(oldPath);
 				const builder = new ImageBuilder(imageBuffer);
 				if (payload.dims) {
-					builder.withDimensions(payload.dims);
+					await builder.withDimensions(payload.dims);
 				}
 				await builder.build().toFile(targetPath);
 				res

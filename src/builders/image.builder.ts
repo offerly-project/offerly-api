@@ -6,14 +6,21 @@ export class ImageBuilder {
 	constructor(buffer: Buffer) {
 		this._image = sharp(buffer);
 	}
-	withDimensions(dims: ImageDimensions) {
+
+	async withDimensions(dims: ImageDimensions) {
 		const [width, height] = dims.split("x").map(Number);
 		if (isNaN(width) || isNaN(height)) {
 			throw new Error("Invalid dimensions");
 		}
+		const dominant = await this._image.stats();
 		this._image.resize(width, height, {
 			fit: "contain",
-			background: { r: 0, g: 0, b: 0, alpha: 0 },
+			background: {
+				r: dominant.dominant.r,
+				g: dominant.dominant.g,
+				b: dominant.dominant.b,
+				alpha: 1,
+			},
 		});
 	}
 
