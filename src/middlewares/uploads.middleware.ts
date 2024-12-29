@@ -14,6 +14,7 @@ export type ImageUploadPayload = {
 	image: formidable.File;
 	path: string;
 	dims?: ImageDimensions;
+	fit?: boolean;
 };
 
 type ImageUploadMiddlwareOptions = {
@@ -68,7 +69,7 @@ export const imageUploadMiddleware =
 				const imageBuffer = fs.readFileSync(oldPath);
 				const builder = new ImageBuilder(imageBuffer);
 				if (payload.dims) {
-					await builder.withDimensions(payload.dims);
+					await builder.withDimensions(payload.dims, payload.fit || false);
 				}
 				await builder.build().toFile(targetPath);
 				res

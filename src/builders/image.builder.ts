@@ -7,21 +7,25 @@ export class ImageBuilder {
 		this._image = sharp(buffer);
 	}
 
-	async withDimensions(dims: ImageDimensions) {
+	async withDimensions(dims: ImageDimensions, fit: boolean) {
 		const [width, height] = dims.split("x").map(Number);
 		if (isNaN(width) || isNaN(height)) {
 			throw new Error("Invalid dimensions");
 		}
 
-		this._image.resize(width, height, {
-			fit: "contain",
-			background: {
-				r: 0,
-				g: 0,
-				b: 0,
-				alpha: 0,
-			},
-		});
+		if (fit) {
+			this._image.resize(width, height, {
+				fit: "contain",
+				background: {
+					r: 0,
+					g: 0,
+					b: 0,
+					alpha: 0,
+				},
+			});
+		} else {
+			this._image.resize(width, height);
+		}
 	}
 
 	build() {
