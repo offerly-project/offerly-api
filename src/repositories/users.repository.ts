@@ -88,11 +88,13 @@ export class UsersRepository {
 	}
 
 	async patchFavoriteOffers(userId: string, offers: string[]) {
+		const favoriteObjectIds = offers.map((offer) => new ObjectId(offer));
+
 		await this.collection.updateOne(
 			{ _id: new ObjectId(userId) },
 			{
-				$set: {
-					favorites: offers.map((offer) => new ObjectId(offer)),
+				$addToSet: {
+					favorites: { $each: favoriteObjectIds },
 				},
 			}
 		);
