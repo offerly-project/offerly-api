@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { randomBytes } from "crypto";
 import { env } from "../configs/env";
+import { JWTPermissions } from "../utils/utils";
 
 export const OTP_EXPIRY = 0.5 * (60 * 1000);
 
@@ -11,6 +12,7 @@ export const OTP_LENGTH = 4;
 export class OTP {
 	private _code: string | null = null;
 	private _pending = true;
+	permissions: JWTPermissions[] = [];
 
 	private _generateOtp = () => {
 		const otpArray = randomBytes(OTP_LENGTH);
@@ -23,6 +25,12 @@ export class OTP {
 			this._pending = false;
 		}, OTP_EXPIRY);
 	};
+
+	constructor(permissions: JWTPermissions[]) {
+		console.log(permissions);
+
+		this.permissions = permissions;
+	}
 
 	init = () => {
 		this._pending = true;

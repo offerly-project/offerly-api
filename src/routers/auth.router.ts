@@ -1,10 +1,9 @@
 import { Router } from "express";
 import { authController } from "../controllers/auth.controller";
-import { authorizeUser } from "../middlewares/auth.middleware";
+import { authorizeUserWithActions } from "../middlewares/auth.middleware";
 import { validateRequest } from "../utils/utils";
 import {
 	adminLoginSchema,
-	userForgotPasswordSchema,
 	userLoginSchema,
 	userResetPasswordSchema,
 } from "../validators/auth.validators";
@@ -25,15 +24,9 @@ userAuthRouter.post(
 	authController.userLoginHandler
 );
 
-userAuthRouter.post(
-	"/forgot-password",
-	validateRequest(userForgotPasswordSchema),
-	authController.userForgotPasswordHandler
-);
-
 userAuthRouter.put(
 	"/reset-password",
-	authorizeUser,
+	authorizeUserWithActions(["password-reset", "all"]),
 	validateRequest(userResetPasswordSchema),
 	authController.userResetPasswordHandler
 );

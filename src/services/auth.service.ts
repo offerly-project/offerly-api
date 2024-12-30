@@ -1,14 +1,10 @@
 import bcrypt from "bcrypt";
-import ejs from "ejs";
 import { omit } from "lodash";
-import path from "path";
 import { env } from "../configs/env";
 import { BadRequestError, NotFoundError } from "../errors/errors";
 import { adminsRepository } from "../repositories/admins.repository";
 import { usersRepository } from "../repositories/users.repository";
 import { generateToken, validatePassword } from "../utils/utils";
-import { mailService } from "./mail.service";
-import { otpService } from "./otp.service";
 import { ANNONYMOUS_KEY } from "./users.service";
 
 export class AdminAuthService {
@@ -21,7 +17,7 @@ export class AdminAuthService {
 		if (!validPassword) {
 			throw new BadRequestError("Incorrect password");
 		}
-		const token = await generateToken(admin._id.toString(), "admin");
+		const token = await generateToken(admin._id.toString(), "admin", ["all"]);
 		return { token, admin: omit(admin, ["password", "_id"]) };
 	}
 }
@@ -39,27 +35,32 @@ export class UserAuthService {
 		if (!validPassword) {
 			throw new BadRequestError("Incorrect password");
 		}
-		const token = await generateToken(user._id.toString(), "user");
+		const token = await generateToken(user._id.toString(), "user", ["all"]);
 		return {
 			token,
 			user: omit(user, ["password", "_id"]),
 		};
 	}
 
-	async forgotPassword(email: string) {
-		const otp = await otpService.requestOtp(email);
-
-		const html = await ejs.renderFile(
-			path.join(__dirname, "../templates/otp.ejs"),
-			{ otp: otp.code }
-		);
-		mailService.sendMail(email, "Password Reset OTP", html);
-		return otp;
-	}
-
 	async changePassword(id: string, password: string) {
 		const hash = await bcrypt.hash(password, +env.SALT_ROUNDS);
 		await usersRepository.updatePassword(id, hash);
+	}
+
+	async changePasswordWithOldPassword(
+		id: string,
+		oldPassword: string,
+		newPassword: string
+	) {
+		const user = await usersRepository.findById(id);
+		if (!user) {
+			throw new NotFoundError("User not found");
+		}
+		const validPassword = await validatePassword(oldPassword, user.password);
+		if (!validPassword) {
+			throw new BadRequestError("Incorrect password");
+		}
+		this.changePassword(id, newPassword);
 	}
 }
 

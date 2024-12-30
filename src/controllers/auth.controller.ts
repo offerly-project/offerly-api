@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { BadRequestError, UnauthorizedError } from "../errors/errors";
 import { adminAuthService, userAuthService } from "../services/auth.service";
-import { generateToken } from "../utils/utils";
 import {
 	AdminLoginBodyData,
-	UserForgotPasswordBodyData,
 	UserLoginBodyData,
 	UserResetPasswordBodyData,
 } from "../validators/auth.validators";
@@ -47,46 +46,46 @@ const userLoginHandler = async (
 	}
 };
 
-const userForgotPasswordHandler = async (
-	req: Request<{}, {}, UserForgotPasswordBodyData>,
-	res: Response,
-	next: NextFunction
-) => {
-	const { email } = req.body;
-	try {
-		const otp = await userAuthService.forgotPassword(email);
-		res.status(StatusCodes.OK).send({
-			status: StatusCodes.OK,
-			message: "Password reset link sent to your email",
-			expiry: otp.expiry,
-		});
-	} catch (e) {
-		next(e);
-	}
-};
-
 const userResetPasswordHandler = async (
-	req: Request<{}, {}, UserResetPasswordBodyData>,
+	req: Request<{}, {}, UserResetPasswordBodyData & { old_password?: string }>,
 	res: Response,
 	next: NextFunction
 ) => {
 	try {
-		const { password } = req.body;
-		const id = req.user.id;
-		await userAuthService.changePassword(id, password);
-		const token = await generateToken(id, "user");
+		const { new_password, old_password } = req.body;
+		const { permissions, id } = req.user;
+
+		if (permissions.includes("all")) {
+			if (!old_password) {
+				throw new BadRequestError("Old password is required for this action");
+			}
+			await userAuthService.changePasswordWithOldPassword(
+				id,
+				old_password,
+				new_password
+			);
+		} else if (permissions.includes("password-reset")) {
+			if (old_password) {
+				throw new BadRequestError(
+					"Old password should not be provided for this action"
+				);
+			}
+			await userAuthService.changePassword(id, new_password);
+		} else {
+			throw new UnauthorizedError(
+				"You do not have permission to reset the password"
+			);
+		}
+
 		res.status(StatusCodes.OK).send({
 			message: "Password reset successfully",
-			token,
 		});
 	} catch (e) {
 		next(e);
 	}
 };
-
 export const authController = {
 	adminLoginHandler,
 	userLoginHandler,
-	userForgotPasswordHandler,
 	userResetPasswordHandler,
 };

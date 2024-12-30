@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { UnauthorizedError } from "../errors/errors";
 import { UserRole } from "../ts/global";
-import { verifyToken } from "../utils/utils";
+import { JWTPermissions, verifyToken } from "../utils/utils";
 
-const _authorize = (roles: UserRole[]) => {
+const _authorize = (roles: UserRole[], permissions: JWTPermissions[]) => {
 	return async (
 		req: Request<any, any, any, any>,
 		res: Response,
@@ -26,23 +26,47 @@ const _authorize = (roles: UserRole[]) => {
 
 			const userData = await verifyToken(token!);
 
+			req.user = userData;
 			if (roles && !roles.includes(userData.role)) {
 				throw new UnauthorizedError(
 					"You are not authorized to access this resource"
 				);
 			}
 
-			req.user = userData;
-
+			if (
+				!(
+					permissions.includes("all") ||
+					permissions.some((permission) =>
+						userData.permissions.includes(permission)
+					)
+				)
+			) {
+				throw new UnauthorizedError(
+					"You are not authorized to access this resource"
+				);
+			}
 			next();
+			return;
 		} catch (e) {
 			next(e);
 		}
 	};
 };
 
-export const authorizeAdmin = _authorize(["admin"]);
+export const authorizeAdmin = _authorize(["admin"], ["all"]);
 
-export const authorizeUser = _authorize(["user"]);
+export const authorizeUser = _authorize(["user"], ["all"]);
 
-export const authorize = _authorize(["admin", "user"]);
+export const authorize = _authorize(["admin", "user"], ["all"]);
+
+export const authorizeAdminWithActions = (actions: JWTPermissions[]) => {
+	return _authorize(["admin"], actions);
+};
+
+export const authorizeUserWithActions = (actions: JWTPermissions[]) => {
+	return _authorize(["user"], actions);
+};
+
+export const authorizeWithActions = (actions: JWTPermissions[]) => {
+	return _authorize(["admin", "user"], actions);
+};

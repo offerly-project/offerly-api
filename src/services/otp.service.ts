@@ -1,10 +1,11 @@
 import { BadRequestError } from "../errors/errors";
 import { OTP, OTP_EXPIRY_SECONDS } from "../models/otp.model";
+import { JWTPermissions } from "../utils/utils";
 
 export class OTPService {
 	private _otps: Record<string, OTP> = {};
 
-	requestOtp = (email: string) => {
+	requestOtp = (email: string, permissions: JWTPermissions[]) => {
 		const otpInstance = this._otps[email];
 		if (otpInstance) {
 			if (otpInstance.canRequest()) {
@@ -15,7 +16,7 @@ export class OTPService {
 				);
 			}
 		} else {
-			this._otps[email] = new OTP();
+			this._otps[email] = new OTP(permissions);
 			return this._otps[email].init();
 		}
 	};
@@ -36,6 +37,10 @@ export class OTPService {
 		}
 
 		return verified;
+	};
+
+	getOtp = (email: string) => {
+		return this._otps[email];
 	};
 }
 

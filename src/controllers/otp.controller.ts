@@ -2,9 +2,13 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError, NotFoundError } from "../errors/errors";
 import { usersRepository } from "../repositories/users.repository";
+import { mailService } from "../services/mail.service";
 import { otpService } from "../services/otp.service";
 import { generateToken } from "../utils/utils";
-import { OTPVerificationBody } from "../validators/otp.validators";
+import {
+	OTPGenerationBody,
+	OTPVerificationBody,
+} from "../validators/otp.validators";
 
 const verifyUserOtpHandler = async (
 	req: Request<{}, {}, OTPVerificationBody>,
@@ -19,6 +23,8 @@ const verifyUserOtpHandler = async (
 		if (!userHasOtp) {
 			throw new NotFoundError("OTP not found");
 		}
+		const otpData = otpService.getOtp(email);
+
 		const otpValid = await otpService.verifyOtp(email, otp);
 
 		if (!otpValid) {
@@ -31,9 +37,14 @@ const verifyUserOtpHandler = async (
 			throw new NotFoundError("User not found");
 		}
 
-		const token = await generateToken(document?._id.toString(), "user", {
-			expiresIn: "5m",
-		});
+		const token = await generateToken(
+			document?._id.toString(),
+			"user",
+			otpData.permissions,
+			{
+				expiresIn: "5m",
+			}
+		);
 
 		res.status(StatusCodes.OK).json({ message: "OTP verified", token });
 	} catch (e) {
@@ -41,4 +52,26 @@ const verifyUserOtpHandler = async (
 	}
 };
 
-export const otpController = { verifyUserOtpHandler };
+const generateUserOtpHandler = async (
+	req: Request<{}, {}, OTPGenerationBody>,
+	res: Response,
+	next: NextFunction
+) => {
+	const { email, permissions } = req.body;
+	try {
+		if (permissions.includes("all")) {
+			throw new BadRequestError("Can't generate OTP for all permissions");
+		}
+		const otp = await otpService.requestOtp(email, permissions);
+		mailService.sendOtpMail(email, otp.code);
+		res.status(StatusCodes.OK).send({
+			status: StatusCodes.OK,
+			message: "OTP sent to your email",
+			expiry: otp.expiry,
+		});
+	} catch (e) {
+		next(e);
+	}
+};
+
+export const otpController = { verifyUserOtpHandler, generateUserOtpHandler };

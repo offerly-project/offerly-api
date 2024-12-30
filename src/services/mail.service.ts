@@ -1,4 +1,6 @@
+import ejs from "ejs";
 import { createTransport, Transporter } from "nodemailer";
+import path from "path";
 import { env } from "../configs/env";
 
 export class MailService {
@@ -16,7 +18,7 @@ export class MailService {
 		});
 	}
 
-	async sendMail(to: string, subject: string, html: string) {
+	private async _sendMail(to: string, subject: string, html: string) {
 		return this._transporter.sendMail({
 			from: env.SMTP_USER,
 			to,
@@ -24,6 +26,14 @@ export class MailService {
 			html,
 		});
 	}
+
+	sendOtpMail = async (email: string, otp: string) => {
+		const html = await ejs.renderFile(
+			path.join(__dirname, "../templates/otp.ejs"),
+			{ otp }
+		);
+		this._sendMail(email, "Password Reset OTP", html);
+	};
 }
 
 export const mailService = new MailService();
