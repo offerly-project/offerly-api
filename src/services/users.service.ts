@@ -78,7 +78,7 @@ export class UsersService {
 		if (!user) {
 			throw new NotFoundError("User not found");
 		}
-		if (data.phone_number) {
+		if (data.phone_number !== undefined && data.phone_number !== "") {
 			const userDoc = await usersRepository.findByPhone(data.phone_number);
 
 			if (userDoc && !userDoc._id.equals(userId)) {
