@@ -17,7 +17,7 @@ export class AdminAuthService {
 		if (!validPassword) {
 			throw new BadRequestError("Incorrect password");
 		}
-		const token = await generateToken(admin._id.toString(), "admin", ["all"]);
+		const token = await generateToken(admin._id.toString(), "admin", "login");
 		return { token, admin: omit(admin, ["password", "_id"]) };
 	}
 }
@@ -35,7 +35,7 @@ export class UserAuthService {
 		if (!validPassword) {
 			throw new BadRequestError("Incorrect password");
 		}
-		const token = await generateToken(user._id.toString(), "user", ["all"]);
+		const token = await generateToken(user._id.toString(), "user", "login");
 		return {
 			token,
 			user: omit(user, ["password", "_id"]),

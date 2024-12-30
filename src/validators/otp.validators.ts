@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { jwtPermissions } from "../utils/utils";
+import { jwtSources } from "../utils/utils";
 
 export const otpVerificationSchema = z.object({
 	body: z.object({
@@ -11,7 +11,7 @@ export const otpVerificationSchema = z.object({
 export const otpGenerationSchema = z.object({
 	body: z.object({
 		email: z.string(),
-		permissions: z.array(z.enum(jwtPermissions)).min(1),
+		source: z.enum(jwtSources),
 	}),
 });
 

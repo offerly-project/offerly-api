@@ -91,21 +91,18 @@ export const verifyToken = (token: string): Promise<JwtUserPayload> => {
 	});
 };
 
-export const jwtPermissions = ["password-reset", "all"] as const;
+export const jwtSources = ["password-reset", "login"] as const;
 
-export type JWTPermissions = (typeof jwtPermissions)[number];
+export type JWTSource = (typeof jwtSources)[number];
 
 export const generateToken = (
 	id: string,
 	role: UserRole,
-	permissions: JWTPermissions[],
+	source: JWTSource,
 	options: SignOptions = {}
 ): Promise<string> => {
 	return new Promise((resolve, reject) => {
-		jwt.sign({ id, role, permissions }, env.PRIVATE_KEY, options, ((
-			err,
-			token
-		) => {
+		jwt.sign({ id, role, source }, env.PRIVATE_KEY, options, ((err, token) => {
 			if (err || !token) {
 				reject(new InternalServerError("failed to generate token"));
 			}

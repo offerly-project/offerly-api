@@ -53,9 +53,9 @@ const userResetPasswordHandler = async (
 ) => {
 	try {
 		const { new_password, old_password } = req.body;
-		const { permissions, id } = req.user;
+		const { source, id } = req.user;
 
-		if (permissions.includes("all")) {
+		if (source === "login") {
 			if (!old_password) {
 				throw new BadRequestError("Old password is required for this action");
 			}
@@ -64,7 +64,7 @@ const userResetPasswordHandler = async (
 				old_password,
 				new_password
 			);
-		} else if (permissions.includes("password-reset")) {
+		} else if (source === "password-reset") {
 			if (old_password) {
 				throw new BadRequestError(
 					"Old password should not be provided for this action"

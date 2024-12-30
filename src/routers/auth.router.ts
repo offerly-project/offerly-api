@@ -26,7 +26,7 @@ userAuthRouter.post(
 
 userAuthRouter.put(
 	"/reset-password",
-	authorizeUserWithActions(["password-reset", "all"]),
+	authorizeUserWithActions(["password-reset", "login"]),
 	validateRequest(userResetPasswordSchema),
 	authController.userResetPasswordHandler
 );
