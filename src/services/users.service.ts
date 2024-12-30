@@ -78,9 +78,8 @@ export class UsersService {
 		if (!user) {
 			throw new NotFoundError("User not found");
 		}
-		if (data.phone_number !== undefined) {
+		if (data.phone_number) {
 			const userDoc = await usersRepository.findByPhone(data.phone_number);
-			console.log(userDoc?._id.toString(), userId);
 
 			if (userDoc && userDoc._id.equals(userId)) {
 				throw new ConflictError("User with same phone number already exists");
