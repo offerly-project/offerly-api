@@ -116,7 +116,7 @@ export class UsersRepository {
 			{ _id: new ObjectId(userId) },
 			{ $set: data }
 		);
-		if (result.modifiedCount === 0) {
+		if (!result.matchedCount) {
 			throw new InternalServerError("User not updated");
 		}
 	}
