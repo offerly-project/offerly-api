@@ -80,7 +80,7 @@ export class UsersService {
 		}
 		if (data.phone_number) {
 			const userDoc = await usersRepository.findByPhone(data.phone_number);
-			if (userDoc) {
+			if (userDoc && userDoc.id !== userId) {
 				throw new ConflictError("User with same phone number already exists");
 			}
 		}
