@@ -10,7 +10,8 @@ export const signupUserSchema = z.object({
 
 export const patchUserSchema = z.object({
 	body: z.object({
-		full_name: z.string({ message: "Full Name is required" }).optional(),
+		full_name: z.string().optional(),
+		phone_number: z.string().optional(),
 	}),
 });
 

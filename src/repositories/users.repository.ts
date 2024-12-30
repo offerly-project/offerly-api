@@ -40,6 +40,10 @@ export class UsersRepository {
 		return this.collection.findOne({ _id: new ObjectId(id) });
 	}
 
+	async findByPhone(phone_number: string) {
+		return this.collection.findOne({ phone_number });
+	}
+
 	async updatePassword(id: string, password: string) {
 		const result = await this.collection.updateOne(
 			{ _id: new ObjectId(id) },

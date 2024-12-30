@@ -78,8 +78,15 @@ export class UsersService {
 		if (!user) {
 			throw new NotFoundError("User not found");
 		}
+		if (data.phone_number) {
+			const userDoc = await usersRepository.findByPhone(data.phone_number);
+			if (userDoc) {
+				throw new ConflictError("User with same phone number already exists");
+			}
+		}
 		const userPatch: Partial<IUser> = removeUndefinedValuesFromObject({
 			full_name: data.full_name,
+			phone_number: data.phone_number,
 		});
 		await usersRepository.update(userId, userPatch);
 	}
