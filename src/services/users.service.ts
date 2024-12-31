@@ -12,7 +12,9 @@ import { removeUndefinedValuesFromObject } from "../utils/utils";
 import {
 	PatchUserBodyData,
 	SignupUserBodyData,
+	UserContactBodyData,
 } from "../validators/user.validators";
+import { mailService } from "./mail.service";
 
 export const ANNONYMOUS_KEY = "anonymous";
 
@@ -90,6 +92,15 @@ export class UsersService {
 			phone_number: data.phone_number,
 		});
 		await usersRepository.update(userId, userPatch);
+	}
+
+	async userContact(userId: string, { subject, message }: UserContactBodyData) {
+		const user = await usersRepository.findById(userId);
+		if (!user) {
+			throw new NotFoundError("User not found");
+		}
+		const { full_name, email } = user;
+		mailService.sendContactMail(email, full_name, subject, message);
 	}
 }
 

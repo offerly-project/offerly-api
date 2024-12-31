@@ -3,6 +3,7 @@ import { usersService } from "../services/users.service";
 import {
 	PatchUserBodyData,
 	SignupUserBodyData,
+	UserContactBodyData,
 } from "../validators/user.validators";
 
 const createUserHandler = async (
@@ -16,6 +17,20 @@ const createUserHandler = async (
 		await usersService.signupUser(user);
 
 		res.status(201).send({ message: "User created successfully" });
+	} catch (e) {
+		next(e);
+	}
+};
+
+const contactHandler = async (
+	req: Request<{}, {}, UserContactBodyData>,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const userId = req.user.id;
+		await usersService.userContact(userId, req.body);
+		res.status(201).send({ message: "Contact email sent successfully" });
 	} catch (e) {
 		next(e);
 	}
@@ -57,4 +72,5 @@ export const userController = {
 	createUserHandler,
 	patchUserHandler,
 	deleteUserHandler,
+	contactHandler,
 };

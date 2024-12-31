@@ -34,6 +34,19 @@ export class MailService {
 		);
 		this._sendMail(email, "Password Reset OTP", html);
 	};
+
+	sendContactMail = async (
+		email: string,
+		full_name: string,
+		subject: string,
+		message: string
+	) => {
+		const html = await ejs.renderFile(
+			path.join(__dirname, "../templates/contact.ejs"),
+			{ subject, message, full_name, email }
+		);
+		this._sendMail(env.SMTP_USER, `A Message from : ${email}`, html);
+	};
 }
 
 export const mailService = new MailService();

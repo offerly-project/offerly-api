@@ -5,7 +5,10 @@ import { authorizeUser } from "../middlewares/auth.middleware";
 import { adminsRepository } from "../repositories/admins.repository";
 import { usersRepository } from "../repositories/users.repository";
 import { validateRequest } from "../utils/utils";
-import { patchUserSchema } from "../validators/user.validators";
+import {
+	patchUserSchema,
+	userContactSchema,
+} from "../validators/user.validators";
 
 export const userAdminRouter = Router();
 
@@ -28,6 +31,13 @@ userUserRouter.patch(
 	authorizeUser,
 	validateRequest(patchUserSchema),
 	userController.patchUserHandler
+);
+
+userUserRouter.post(
+	"/contact",
+	authorizeUser,
+	validateRequest(userContactSchema),
+	userController.contactHandler
 );
 
 userUserRouter.delete("/", authorizeUser, userController.deleteUserHandler);

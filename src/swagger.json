@@ -85,49 +85,6 @@
 				}
 			}
 		},
-		"/user/auth/forgot-password": {
-			"post": {
-				"summary": "requesting password reset",
-				"requestBody": {
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"email": {
-										"type": "string"
-									}
-								}
-							}
-						}
-					}
-				},
-				"tags": ["auth"],
-				"responses": {
-					"200": {
-						"description": "successful response",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "object",
-									"properties": {
-										"message": {
-											"type": "string",
-											"example": "Password reset link sent to your email"
-										},
-										"expiry": {
-											"type": "number",
-											"description": "Timer in seconds",
-											"example": 1
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
 		"/user/auth/reset-password": {
 			"post": {
 				"summary": "password reset",
@@ -142,7 +99,10 @@
 							"schema": {
 								"type": "object",
 								"properties": {
-									"password": {
+									"new_password": {
+										"type": "string"
+									},
+									"old_password": {
 										"type": "string"
 									}
 								}
@@ -161,10 +121,56 @@
 									"properties": {
 										"message": {
 											"type": "string",
-											"example": "Password reset link sent to your email"
+											"example": "Password reset successfully"
 										},
 										"token": {
 											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/user/contact": {
+			"post": {
+				"summary": "user contact the support team",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"tags": ["contact"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"subject": {
+										"type": "string"
+									},
+									"message": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Contact email sent",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Contact email sent successfully"
 										}
 									}
 								}
@@ -283,6 +289,52 @@
 					}
 				},
 				"tags": ["signup"]
+			}
+		},
+		"/otp/generate": {
+			"post": {
+				"tags": ["otp"],
+				"summary": "otp generation",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string"
+									},
+									"source": {
+										"type": "string",
+										"enum": ["password-reset"]
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "otp sent to email",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "OTP sent to your email"
+										},
+										"expiry": {
+											"type": "number",
+											"example": 30
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/otp/verify": {
