@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError, UnauthorizedError } from "../errors/errors";
 import { adminAuthService, userAuthService } from "../services/auth.service";
+import { generateToken } from "../utils/utils";
 import {
 	AdminLoginBodyData,
 	UserLoginBodyData,
@@ -53,7 +54,7 @@ const userResetPasswordHandler = async (
 ) => {
 	try {
 		const { new_password, old_password } = req.body;
-		const { source, id } = req.user;
+		const { source, id, role } = req.user;
 
 		if (source === "login") {
 			if (!old_password) {
@@ -77,8 +78,11 @@ const userResetPasswordHandler = async (
 			);
 		}
 
+		const token = await generateToken(id, role, "login");
+
 		res.status(StatusCodes.OK).send({
 			message: "Password reset successfully",
+			token,
 		});
 	} catch (e) {
 		next(e);
