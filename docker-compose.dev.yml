@@ -10,23 +10,13 @@ services:
         - LANGUAGES=${LANGUAGES}
     ports:
       - "8000:8000"
-    depends_on:
-      - db
-    
-    environment:
-      - DB_URL=mongodb://db:27017
+    env_file:
+      - .local.env
     networks:
       - services-network
     volumes:
       - offerly-uploads:${UPLOADS_DIR}
       - ./src:/app/src
-  db:
-    image: mongo:latest
-    volumes:
-      - offerly-db-data:/data/db
-    networks:
-      - services-network
-
 networks:
   services-network:
 
