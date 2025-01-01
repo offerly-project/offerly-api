@@ -21,6 +21,11 @@ export class BanksRepository {
 
 	private _bankCardsPipeline: Document[] = [
 		{
+			$match: {
+				status: { $eq: "enabled" },
+			},
+		},
+		{
 			$lookup: {
 				from: "cards",
 				localField: "cards",
@@ -37,7 +42,6 @@ export class BanksRepository {
 				as: "bank",
 			},
 		},
-
 		{
 			$unwind: "$bank",
 		},
@@ -65,6 +69,11 @@ export class BanksRepository {
 		},
 	];
 	private _userBanksPipeline: Document[] = [
+		{
+			$match: {
+				status: { $eq: "enabled" },
+			},
+		},
 		{
 			$project: {
 				name: 1,

@@ -78,6 +78,7 @@ const getUserBanksHandler = async (
 ) => {
 	try {
 		const banks = await banksService.getUserBanks();
+
 		res.status(StatusCodes.OK).send(transformDocsResponse(banks));
 	} catch (e) {
 		next(e);
@@ -91,6 +92,7 @@ const getUserBankCardsHandler = async (
 ) => {
 	try {
 		const cards = await banksService.getBankCardsById(req.params.id);
+
 		res.status(StatusCodes.OK).send(transformDocsResponse(cards));
 	} catch (e) {
 		next(e);
