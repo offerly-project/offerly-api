@@ -281,6 +281,9 @@
 										"message": {
 											"type": "string",
 											"example": "User created successfully"
+										},
+										"token": {
+											"type": "string"
 										}
 									}
 								}

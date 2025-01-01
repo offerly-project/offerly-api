@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { usersService } from "../services/users.service";
+import { generateToken } from "../utils/utils";
 import {
 	PatchUserBodyData,
 	SignupUserBodyData,
@@ -14,9 +15,13 @@ const createUserHandler = async (
 	try {
 		const user = req.body;
 
-		await usersService.signupUser(user);
-
-		res.status(201).send({ message: "User created successfully" });
+		const userDoc = await usersService.signupUser(user);
+		const token = await generateToken(
+			userDoc.insertedId.toString(),
+			"user",
+			"login"
+		);
+		res.status(201).send({ message: "User created successfully", token });
 	} catch (e) {
 		next(e);
 	}

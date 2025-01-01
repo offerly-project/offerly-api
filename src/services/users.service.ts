@@ -36,7 +36,7 @@ export class UsersService {
 			cards: [],
 			favorites: [],
 		};
-		await usersRepository.create(user);
+		return await usersRepository.create(user);
 	}
 	async updateUserCards(userId: string, cards: string[]) {
 		const user = await usersRepository.findById(userId);
