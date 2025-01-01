@@ -111,6 +111,22 @@ export class OffersRepositry {
 									channels: 1,
 									starting_date: 1,
 									categories: 1,
+									applicable_cards: 1,
+								},
+							},
+							{
+								$addFields: {
+									applicable_cards: {
+										$map: {
+											input: "$applicable_cards",
+											as: "card",
+											in: {
+												_id: "$$card._id",
+												name: "$$card.name",
+												image: "$$card.image",
+											},
+										},
+									},
 								},
 							},
 						],
