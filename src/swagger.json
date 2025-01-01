@@ -908,8 +908,19 @@
 													"applicable_cards": {
 														"type": "array",
 														"items": {
-															"type": "string",
-															"format": "objectId"
+															"type": "object",
+															"properties": {
+																"id": {
+																	"type": "string",
+																	"format": "objectId"
+																},
+																"name": {
+																	"type": "string"
+																},
+																"logo": {
+																	"type": "string"
+																}
+															}
 														},
 														"example": ["6482d6b5e9c8f8b5f3c781d5"]
 													},

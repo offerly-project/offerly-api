@@ -56,7 +56,6 @@ export class OffersRepositry {
 
 		return cards;
 	}
-
 	getOffersByQuery(query: OffersQuery) {
 		const { card, category, page, limit, q } = query;
 		const cardFilter = card
@@ -94,8 +93,18 @@ export class OffersRepositry {
 							{ $addFields: { page: +page, limit: +limit } },
 						],
 						data: [
+							{
+								$lookup: {
+									from: "cards",
+									localField: "applicable_cards",
+									foreignField: "_id",
+									as: "applicable_cards",
+								},
+							},
+
 							{ $skip: skip },
 							{ $limit: +limit },
+
 							{
 								$project: {
 									_id: 1,
@@ -111,21 +120,10 @@ export class OffersRepositry {
 									channels: 1,
 									starting_date: 1,
 									categories: 1,
-									applicable_cards: 1,
-								},
-							},
-							{
-								$addFields: {
 									applicable_cards: {
-										$map: {
-											input: "$applicable_cards",
-											as: "card",
-											in: {
-												_id: "$$card._id",
-												name: "$$card.name",
-												image: "$$card.image",
-											},
-										},
+										_id: 1,
+										name: 1,
+										logo: 1,
 									},
 								},
 							},
