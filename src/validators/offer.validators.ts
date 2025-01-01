@@ -45,7 +45,7 @@ export type UpdateOfferBodyData = z.infer<typeof updateOfferSchema>["body"];
 
 export const getUserOffersSchema = z.object({
 	query: z.object({
-		card: z.string(),
+		card: z.string().optional(),
 		q: z.string().optional(),
 		category: z.string().optional().refine(validateCategories(true)),
 		page: z.string().refine((value) => {
