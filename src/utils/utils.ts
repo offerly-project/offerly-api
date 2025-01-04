@@ -110,3 +110,6 @@ export const generateToken = (
 		}) as jwt.SignCallback);
 	});
 };
+
+export const getSortDirectionNumber = (direction: "asc" | "desc") =>
+	direction === "asc" ? 1 : -1;

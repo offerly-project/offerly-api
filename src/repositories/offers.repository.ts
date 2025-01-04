@@ -1,7 +1,8 @@
-import { Collection, ObjectId, WithId } from "mongodb";
+import { Collection, Document, ObjectId, WithId } from "mongodb";
 import { db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
 import { IOffer } from "../models/offer.model";
+import { getSortDirectionNumber } from "../utils/utils";
 import { OffersQuery } from "../validators/offer.validators";
 
 export class OffersRepositry {
@@ -57,7 +58,7 @@ export class OffersRepositry {
 		return cards;
 	}
 	getOffersByQuery(query: OffersQuery) {
-		const { card, category, page, limit, q } = query;
+		const { card, category, page, limit, q, sort_by, sort_direction } = query;
 		const cardFilter = card
 			? { applicable_cards: { $in: [new ObjectId(card)] } }
 			: {};
@@ -77,15 +78,36 @@ export class OffersRepositry {
 			  }
 			: {};
 
+		const sortStage = !sort_by
+			? {}
+			: sort_by === "expiry_date"
+			? { $sort: { expiry_date: getSortDirectionNumber(sort_direction) } }
+			: {
+					$sort: {
+						[`title.${sort_by.split("_")[1]}`]:
+							getSortDirectionNumber(sort_direction),
+					},
+			  };
+
+		console.log(sortStage);
+
+		const pipelineBase: Document[] = [
+			{
+				$match: {
+					...cardFilter,
+					...categoryFilter,
+					...searchFilter,
+				},
+			},
+		];
+
+		if (sort_by) {
+			pipelineBase.push(sortStage);
+		}
+
 		return this.collection
 			.aggregate<WithId<IOffer>>([
-				{
-					$match: {
-						...cardFilter,
-						...categoryFilter,
-						...searchFilter,
-					},
-				},
+				...pipelineBase,
 				{
 					$facet: {
 						metadata: [

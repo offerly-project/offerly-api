@@ -43,10 +43,16 @@ export const updateOfferSchema = z.object({
 export type CreateOfferBodyData = z.infer<typeof createOfferSchema>["body"];
 export type UpdateOfferBodyData = z.infer<typeof updateOfferSchema>["body"];
 
+const offerSortBySchema = z.enum(["expiry_date", "alphabet_ar", "alphabet_en"]);
+
+const offerSortDirectionSchema = z.enum(["asc", "desc"]);
+
 export const getUserOffersSchema = z.object({
 	query: z.object({
 		card: z.string().optional(),
 		q: z.string().optional(),
+		sort_by: offerSortBySchema.optional(),
+		sort_direction: offerSortDirectionSchema.default("asc"),
 		category: z.string().optional().refine(validateCategories(true)),
 		page: z.string().refine((value) => {
 			if (!isNumber(+value)) {
