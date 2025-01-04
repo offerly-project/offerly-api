@@ -52,7 +52,7 @@ export const getUserOffersSchema = z.object({
 		card: z.string().optional(),
 		q: z.string().optional(),
 		sort_by: offerSortBySchema.optional(),
-		sort_direction: offerSortDirectionSchema.default("asc"),
+		sort_direction: offerSortDirectionSchema.default("asc").optional(),
 		category: z.string().optional().refine(validateCategories(true)),
 		page: z.string().refine((value) => {
 			if (!isNumber(+value)) {

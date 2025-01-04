@@ -1,7 +1,7 @@
 import { JwtPayload } from "jsonwebtoken";
 import { JWTSource } from "../utils/utils";
 
-export type UserRole = "admin" | "user";
+export type UserRole = "admin" | "user" | "guest";
 
 export type EntityStatus = "enabled" | "disabled";
 

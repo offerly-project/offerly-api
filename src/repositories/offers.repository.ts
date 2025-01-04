@@ -81,11 +81,18 @@ export class OffersRepositry {
 		const sortStage = !sort_by
 			? {}
 			: sort_by === "expiry_date"
-			? { $sort: { expiry_date: getSortDirectionNumber(sort_direction) } }
+			? {
+					$sort: {
+						expiry_date: getSortDirectionNumber(
+							sort_direction ? sort_direction : "asc"
+						),
+					},
+			  }
 			: {
 					$sort: {
-						[`title.${sort_by.split("_")[1]}`]:
-							getSortDirectionNumber(sort_direction),
+						[`title.${sort_by.split("_")[1]}`]: getSortDirectionNumber(
+							sort_direction ? sort_direction : "asc"
+						),
 					},
 			  };
 
@@ -106,7 +113,14 @@ export class OffersRepositry {
 		}
 
 		return this.collection
-			.aggregate<WithId<IOffer>>([
+			.aggregate<{
+				data: WithId<IOffer>;
+				metadata: {
+					total: number;
+					page: number;
+					limit: number;
+				};
+			}>([
 				...pipelineBase,
 				{
 					$facet: {

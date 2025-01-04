@@ -7,6 +7,7 @@ import { adminAuthRouter, userAuthRouter } from "./auth.router";
 import { banksAdminRouter, banksUserRouter } from "./banks.router";
 import { cardsAdminRouter, cardsUserRouter } from "./cards.router";
 import { userFavoriteOffersRouter } from "./favorites.router";
+import { guestRouter } from "./guest.router";
 import { offersAdminRouter, offersUserRouter } from "./offers.router";
 import { userAdminRouter, userUserRouter } from "./user.router";
 
@@ -26,15 +27,17 @@ export const userRouter = Router();
 
 userRouter.use("/auth", userAuthRouter);
 
-userRouter.use("/banks", banksUserRouter);
+userRouter.use("/banks", authorizeUser, banksUserRouter);
 
-userRouter.use("/cards", cardsUserRouter);
+userRouter.use("/cards", authorizeUser, cardsUserRouter);
 
-userRouter.use("/offers", offersUserRouter);
+userRouter.use("/offers", authorizeUser, offersUserRouter);
 
-userRouter.use("/favorites", userFavoriteOffersRouter);
+userRouter.use("/favorites", authorizeUser, userFavoriteOffersRouter);
 
 userRouter.use("/user", authorizeUser, userUserRouter);
+
+userRouter.use("/guest", guestRouter);
 
 userRouter.post(
 	"/signup",
