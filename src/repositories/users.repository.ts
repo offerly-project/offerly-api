@@ -16,10 +16,37 @@ export class UsersRepository {
 			},
 		},
 		{
+			$unwind: "$favorites", // Ensure each favorite is handled separately
+		},
+		{
+			$replaceRoot: {
+				newRoot: "$favorites", // Replace the root with the favorite object
+			},
+		},
+		{
+			$lookup: {
+				from: "cards",
+				localField: "applicable_cards",
+				foreignField: "_id",
+				as: "applicable_cards",
+			},
+		},
+		{
 			$project: {
-				favorites: {
-					applicable_cards: 0,
-				},
+				_id: 1,
+				title: 1,
+				description: 1,
+				logo: 1,
+				offer_source_link: 1,
+				status: 1,
+				terms_and_conditions: 1,
+				expiry_date: 1,
+				minimum_amount: 1,
+				cap: 1,
+				channels: 1,
+				starting_date: 1,
+				categories: 1,
+				applicable_cards: 1,
 			},
 		},
 	];

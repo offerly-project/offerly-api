@@ -15,7 +15,8 @@ const getUserFavoriteOffersHandler = async (
 	try {
 		const userId = req.user.id;
 		const favorites = await usersRepository.getFavoriteOffers(userId);
-		const elements: IOffer[] = favorites[0].favorites;
+
+		const elements: IOffer[] = favorites as IOffer[];
 		res.status(200).send(transformDocsResponse(elements));
 	} catch (e) {
 		next(e);
