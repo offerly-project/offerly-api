@@ -50,6 +50,8 @@ export const authorizeAdmin = _authorize(["admin"], ["login"]);
 
 export const authorizeUser = _authorize(["user"], ["login"]);
 
+export const authorizeGuest = _authorize(["guest"], ["login"]);
+
 export const authorize = _authorize(["admin", "user"], ["login"]);
 
 export const authorizeAdminWithActions = (sources: JWTSource[]) => {
