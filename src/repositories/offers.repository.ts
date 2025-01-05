@@ -1,6 +1,7 @@
 import { Collection, Document, ObjectId, WithId } from "mongodb";
 import { db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
+import { ErrorCodes } from "../errors/errors.codes";
 import { IOffer } from "../models/offer.model";
 import { getSortDirectionNumber } from "../utils/utils";
 import { OffersQuery } from "../validators/offer.validators";
@@ -14,7 +15,10 @@ export class OffersRepositry {
 	async add(data: IOffer) {
 		const result = await this.collection.insertOne(data);
 		if (!result.insertedId) {
-			throw new InternalServerError("Failed to insert offer");
+			throw new InternalServerError(
+				"Failed to create offer",
+				ErrorCodes.CREATE_OFFER_FAILED
+			);
 		}
 		return result.insertedId;
 	}
@@ -40,8 +44,11 @@ export class OffersRepositry {
 			{ _id: new ObjectId(id) },
 			{ $set: data }
 		);
-		if (!result.matchedCount) {
-			throw new InternalServerError("Failed to update offer");
+		if (!result.acknowledged) {
+			throw new InternalServerError(
+				"Failed to update offer",
+				ErrorCodes.UPDATE_OFFER_FAILED
+			);
 		}
 	}
 
@@ -50,7 +57,10 @@ export class OffersRepositry {
 			_id: new ObjectId(id),
 		});
 		if (!offer) {
-			throw new InternalServerError("Failed to delete offer");
+			throw new InternalServerError(
+				"Failed to delete offer",
+				ErrorCodes.DELETE_OFFER_FAILED
+			);
 		}
 
 		const cards = offer.applicable_cards.map((card) => card.toString());

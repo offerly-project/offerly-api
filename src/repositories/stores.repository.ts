@@ -1,6 +1,7 @@
 import { Collection, ObjectId } from "mongodb";
 import { db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
+import { ErrorCodes } from "../errors/errors.codes";
 import { IStore } from "../models/store.model";
 
 // NON-MVP CODE
@@ -42,8 +43,11 @@ export class StoresRepository {
 			{ _id: new ObjectId(id) },
 			{ $set: store }
 		);
-		if (!result.matchedCount) {
-			throw new InternalServerError("Failed to update store");
+		if (!result.acknowledged) {
+			throw new InternalServerError(
+				"Failed to update store",
+				ErrorCodes.UPDATE_STORE_FAILED
+			);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { UnauthorizedError } from "../errors/errors";
+import { InternalServerError, UnauthorizedError } from "../errors/errors";
+import { ErrorCodes } from "../errors/errors.codes";
 import { UserRole } from "../ts/global";
 import { JWTSource, verifyToken } from "../utils/utils";
 
@@ -13,14 +14,24 @@ const _authorize = (roles: UserRole[], sources: JWTSource[]) => {
 			const authHeader = req.headers.authorization;
 
 			if (!authHeader) {
-				next(new UnauthorizedError("Authorization header is missing"));
+				next(
+					new InternalServerError(
+						"Authorization header is missing",
+						ErrorCodes.AUTH_HEADER_MISSING
+					)
+				);
 				return;
 			}
 
 			const token = authHeader && authHeader.split(" ")[1];
 
 			if (!token) {
-				next(new UnauthorizedError("Token is missing"));
+				next(
+					new InternalServerError(
+						"Token is missing",
+						ErrorCodes.AUTH_TOKEN_MISSING
+					)
+				);
 				return;
 			}
 
@@ -29,13 +40,15 @@ const _authorize = (roles: UserRole[], sources: JWTSource[]) => {
 			req.user = userData;
 			if (roles && !roles.includes(userData.role)) {
 				throw new UnauthorizedError(
-					"You are not authorized to access this resource"
+					"You are not authorized to access this resource",
+					ErrorCodes.UNAUTHORIZED
 				);
 			}
 
 			if (!sources.includes(userData.source)) {
 				throw new UnauthorizedError(
-					"You are not authorized to access this resource with this token"
+					"You are not authorized to access this resource with this token",
+					ErrorCodes.UNAUTHORIZED
 				);
 			}
 			next();

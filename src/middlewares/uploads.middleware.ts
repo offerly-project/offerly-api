@@ -6,7 +6,8 @@ import path from "path";
 import { ImageBuilder } from "../builders/image.builder";
 import { env } from "../configs/env";
 import { UploadDirectory } from "../configs/files";
-import { BadRequestError } from "../errors/errors";
+import { BadRequestError, InternalServerError } from "../errors/errors";
+import { ErrorCodes } from "../errors/errors.codes";
 
 export type ImageDimensions = `${string}x${string}`;
 
@@ -39,12 +40,16 @@ export const imageUploadMiddleware =
 				} as unknown as ImageUploadPayload;
 
 				if (!payload.image) {
-					next(new BadRequestError("Image is required"));
+					next(
+						new BadRequestError("Image is required", ErrorCodes.IMAGE_REQUIRED)
+					);
 					return;
 				}
 
 				if (!payload.path) {
-					next(new BadRequestError("Path is required"));
+					next(
+						new BadRequestError("Path is required", ErrorCodes.PATH_REQUIRED)
+					);
 					return;
 				}
 
@@ -53,17 +58,27 @@ export const imageUploadMiddleware =
 					allowedPaths.length !== 0 &&
 					!allowedPaths.some((path) => payload.path.startsWith(path))
 				) {
-					next(new BadRequestError("Invalid Path"));
+					next(new BadRequestError("Invalid Path", ErrorCodes.INVALID_PATH));
 					return;
 				}
 				if (payload.dims && !allowCustomDimensions) {
-					next(new BadRequestError("Custom dimensions are not allowed"));
+					next(
+						new BadRequestError(
+							"Custom dimensions are not allowed",
+							ErrorCodes.CUSTOM_DIMENSIONS_NOT_ALLOWED
+						)
+					);
 					return;
 				}
 				const oldPath = payload.image.filepath;
 				const targetPath = path.join(env.UPLOADS_DIR, payload.path);
 				if (!oldPath) {
-					next(new BadRequestError("File not uploaded"));
+					next(
+						new InternalServerError(
+							"File not uploaded",
+							ErrorCodes.FILE_NOT_UPLOADED
+						)
+					);
 					return;
 				}
 				const imageBuffer = fs.readFileSync(oldPath);

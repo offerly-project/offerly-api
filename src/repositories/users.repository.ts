@@ -1,6 +1,7 @@
 import { Collection, ObjectId, PullOperator } from "mongodb";
 import { Database, db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
+import { ErrorCodes } from "../errors/errors.codes";
 import { IUser } from "../models/user.model";
 
 export class UsersRepository {
@@ -77,7 +78,10 @@ export class UsersRepository {
 			{ $set: { password } }
 		);
 		if (result.modifiedCount === 0) {
-			throw new InternalServerError("Password not updated");
+			throw new InternalServerError(
+				"Password not updated",
+				ErrorCodes.UPDATE_PASSWORD_FAILED
+			);
 		}
 	}
 	async updateCards(userId: string, cards: string[]) {
@@ -90,7 +94,10 @@ export class UsersRepository {
 			}
 		);
 		if (result.modifiedCount === 0) {
-			throw new InternalServerError("Cards not updated");
+			throw new InternalServerError(
+				"Cards not updated",
+				ErrorCodes.UPDATE_CARD_FAILED
+			);
 		}
 	}
 
@@ -102,7 +109,10 @@ export class UsersRepository {
 			} as unknown as PullOperator<IUser>
 		);
 		if (result.modifiedCount === 0) {
-			throw new InternalServerError("Cards not removed");
+			throw new InternalServerError(
+				"Cards not removed",
+				ErrorCodes.UPDATE_CARD_FAILED
+			);
 		}
 	}
 	async getFavoriteOffers(userId: string) {
@@ -143,8 +153,11 @@ export class UsersRepository {
 			{ _id: new ObjectId(userId) },
 			{ $set: data }
 		);
-		if (!result.matchedCount) {
-			throw new InternalServerError("User not updated");
+		if (!result.acknowledged) {
+			throw new InternalServerError(
+				"User not updated",
+				ErrorCodes.UPDATE_USER_FAILED
+			);
 		}
 	}
 }

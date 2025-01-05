@@ -1,6 +1,7 @@
 import { Collection, Document, ObjectId, WithId } from "mongodb";
 import { db } from "../configs/db";
 import { InternalServerError, NotFoundError } from "../errors/errors";
+import { ErrorCodes } from "../errors/errors.codes";
 import { IBank } from "../models/bank.model";
 import { Translation } from "../ts/global";
 import { languageSearchQuery } from "../utils/utils";
@@ -110,7 +111,7 @@ export class BanksRepository {
 		const bank = await this.collection.findOne({ _id: new ObjectId(id) });
 
 		if (!bank) {
-			throw new NotFoundError("Bank not found");
+			throw new NotFoundError("Bank not found", ErrorCodes.BANK_NOT_FOUND);
 		}
 
 		return bank.cards;
@@ -130,7 +131,7 @@ export class BanksRepository {
 			.then((result) => result[0]);
 
 		if (!bank) {
-			throw new NotFoundError("Bank not found");
+			throw new NotFoundError("Bank not found", ErrorCodes.BANK_NOT_FOUND);
 		}
 
 		return bank;
@@ -140,7 +141,10 @@ export class BanksRepository {
 		const result = await this.collection.insertOne(bank);
 
 		if (!result.insertedId) {
-			throw new InternalServerError("Failed to create bank");
+			throw new InternalServerError(
+				"Failed to create bank",
+				ErrorCodes.CREATE_BANK_FAILED
+			);
 		}
 
 		return result.insertedId;
@@ -152,8 +156,11 @@ export class BanksRepository {
 			{ $set: bank }
 		);
 
-		if (!result.matchedCount) {
-			throw new InternalServerError("Failed to update bank");
+		if (!result.acknowledged) {
+			throw new InternalServerError(
+				"Failed to update bank",
+				ErrorCodes.UPDATE_BANK_FAILED
+			);
 		}
 	}
 

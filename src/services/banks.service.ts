@@ -1,9 +1,6 @@
 import { ObjectId } from "mongodb";
-import {
-	BadRequestError,
-	ConflictError,
-	NotFoundError,
-} from "../errors/errors";
+import { ConflictError, NotFoundError } from "../errors/errors";
+import { ErrorCodes } from "../errors/errors.codes";
 import { IBank } from "../models/bank.model";
 import { banksRepository } from "../repositories/banks.repository";
 import { removeUndefinedValuesFromObject } from "../utils/utils";
@@ -17,7 +14,10 @@ export class BanksService {
 		const bankExists = await banksRepository.bankNameExists(bank.name);
 
 		if (bankExists) {
-			throw new ConflictError("Bank already exists");
+			throw new ConflictError(
+				"Bank already exists",
+				ErrorCodes.BANK_ALREADY_EXISTS
+			);
 		}
 
 		const newBank: IBank = removeUndefinedValuesFromObject({
@@ -34,13 +34,16 @@ export class BanksService {
 	async updateBank(id: string, bank: UpdateBankBodyData) {
 		const bankExists = await banksRepository.findById(id);
 		if (!bankExists) {
-			throw new NotFoundError("Bank not found");
+			throw new NotFoundError("Bank not found", ErrorCodes.BANK_NOT_FOUND);
 		}
 
 		if (bank.name) {
 			const foundBank = await banksRepository.findByName(bank.name);
 			if (foundBank && foundBank._id.toString() !== id) {
-				throw new BadRequestError("Bank name already exists");
+				throw new ConflictError(
+					"Bank name already exists",
+					ErrorCodes.BANK_ALREADY_EXISTS
+				);
 			}
 		}
 
@@ -67,7 +70,7 @@ export class BanksService {
 	async getBank(id: string) {
 		const bank = await banksRepository.findById(id);
 		if (!bank) {
-			throw new NotFoundError("Bank not found");
+			throw new NotFoundError("Bank not found", ErrorCodes.BANK_NOT_FOUND);
 		}
 		return bank;
 	}

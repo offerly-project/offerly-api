@@ -1,6 +1,7 @@
 import { Collection, Document, ObjectId, PullOperator, WithId } from "mongodb";
 import { db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
+import { ErrorCodes } from "../errors/errors.codes";
 import { ICard } from "../models/card.model";
 import { Translation } from "../ts/global";
 import { languageSearchQuery } from "../utils/utils";
@@ -112,7 +113,10 @@ export class CardsRepository {
 		const result = await this.collection.insertOne(card);
 
 		if (!result.insertedId) {
-			throw new InternalServerError("Failed to create card");
+			throw new InternalServerError(
+				"Failed to create card",
+				ErrorCodes.CREATE_CARD_FAILED
+			);
 		}
 
 		return result.insertedId;
@@ -137,8 +141,11 @@ export class CardsRepository {
 			{ $set: card }
 		);
 
-		if (!result.matchedCount) {
-			throw new InternalServerError("Failed to update card");
+		if (!result.acknowledged) {
+			throw new InternalServerError(
+				"Failed to update card",
+				ErrorCodes.UPDATE_CARD_FAILED
+			);
 		}
 	}
 
