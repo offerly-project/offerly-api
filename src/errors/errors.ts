@@ -50,8 +50,8 @@ export class ConflictError extends CustomError {
 
 export class ZodFriendlyError extends CustomError {
 	error: ZodError;
-	constructor(zodError: ZodError, code = ErrorCodes.BAD_REQUEST) {
-		super("invalid request", 400, code);
+	constructor(zodError: ZodError) {
+		super("invalid request", 400, ErrorCodes.ZOD_VALIDATION_FAILED);
 		this.error = zodError;
 	}
 	toString() {
