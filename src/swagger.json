@@ -277,6 +277,55 @@
 				}
 			}
 		},
+		"/user/guest/contact": {
+			"post": {
+				"summary": "guest contact the support team",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"tags": ["contact"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string"
+									},
+									"subject": {
+										"type": "string"
+									},
+									"message": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Contact email sent",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"example": "Contact email sent successfully"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/user/user": {
 			"delete": {
 				"summary": "delete user",
