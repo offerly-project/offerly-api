@@ -41,7 +41,7 @@ const contactGuestHandler = async (
 ) => {
 	try {
 		const userId = req.user.id;
-		await usersService.userContact(userId, req.body);
+		await usersService.guestContact(req.body);
 		res.status(201).send({ message: "Contact email sent successfully" });
 	} catch (e) {
 		next(e);
