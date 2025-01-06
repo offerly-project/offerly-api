@@ -22,8 +22,18 @@ export const userContactSchema = z.object({
 	}),
 });
 
+export const guestContactSchema = z.object({
+	body: z.object({
+		email: z.string({ message: "Email is required" }),
+		subject: z.string({ message: "Subject is required" }),
+		message: z.string({ message: "Message is required" }),
+	}),
+});
+
 export type SignupUserBodyData = z.infer<typeof signupUserSchema>["body"];
 
 export type PatchUserBodyData = z.infer<typeof patchUserSchema>["body"];
 
 export type UserContactBodyData = z.infer<typeof userContactSchema>["body"];
+
+export type GuestContactBodyData = z.infer<typeof guestContactSchema>["body"];

@@ -124,7 +124,7 @@ export class CardsRepository {
 
 	async findCards(ids: string[]) {
 		return this.collection
-			.aggregate([
+			.aggregate<WithId<ICard>>([
 				{
 					$match: {
 						_id: { $in: ids.map((id) => new ObjectId(id)) },

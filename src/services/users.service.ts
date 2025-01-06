@@ -11,6 +11,7 @@ import { cardsRepository } from "../repositories/cards.repository";
 import { usersRepository } from "../repositories/users.repository";
 import { removeUndefinedValuesFromObject } from "../utils/utils";
 import {
+	GuestContactBodyData,
 	PatchUserBodyData,
 	SignupUserBodyData,
 	UserContactBodyData,
@@ -117,6 +118,10 @@ export class UsersService {
 		}
 		const { full_name, email } = user;
 		mailService.sendContactMail(email, full_name, subject, message);
+	}
+
+	async guestContact({ email, subject, message }: GuestContactBodyData) {
+		mailService.sendContactMail(email, "Guest", subject, message);
 	}
 }
 

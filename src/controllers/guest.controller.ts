@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { offersRepository } from "../repositories/offers.repository";
+import { usersService } from "../services/users.service";
 import { generateToken, transformDocsResponse } from "../utils/utils";
 
 const getGuestTokenHandler = async (
@@ -33,4 +34,22 @@ const getGuestOffersHandler = async (
 	}
 };
 
-export const guestController = { getGuestOffersHandler, getGuestTokenHandler };
+const contactGuestHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const userId = req.user.id;
+		await usersService.userContact(userId, req.body);
+		res.status(201).send({ message: "Contact email sent successfully" });
+	} catch (e) {
+		next(e);
+	}
+};
+
+export const guestController = {
+	getGuestOffersHandler,
+	getGuestTokenHandler,
+	contactGuestHandler,
+};
