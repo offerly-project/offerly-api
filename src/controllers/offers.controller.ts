@@ -80,7 +80,8 @@ const getUserOffersHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const offers = await offersService.getUserOffers(req.query);
+		const userId = req.user.id;
+		const offers = await offersService.getUserOffers(req.query, userId);
 		res.status(StatusCodes.OK).send(transformDocsResponse(offers));
 	} catch (e) {
 		next(e);

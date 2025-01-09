@@ -67,11 +67,11 @@ export class OffersRepositry {
 
 		return cards;
 	}
-	getOffersByQuery(query: OffersQuery) {
+	async getOffersByQuery(query: OffersQuery, userCards: ObjectId[] = []) {
 		const { card, category, page, limit, q, sort_by, sort_direction } = query;
 		const cardFilter = card
 			? { applicable_cards: { $in: [new ObjectId(card)] } }
-			: {};
+			: { applicable_cards: { $in: userCards } };
 		const categoryFilter = category ? { categories: { $in: [category] } } : {};
 		const skip = (+page - 1) * +limit;
 

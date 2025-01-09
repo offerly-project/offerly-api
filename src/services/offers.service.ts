@@ -3,6 +3,7 @@ import { NotFoundError } from "../errors/errors";
 import { IOffer } from "../models/offer.model";
 import { cardsRepository } from "../repositories/cards.repository";
 import { offersRepository } from "../repositories/offers.repository";
+import { usersRepository } from "../repositories/users.repository";
 import { removeUndefinedValuesFromObject } from "../utils/utils";
 import {
 	CreateOfferBodyData,
@@ -89,8 +90,10 @@ export class OffersService {
 		await cardsRepository.removeOfferFromCards(id, cards);
 	}
 
-	async getUserOffers(query: OffersQuery) {
-		const offers = await offersRepository.getOffersByQuery(query);
+	async getUserOffers(query: OffersQuery, userId: string) {
+		const user = await usersRepository.findById(userId);
+		const userCards = user?.cards.map((card) => new ObjectId(card)) || [];
+		const offers = await offersRepository.getOffersByQuery(query, userCards);
 		return offers;
 	}
 }
