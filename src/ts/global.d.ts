@@ -19,6 +19,8 @@ declare module "express-serve-static-core" {
 	}
 }
 
+type Language = "en" | "ar";
+
 export type Translation = {
 	en: string;
 	ar: string;
