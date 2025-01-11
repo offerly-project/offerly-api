@@ -39,6 +39,21 @@ export class OffersRepositry {
 	async getAll() {
 		return this.collection.aggregate<WithId<IOffer>>().toArray();
 	}
+
+	disableExpiredOffers = async () => {
+		const date = new Date();
+
+		await this.collection.updateMany(
+			{
+				expiry_date: { $lt: date },
+				status: { $ne: "disabled" },
+			},
+			{
+				$set: { status: "disabled" },
+			}
+		);
+	};
+
 	async update(id: string, data: Partial<IOffer>) {
 		const result = await this.collection.updateOne(
 			{ _id: new ObjectId(id) },

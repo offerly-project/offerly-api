@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import express, { json, urlencoded } from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
+import { CronJobs } from "./configs/cron";
 import { db } from "./configs/db";
 import { env } from "./configs/env";
 import { CORS_OPTIONS } from "./configs/options";
@@ -56,6 +57,8 @@ dotenv.config();
 	app.use("/static", express.static(env.DATA_DIR));
 
 	app.use(errorsMiddleware);
+
+	CronJobs.start();
 
 	app.listen(env.PORT, () => {
 		console.log(`Server is running on port ${env.PORT}`);
