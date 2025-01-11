@@ -108,14 +108,13 @@ export class OffersRepositry {
 					},
 			  };
 
-		console.log(sortStage);
-
 		const pipelineBase: Document[] = [
 			{
 				$match: {
 					...cardFilter,
 					...categoryFilter,
 					...searchFilter,
+					...{ status: { $eq: "enabled" } },
 				},
 			},
 		];
