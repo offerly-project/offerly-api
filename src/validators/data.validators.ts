@@ -16,8 +16,6 @@ export const validateCountries = async (countries: string[] | string) => {
 export const validateCategories =
 	(optional = false) =>
 	async (categories?: string[] | string) => {
-		console.log(categories, optional);
-
 		if (!categories && optional) return true;
 		const CATEGORIES = await ConstantsService.getCategories();
 		console.log(categories, CATEGORIES);

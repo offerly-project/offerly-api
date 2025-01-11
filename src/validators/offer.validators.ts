@@ -33,7 +33,7 @@ export const updateOfferSchema = z.object({
 		minimum_amount: z.string().optional(),
 		cap: z.string().optional(),
 		channels: z.array(z.enum(channels)).optional(),
-		categories: z.array(z.string()).optional().refine(validateCategories()),
+		categories: z.array(z.string()).optional().refine(validateCategories(true)),
 		applicable_cards: z.array(z.string()).optional(),
 		status: z.enum(entityStatuses).optional(),
 		title: languagesSchema.optional(),
