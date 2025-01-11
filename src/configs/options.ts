@@ -6,6 +6,6 @@ export const CORS_OPTIONS: CorsOptions = {
 		"http://localhost:3000",
 		"http://localhost:8080",
 		"http://offerly.me",
-		"https://offerly.me",
+		"https://offerly.me/admin",
 	],
 };
