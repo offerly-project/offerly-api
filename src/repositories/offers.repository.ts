@@ -83,10 +83,6 @@ export class OffersRepositry {
 					$or: [
 						{ "title.en": { $regex: q, $options: "i" } },
 						{ "title.ar": { $regex: q, $options: "i" } },
-						{ "terms_and_conditions.en": { $regex: q, $options: "i" } },
-						{ "terms_and_conditions.ar": { $regex: q, $options: "i" } },
-						{ "description.en": { $regex: q, $options: "i" } },
-						{ "description.ar": { $regex: q, $options: "i" } },
 					],
 			  }
 			: {};
@@ -125,6 +121,7 @@ export class OffersRepositry {
 		}
 
 		return this.collection
+
 			.aggregate<{
 				data: WithId<IOffer>;
 				metadata: {
@@ -182,6 +179,7 @@ export class OffersRepositry {
 					$unwind: "$metadata",
 				},
 			])
+
 			.toArray()
 			.then(
 				(result) =>

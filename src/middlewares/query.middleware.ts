@@ -5,12 +5,16 @@ export const queryMiddleware = (
 	res: Response,
 	next: NextFunction
 ) => {
-	const decodedQuery = Object.entries(req.query).reduce((acc, [key, value]) => {
-		acc[key] = decodeURIComponent(value as string);
-		return acc;
-	}, {} as Record<string, string>);
-
-	req.query = decodedQuery;
+	if (req.query) {
+		const decodedQuery = Object.entries(req.query).reduce(
+			(acc, [key, value]) => {
+				acc[key] = decodeURIComponent(value as string);
+				return acc;
+			},
+			{} as Record<string, string>
+		);
+		req.query = decodedQuery;
+	}
 
 	next();
 };
