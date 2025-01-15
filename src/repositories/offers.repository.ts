@@ -68,7 +68,11 @@ export class OffersRepositry {
 
 		return cards;
 	}
-	async getOffersByQuery(query: OffersQuery, userCards: ObjectId[] = []) {
+	async getOffersByQuery(
+		query: OffersQuery,
+		userCards: ObjectId[] = [],
+		guest = false
+	) {
 		const { card, category, page, limit, q, sort_by, sort_direction } = query;
 		const cards = card
 			? card.split(",").map((cardId) => new ObjectId(cardId))
@@ -108,7 +112,7 @@ export class OffersRepositry {
 		const pipelineBase: Document[] = [
 			{
 				$match: {
-					...cardFilter,
+					...(guest ? {} : cardFilter),
 					...categoryFilter,
 					...searchFilter,
 					...{ status: { $eq: "enabled" } },
