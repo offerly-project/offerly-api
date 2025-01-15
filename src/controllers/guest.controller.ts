@@ -24,10 +24,14 @@ const getGuestOffersHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const offers = await offersRepository.getOffersByQuery({
-			page: "1",
-			limit: "10",
-		});
+		const offers = await offersRepository.getOffersByQuery(
+			{
+				page: "1",
+				limit: "10",
+			},
+			undefined,
+			true
+		);
 		res.send(transformDocsResponse(offers.data));
 	} catch (e) {
 		next(e);
