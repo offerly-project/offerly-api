@@ -116,6 +116,7 @@ export class OffersRepositry {
 					...categoryFilter,
 					...searchFilter,
 					...{ status: { $eq: "enabled" } },
+					...{ expiry_date: { $gte: new Date() } },
 				},
 			},
 		];
@@ -153,7 +154,6 @@ export class OffersRepositry {
 
 							{ $skip: skip },
 							{ $limit: +limit },
-
 							{
 								$project: {
 									_id: 1,
