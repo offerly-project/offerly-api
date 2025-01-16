@@ -1,5 +1,5 @@
 import { BadRequestError } from "../errors/errors";
-import { OTP, OTP_EXPIRY_SECONDS } from "../models/otp.model";
+import { OTP, OTP_REREQUEST_SECONDS } from "../models/otp.model";
 import { JWTSource } from "../utils/utils";
 
 export class OTPService {
@@ -12,7 +12,7 @@ export class OTPService {
 				return otpInstance.init();
 			} else {
 				throw new BadRequestError(
-					`Please wait for ${OTP_EXPIRY_SECONDS} seconds before requesting another OTP`
+					`Please wait for ${OTP_REREQUEST_SECONDS} seconds before requesting another OTP`
 				);
 			}
 		} else {
