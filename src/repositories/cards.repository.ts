@@ -122,6 +122,16 @@ export class CardsRepository {
 		return result.insertedId;
 	}
 
+	async cardsExists(ids: string[]) {
+		const cards = await this.collection
+			.find({
+				_id: { $in: ids.map((id) => new ObjectId(id)) },
+			})
+			.toArray();
+
+		return cards.length === ids.length;
+	}
+
 	async findCards(ids: string[]) {
 		return this.collection
 			.aggregate<WithId<ICard>>([

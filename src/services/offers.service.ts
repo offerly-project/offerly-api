@@ -13,8 +13,10 @@ import {
 
 export class OffersService {
 	async createOffer(data: CreateOfferBodyData) {
-		const cards = await cardsRepository.findCards(data.applicable_cards);
-
+		const exists = await cardsRepository.cardsExists(data.applicable_cards);
+		if (!exists) {
+			throw new NotFoundError("some cards not found");
+		}
 		data.expiry_date = data.expiry_date?.split("/").reverse().join("-");
 
 		const offer: IOffer = removeUndefinedValuesFromObject({
