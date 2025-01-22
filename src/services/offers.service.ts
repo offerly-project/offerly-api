@@ -15,9 +15,6 @@ export class OffersService {
 	async createOffer(data: CreateOfferBodyData) {
 		const cards = await cardsRepository.findCards(data.applicable_cards);
 
-		if (cards.length !== data.applicable_cards.length) {
-			throw new NotFoundError("cards not found");
-		}
 		data.expiry_date = data.expiry_date?.split("/").reverse().join("-");
 
 		const offer: IOffer = removeUndefinedValuesFromObject({
