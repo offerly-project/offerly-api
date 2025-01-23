@@ -79,7 +79,14 @@ export class OffersRepositry {
 			: userCards;
 		const cardFilter = { applicable_cards: { $in: cards } };
 
-		const categoryFilter = category ? { categories: { $in: [category] } } : {};
+		const categoryFilter = category
+			? {
+					$or: category.split(",").map((cat) => ({
+						categories: { $regex: cat, $options: "i" }, // Case-insensitive partial match
+					})),
+			  }
+			: {};
+
 		const skip = (+page - 1) * +limit;
 
 		const searchFilter = q

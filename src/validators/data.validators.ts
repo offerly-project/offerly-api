@@ -18,9 +18,11 @@ export const validateCategories =
 	async (categories?: string[] | string) => {
 		if (!categories && optional) return true;
 		const CATEGORIES = await ConstantsService.getCategories();
-		console.log(categories, CATEGORIES);
+
 		if (typeof categories === "string") {
-			return CATEGORIES.includes(categories);
+			const cats = categories.split(",");
+
+			return cats.every((cat) => CATEGORIES.includes(cat));
 		}
 
 		return categories?.every((category) => {
