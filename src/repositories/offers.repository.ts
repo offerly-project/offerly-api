@@ -37,7 +37,41 @@ export class OffersRepositry {
 	}
 
 	async getAll() {
-		return this.collection.aggregate<WithId<IOffer>>().toArray();
+		return this.collection
+			.aggregate<WithId<IOffer>>([
+				{
+					$lookup: {
+						from: "cards",
+						localField: "applicable_cards",
+						foreignField: "_id",
+						as: "applicable_cards_temp",
+					},
+				},
+				{
+					$lookup: {
+						from: "banks",
+						localField: "applicable_cards_temp.bank",
+						foreignField: "_id",
+						as: "applicable_cards_temp.bank",
+					},
+				},
+				{
+					$addFields: {
+						bank: { $arrayElemAt: ["$applicable_cards_temp.bank", 0] },
+					},
+				},
+				{
+					$project: {
+						applicable_cards_temp: 0,
+					},
+				},
+				{
+					$project: {
+						"bank.cards": 0,
+					},
+				},
+			])
+			.toArray();
 	}
 
 	async update(id: string, data: Partial<IOffer>) {
