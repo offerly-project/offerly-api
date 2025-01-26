@@ -2,6 +2,7 @@ import ejs from "ejs";
 import { createTransport, Transporter } from "nodemailer";
 import path from "path";
 import { env } from "../configs/env";
+import { Language } from "../models/user.model";
 
 export class MailService {
 	private _transporter: Transporter;
@@ -27,12 +28,30 @@ export class MailService {
 		});
 	}
 
-	sendOtpMail = async (email: string, otp: string) => {
+	sendOtpMail = async (
+		email: string,
+		name: string,
+		otp: string,
+		lang: Language = "en"
+	) => {
 		const html = await ejs.renderFile(
-			path.join(__dirname, "../templates/otp.ejs"),
-			{ otp }
+			path.join(__dirname, `../templates/otp/otp_${lang}.ejs`),
+			{ otp, name }
 		);
-		this._sendMail(email, "Password Reset OTP", html);
+
+		this._sendMail(email, "OTP", html);
+	};
+
+	sendWelcomeMail = async (
+		email: string,
+		name: string,
+		lang: Language = "en"
+	) => {
+		const html = await ejs.renderFile(
+			path.join(__dirname, `../templates/welcome/welcome_${lang}.ejs`),
+			{ name }
+		);
+		this._sendMail(email, "Welcome to our platform", html);
 	};
 
 	sendContactMail = async (

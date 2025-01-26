@@ -57,6 +57,7 @@ dotenv.config();
 
 	app.use(errorsMiddleware);
 
+	// mailService.sendOtpMail("jadhamwi4@gmail.com", "Jad Alhamwi", "1234");
 	app.listen(env.PORT, () => {
 		console.log(`Server is running on port ${env.PORT}`);
 	});

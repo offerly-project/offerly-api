@@ -43,6 +43,7 @@ export class UsersService {
 			full_name: body.full_name,
 			cards: [],
 			favorites: [],
+			language: body.language,
 		};
 		return await usersRepository.create(user);
 	}
@@ -104,9 +105,11 @@ export class UsersService {
 				);
 			}
 		}
+
 		const userPatch: Partial<IUser> = removeUndefinedValuesFromObject({
 			full_name: data.full_name,
 			phone_number: data.phone_number,
+			language: data.language,
 		});
 		await usersRepository.update(userId, userPatch);
 	}

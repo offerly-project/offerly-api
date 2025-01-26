@@ -1,10 +1,12 @@
 import { z } from "zod";
+import { LANGUAGES } from "../models/user.model";
 
 export const signupUserSchema = z.object({
 	body: z.object({
 		email: z.string({ message: "Email is required" }),
 		password: z.string({ message: "Password is required" }),
 		full_name: z.string({ message: "Full Name is required" }),
+		language: z.enum(LANGUAGES).default("en"),
 	}),
 });
 
@@ -12,6 +14,7 @@ export const patchUserSchema = z.object({
 	body: z.object({
 		full_name: z.string().optional(),
 		phone_number: z.string().optional(),
+		language: z.enum(LANGUAGES).optional(),
 	}),
 });
 

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { mailService } from "../services/mail.service";
 import { usersService } from "../services/users.service";
 import { generateToken } from "../utils/utils";
 import {
@@ -21,6 +22,7 @@ const createUserHandler = async (
 			"user",
 			"login"
 		);
+		mailService.sendWelcomeMail(user.email, user.full_name, user.language);
 		res.status(201).send({ message: "User created successfully", token });
 	} catch (e) {
 		next(e);
