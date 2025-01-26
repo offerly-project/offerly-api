@@ -5,7 +5,7 @@ import { JWTSource } from "../utils/utils";
 
 export const OTP_REREQUEST = 0.5 * (60 * 1000);
 
-export const OTP_REREQUEST_SLACKED = OTP_REREQUEST + 2 * 60 * 1000;
+export const OTP_REREQUEST_SLACKED = 30 * 60 * 1000;
 
 export const OTP_REREQUEST_SECONDS = OTP_REREQUEST / 1000;
 
@@ -22,7 +22,7 @@ export class OTP {
 		return Array.from(otpArray, (num) => num % 10).join("");
 	};
 
-	private _clearTimeouts = () => {
+	public clearTimeouts = () => {
 		this._timeouts.forEach((timeout) => {
 			clearTimeout(timeout);
 		});
@@ -54,7 +54,7 @@ export class OTP {
 				}
 
 				this._code = hash;
-				this._clearTimeouts();
+				this.clearTimeouts();
 				this._startTimer();
 				resolve({ code: otpGenerated, expiry: OTP_REREQUEST_SECONDS });
 			});
@@ -79,5 +79,9 @@ export class OTP {
 				resolve(same);
 			});
 		});
+	};
+
+	isExpired = () => {
+		return this._code === null;
 	};
 }

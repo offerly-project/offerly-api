@@ -42,6 +42,15 @@ export class OTPService {
 	getOtp = (email: string) => {
 		return this._otps[email];
 	};
+
+	shouldCleanup = () => {
+		return Object.values(this._otps).every((otp) => otp.isExpired());
+	};
+
+	reset = () => {
+		Object.values(this._otps).forEach((otp) => otp.clearTimeouts());
+		this._otps = {};
+	};
 }
 
 export const otpService = new OTPService();

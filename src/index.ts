@@ -6,6 +6,7 @@ import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import { db } from "./configs/db";
 import { env } from "./configs/env";
+import { startGarbageCollectors } from "./configs/garbage-collector";
 import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
 import { queryMiddleware } from "./middlewares/query.middleware";
@@ -57,7 +58,7 @@ dotenv.config();
 
 	app.use(errorsMiddleware);
 
-	// mailService.sendOtpMail("jadhamwi4@gmail.com", "Jad Alhamwi", "1234");
+	startGarbageCollectors();
 	app.listen(env.PORT, () => {
 		console.log(`Server is running on port ${env.PORT}`);
 	});
