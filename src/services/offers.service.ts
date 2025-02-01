@@ -29,6 +29,7 @@ export class OffersService {
 			applicable_cards:
 				data.applicable_cards?.map((id) => new ObjectId(id)) || [],
 			logo: data.logo,
+			bank: data.bank,
 			discount_code: data.discount_code,
 			starting_date: data.starting_date
 				? new Date(data.starting_date)
@@ -72,6 +73,7 @@ export class OffersService {
 			applicable_cards: data.applicable_cards?.map((id) => new ObjectId(id)),
 			logo: data.logo,
 			discount_code: data.discount_code,
+			bank: data.bank,
 			starting_date: data.starting_date
 				? new Date(data.starting_date)
 				: undefined,
