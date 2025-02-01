@@ -33,3 +33,15 @@ offersUserRouter.get(
 	validateRequest(getUserOffersSchema),
 	offersController.getUserOffersHandler
 );
+
+offersUserRouter.get(
+	"/last-chance",
+	authorizeUser,
+	offersController.getUserLastChanceOffersHandler
+);
+
+offersUserRouter.get(
+	"/newly-added",
+	authorizeUser,
+	offersController.getUserNewlyAddedOfferHandler
+);

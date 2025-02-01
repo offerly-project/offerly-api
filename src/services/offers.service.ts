@@ -96,6 +96,16 @@ export class OffersService {
 		const offers = await offersRepository.getOffersByQuery(query, userCards);
 		return offers;
 	}
+
+	async getNewlyAddedOffers(limit: number) {
+		const offers = await offersRepository.getNewlyAddedOffers(limit);
+		return offers;
+	}
+
+	async getLastChanceOffers(limit: number) {
+		const offers = await offersRepository.getLastChanceOffers(limit);
+		return offers;
+	}
 }
 
 export const offersService = new OffersService();

@@ -821,6 +821,7 @@
 				}
 			}
 		},
+
 		"/user/cards": {
 			"patch": {
 				"summary": "patch user cards",
@@ -958,6 +959,182 @@
 												"$ref": "#/components/schemas/Translation"
 											},
 											"id": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/offers/last-chance": {
+			"get": {
+				"tags": ["offers"],
+				"summary": "Fetch Last Chance Offers",
+				"description": "retrieve offers about to expired sorted",
+				"parameters": [
+					{
+						"name": "limit",
+						"in": "query",
+						"description": "Number of offers to return.",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"example": 10
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string",
+												"format": "objectId",
+												"example": "6482d6b5e9c8f8b5f3c781d4"
+											},
+											"applicable_cards": {
+												"type": "array",
+												"items": {
+													"type": "string",
+													"format": "objectId"
+												},
+												"example": ["6482d6b5e9c8f8b5f3c781d5"]
+											},
+											"categories": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												},
+												"example": ["electronics"]
+											},
+											"title": {
+												"$ref": "#/components/schemas/Translation"
+											},
+											"terms_and_conditions": {
+												"$ref": "#/components/schemas/Translation"
+											},
+											"description": {
+												"$ref": "#/components/schemas/Translation"
+											},
+											"logo": {
+												"$ref": "#/components/schemas/OfferLogo"
+											},
+											"offer_source_link": {
+												"type": "string"
+											},
+											"status": {
+												"$ref": "#/components/schemas/EntityStatus"
+											},
+											"expiry_date": {
+												"type": "string"
+											},
+											"minimum_amount": {
+												"type": "string"
+											},
+											"cap": {
+												"type": "string"
+											},
+											"channel": {
+												"type": "string"
+											},
+											"starting_date": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/offers/newly-added": {
+			"get": {
+				"tags": ["offers"],
+				"summary": "Fetch Newly added Offers",
+				"description": "retrieve recently offers sorted",
+				"parameters": [
+					{
+						"name": "limit",
+						"in": "query",
+						"description": "Number of offers to return.",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"example": 10
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "string",
+												"format": "objectId",
+												"example": "6482d6b5e9c8f8b5f3c781d4"
+											},
+											"applicable_cards": {
+												"type": "array",
+												"items": {
+													"type": "string",
+													"format": "objectId"
+												},
+												"example": ["6482d6b5e9c8f8b5f3c781d5"]
+											},
+											"categories": {
+												"type": "array",
+												"items": {
+													"type": "string"
+												},
+												"example": ["electronics"]
+											},
+											"title": {
+												"$ref": "#/components/schemas/Translation"
+											},
+											"terms_and_conditions": {
+												"$ref": "#/components/schemas/Translation"
+											},
+											"description": {
+												"$ref": "#/components/schemas/Translation"
+											},
+											"logo": {
+												"$ref": "#/components/schemas/OfferLogo"
+											},
+											"offer_source_link": {
+												"type": "string"
+											},
+											"status": {
+												"$ref": "#/components/schemas/EntityStatus"
+											},
+											"expiry_date": {
+												"type": "string"
+											},
+											"minimum_amount": {
+												"type": "string"
+											},
+											"cap": {
+												"type": "string"
+											},
+											"channel": {
+												"type": "string"
+											},
+											"starting_date": {
 												"type": "string"
 											}
 										}

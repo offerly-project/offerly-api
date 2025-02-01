@@ -50,24 +50,18 @@ export class OffersRepositry {
 				{
 					$lookup: {
 						from: "banks",
-						localField: "applicable_cards_temp.bank",
+						localField: "bankId",
 						foreignField: "_id",
-						as: "applicable_cards_temp.bank",
+						as: "bank",
 					},
 				},
 				{
-					$addFields: {
-						bank: { $arrayElemAt: ["$applicable_cards_temp.bank", 0] },
-					},
-				},
-				{
-					$project: {
-						applicable_cards_temp: 0,
-					},
+					$unwind: "$bank",
 				},
 				{
 					$project: {
 						"bank.cards": 0,
+						bankId: 0,
 					},
 				},
 			])
@@ -233,6 +227,102 @@ export class OffersRepositry {
 						data: [],
 					}
 			);
+	}
+
+	async getLastChanceOffers(limit: number) {
+		return this.collection
+			.aggregate<WithId<IOffer>>([
+				{
+					$match: {
+						expiry_date: { $gte: new Date() },
+					},
+				},
+				{
+					$sort: {
+						expiry_date: 1,
+					},
+				},
+				{
+					$limit: limit,
+				},
+				{
+					$lookup: {
+						from: "cards",
+						localField: "applicable_cards",
+						foreignField: "_id",
+						as: "applicable_cards",
+					},
+				},
+				{
+					$project: {
+						_id: 1,
+						title: 1,
+						description: 1,
+						logo: 1,
+						offer_source_link: 1,
+						status: 1,
+						terms_and_conditions: 1,
+						expiry_date: 1,
+						minimum_amount: 1,
+						cap: 1,
+						channels: 1,
+						starting_date: 1,
+						categories: 1,
+						applicable_cards: {
+							_id: 1,
+							name: 1,
+							logo: 1,
+						},
+					},
+				},
+			])
+			.toArray();
+	}
+
+	async getNewlyAddedOffers(limit: number) {
+		return this.collection
+			.aggregate<WithId<IOffer>>([
+				{
+					$sort: {
+						created_at: -1,
+					},
+				},
+				{
+					$limit: limit,
+				},
+				{
+					$lookup: {
+						from: "cards",
+						localField: "applicable_cards",
+						foreignField: "_id",
+						as: "applicable_cards",
+					},
+				},
+				{
+					$project: {
+						_id: 1,
+						title: 1,
+						description: 1,
+						logo: 1,
+						offer_source_link: 1,
+						status: 1,
+						terms_and_conditions: 1,
+						expiry_date: 1,
+						minimum_amount: 1,
+						cap: 1,
+						channels: 1,
+						starting_date: 1,
+						categories: 1,
+						created_at: 1,
+						applicable_cards: {
+							_id: 1,
+							name: 1,
+							logo: 1,
+						},
+					},
+				},
+			])
+			.toArray();
 	}
 }
 

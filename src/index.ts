@@ -42,9 +42,7 @@ dotenv.config();
 
 	app.use("/user", userRouter);
 
-	if (env.NODE_ENV === "development") {
-		app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJson));
-	}
+	app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 
 	app.get("/health", (req, res) => {
 		res.json({ status: "healthy!" });

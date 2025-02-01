@@ -88,6 +88,38 @@ const getUserOffersHandler = async (
 	}
 };
 
+type TrendingOffersQuery = {
+	limit?: number;
+};
+
+const getUserLastChanceOffersHandler = async (
+	req: Request<{}, {}, {}, TrendingOffersQuery>,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const limit = req.query.limit || 10;
+		const offers = await offersService.getLastChanceOffers(+limit);
+		res.status(StatusCodes.OK).send(transformDocsResponse(offers));
+	} catch (e) {
+		next(e);
+	}
+};
+
+const getUserNewlyAddedOfferHandler = async (
+	req: Request<{}, {}, {}, TrendingOffersQuery>,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const limit = req.query.limit || 10;
+		const offers = await offersService.getNewlyAddedOffers(+limit);
+		res.status(StatusCodes.OK).send(transformDocsResponse(offers));
+	} catch (e) {
+		next(e);
+	}
+};
+
 export const offersController = {
 	createOfferHandler,
 	getOffersHandler,
@@ -95,4 +127,6 @@ export const offersController = {
 	updateOfferHandler,
 	deleteOfferHandler,
 	getUserOffersHandler,
+	getUserLastChanceOffersHandler,
+	getUserNewlyAddedOfferHandler,
 };
