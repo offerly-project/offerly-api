@@ -13,7 +13,7 @@ export interface IOffer extends Document {
 	starting_date?: Date;
 	expiry_date: Date;
 	minimum_amount?: string;
-	bankId: string;
+	bankId: ObjectId;
 	cap?: string;
 	status: EntityStatus;
 	channels: OfferChannel[];
