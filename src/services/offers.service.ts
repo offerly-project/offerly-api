@@ -36,6 +36,7 @@ export class OffersService {
 			cap: data.cap,
 			status: "enabled",
 			title: data.title,
+			created_at: new Date(),
 		});
 
 		const id = await offersRepository.add(offer);

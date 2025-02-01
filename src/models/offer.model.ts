@@ -18,4 +18,5 @@ export interface IOffer extends Document {
 	channels: OfferChannel[];
 	categories: string[];
 	applicable_cards: ObjectId[];
+	created_at: Date;
 }
