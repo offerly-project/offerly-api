@@ -82,6 +82,8 @@ export class OffersService {
 			title: data.title,
 		});
 
+		console.log(patchData);
+
 		await offersRepository.update(id, patchData);
 	}
 
