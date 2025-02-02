@@ -41,33 +41,19 @@ export class OffersRepositry {
 			.aggregate<WithId<IOffer>>([
 				{
 					$lookup: {
-						from: "cards",
-						localField: "applicable_cards",
-						foreignField: "_id",
-						as: "applicable_cards_temp",
-					},
-				},
-				{
-					$lookup: {
 						from: "banks",
-						localField: "applicable_cards_temp.bank",
+						localField: "bankId",
 						foreignField: "_id",
-						as: "applicable_cards_temp.bank",
+						as: "bank",
 					},
 				},
 				{
-					$addFields: {
-						bank: { $arrayElemAt: ["$applicable_cards_temp.bank", 0] },
-					},
-				},
-				{
-					$project: {
-						applicable_cards_temp: 0,
-					},
+					$unwind: "$bank",
 				},
 				{
 					$project: {
 						"bank.cards": 0,
+						bankId: 0,
 					},
 				},
 			])
@@ -107,11 +93,14 @@ export class OffersRepositry {
 		userCards: ObjectId[] = [],
 		guest = false
 	) {
-		const { card, category, page, limit, q, sort_by, sort_direction } = query;
+		const { card, category, page, limit, q, sort_by, sort_direction, bank } =
+			query;
 		const cards = card
 			? card.split(",").map((cardId) => new ObjectId(cardId))
 			: userCards;
-		const cardFilter = { applicable_cards: { $in: cards } };
+		const cardFilter = !bank ? { applicable_cards: { $in: cards } } : {};
+
+		const bankFilter = bank ? { bankId: new ObjectId(bank) } : {};
 
 		const categoryFilter = category
 			? {
@@ -158,6 +147,7 @@ export class OffersRepositry {
 					...searchFilter,
 					...{ status: { $eq: "enabled" } },
 					...{ expiry_date: { $gte: new Date() } },
+					...bankFilter,
 				},
 			},
 		];

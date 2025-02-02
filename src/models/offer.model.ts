@@ -1,5 +1,6 @@
 import { Document, ObjectId } from "mongodb";
 import { EntityStatus, Translation } from "../ts/global";
+import { IBank } from "./bank.model";
 
 export type OfferChannel = "online" | "in-store";
 
@@ -14,6 +15,7 @@ export interface IOffer extends Document {
 	expiry_date: Date;
 	minimum_amount?: string;
 	bankId: ObjectId;
+	bank?: Omit<IBank, "cards">;
 	cap?: string;
 	status: EntityStatus;
 	channels: OfferChannel[];

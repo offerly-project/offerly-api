@@ -53,6 +53,7 @@ export const getUserOffersSchema = z.object({
 	query: z.object({
 		card: z.string().optional(),
 		q: z.string().optional(),
+		bank: z.string().optional(),
 		sort_by: offerSortBySchema.optional(),
 		sort_direction: offerSortDirectionSchema.default("asc").optional(),
 		category: z.string().optional().refine(validateCategories(true)),
