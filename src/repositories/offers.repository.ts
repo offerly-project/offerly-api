@@ -50,18 +50,24 @@ export class OffersRepositry {
 				{
 					$lookup: {
 						from: "banks",
-						localField: "bankId",
+						localField: "applicable_cards_temp.bank",
 						foreignField: "_id",
-						as: "bank",
+						as: "applicable_cards_temp.bank",
 					},
 				},
 				{
-					$unwind: "$bank",
+					$addFields: {
+						bank: { $arrayElemAt: ["$applicable_cards_temp.bank", 0] },
+					},
+				},
+				{
+					$project: {
+						applicable_cards_temp: 0,
+					},
 				},
 				{
 					$project: {
 						"bank.cards": 0,
-						bankId: 0,
 					},
 				},
 			])
