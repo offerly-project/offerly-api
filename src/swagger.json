@@ -1153,6 +1153,17 @@
 				"description": "Retrieve offers based on applicable cards, categories, search query, and pagination.",
 				"parameters": [
 					{
+						"name": "bank",
+						"in": "query",
+						"description": "Filter offers by bankId",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "objectId",
+							"example": "6482d6b5e9c8f8b5f3c7842s"
+						}
+					},
+					{
 						"name": "card",
 						"in": "query",
 						"description": "Filter offers by applicable card ID.",
