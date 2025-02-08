@@ -44,7 +44,7 @@ export class UsersService {
 			cards: [],
 			favorites: [],
 			language: body.language,
-			notification_token: body.notification_token,
+			notification_token: body.notification_token || null,
 		};
 		return await usersRepository.create(user);
 	}
