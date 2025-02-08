@@ -44,6 +44,7 @@ export class UsersService {
 			cards: [],
 			favorites: [],
 			language: body.language,
+			notification_token: body.notification_token,
 		};
 		return await usersRepository.create(user);
 	}
@@ -110,6 +111,7 @@ export class UsersService {
 			full_name: data.full_name,
 			phone_number: data.phone_number,
 			language: data.language,
+			notification_token: data.notification_token,
 		});
 		await usersRepository.update(userId, userPatch);
 	}

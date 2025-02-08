@@ -12,4 +12,5 @@ export interface IUser extends Document {
 	password: string;
 	full_name: string;
 	language?: Language;
+	notification_token?: string;
 }

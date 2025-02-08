@@ -7,6 +7,7 @@ export const signupUserSchema = z.object({
 		password: z.string({ message: "Password is required" }),
 		full_name: z.string({ message: "Full Name is required" }),
 		language: z.enum(LANGUAGES).default("en"),
+		notification_token: z.string().optional(),
 	}),
 });
 
@@ -15,6 +16,7 @@ export const patchUserSchema = z.object({
 		full_name: z.string().optional(),
 		phone_number: z.string().optional(),
 		language: z.enum(LANGUAGES).optional(),
+		notification_token: z.string().optional(),
 	}),
 });
 

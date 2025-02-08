@@ -59,6 +59,7 @@ dotenv.config();
 	app.use(errorsMiddleware);
 
 	startGarbageCollectors();
+
 	app.listen(env.PORT, () => {
 		console.log(`Server is running on port ${env.PORT}`);
 	});
