@@ -95,10 +95,14 @@ export class OffersRepositry {
 	) {
 		const { card, category, page, limit, q, sort_by, sort_direction, bank } =
 			query;
-		const cards = card
-			? card.split(",").map((cardId) => new ObjectId(cardId))
-			: userCards;
-		const cardFilter = !bank ? { applicable_cards: { $in: cards } } : {};
+
+		const cards =
+			card && card !== "*"
+				? card.split(",").map((cardId) => new ObjectId(cardId))
+				: userCards;
+
+		const cardFilter =
+			card !== "*" && !bank ? { applicable_cards: { $in: cards } } : {};
 
 		const bankFilter = bank ? { bankId: new ObjectId(bank) } : {};
 
@@ -151,6 +155,8 @@ export class OffersRepositry {
 				},
 			},
 		];
+
+		console.log(JSON.stringify(pipelineBase, null, 2));
 
 		if (sort_by) {
 			pipelineBase.push(sortStage);

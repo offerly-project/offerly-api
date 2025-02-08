@@ -93,7 +93,15 @@ export class OffersService {
 	async getUserOffers(query: OffersQuery, userId: string) {
 		const user = await usersRepository.findById(userId);
 		const userCards = user?.cards.map((card) => new ObjectId(card)) || [];
-		const offers = await offersRepository.getOffersByQuery(query, userCards);
+
+		const offers = await offersRepository.getOffersByQuery(
+			{
+				...query,
+				page: query.page || "1",
+				limit: query.limit || "50",
+			},
+			userCards
+		);
 		return offers;
 	}
 

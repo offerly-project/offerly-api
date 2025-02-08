@@ -57,19 +57,31 @@ export const getUserOffersSchema = z.object({
 		sort_by: offerSortBySchema.optional(),
 		sort_direction: offerSortDirectionSchema.default("asc").optional(),
 		category: z.string().optional().refine(validateCategories(true)),
-		page: z.string().refine((value) => {
-			if (!isNumber(+value)) {
-				return false;
-			}
-			return +value >= 1;
-		}),
-		limit: z.string().refine((value) => {
-			if (!isNumber(+value)) {
-				return false;
-			}
-			return +value <= 20 && +value >= 1;
-		}),
+		page: z
+			.string()
+			.refine((value) => {
+				if (!isNumber(+value)) {
+					return true;
+				}
+				return +value >= 1;
+			})
+			.optional(),
+		limit: z
+			.string()
+			.refine((value) => {
+				if (!isNumber(+value)) {
+					return true;
+				}
+				return +value <= 50 && +value >= 1;
+			})
+			.optional(),
 	}),
 });
 
-export type OffersQuery = z.infer<typeof getUserOffersSchema>["query"];
+export type OffersQuery = Omit<
+	z.infer<typeof getUserOffersSchema>["query"],
+	"page" | "limit"
+> & {
+	page: string;
+	limit: string;
+};
