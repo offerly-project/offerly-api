@@ -94,6 +94,17 @@ export class OffersService {
 		const user = await usersRepository.findById(userId);
 		const userCards = user?.cards.map((card) => new ObjectId(card)) || [];
 
+		if (query?.card === "*") {
+			return {
+				metadata: {
+					total: 0,
+					limit: 0,
+					offset: 0,
+				},
+				data: [],
+			};
+		}
+
 		const offers = await offersRepository.getOffersByQuery(
 			{
 				...query,

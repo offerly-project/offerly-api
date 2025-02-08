@@ -81,16 +81,7 @@ const getUserOffersHandler = async (
 ) => {
 	try {
 		const userId = req.user.id;
-		if (req.query.card === "*") {
-			return {
-				metadata: {
-					total: 0,
-					limit: 0,
-					offset: 0,
-				},
-				data: [],
-			};
-		}
+
 		const offers = await offersService.getUserOffers(req.query, userId);
 		res.status(StatusCodes.OK).send(transformDocsResponse(offers));
 	} catch (e) {
