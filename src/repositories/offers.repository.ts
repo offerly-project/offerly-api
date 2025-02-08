@@ -156,8 +156,6 @@ export class OffersRepositry {
 			},
 		];
 
-		console.log(JSON.stringify(pipelineBase, null, 2));
-
 		if (sort_by) {
 			pipelineBase.push(sortStage);
 		}
