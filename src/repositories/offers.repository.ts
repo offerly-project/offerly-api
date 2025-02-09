@@ -235,8 +235,10 @@ export class OffersRepositry {
 				{
 					$match: {
 						expiry_date: { $gte: new Date() },
+						status: "enabled",
 					},
 				},
+				{},
 				{
 					$sort: {
 						expiry_date: 1,
@@ -285,6 +287,12 @@ export class OffersRepositry {
 				{
 					$sort: {
 						created_at: -1,
+					},
+				},
+				{
+					$match: {
+						status: "enabled",
+						expiry_date: { $gte: new Date() },
 					},
 				},
 				{
