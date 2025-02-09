@@ -238,7 +238,7 @@ export class OffersRepositry {
 						status: { $eq: "enabled" },
 					},
 				},
-				{},
+
 				{
 					$sort: {
 						expiry_date: 1,
