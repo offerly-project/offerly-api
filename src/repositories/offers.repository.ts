@@ -235,7 +235,7 @@ export class OffersRepositry {
 				{
 					$match: {
 						expiry_date: { $gte: new Date() },
-						status: "enabled",
+						status: { $eq: "enabled" },
 					},
 				},
 				{},
@@ -291,7 +291,7 @@ export class OffersRepositry {
 				},
 				{
 					$match: {
-						status: "enabled",
+						status: { $eq: "enabled" },
 						expiry_date: { $gte: new Date() },
 					},
 				},
