@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { offersController } from "../controllers/offers.controller";
-import { authorizeUser } from "../middlewares/auth.middleware";
+import {
+	authorizeUser,
+	customAuthorization,
+} from "../middlewares/auth.middleware";
 import { validateRequest } from "../utils/utils";
 import {
 	createOfferSchema,
@@ -36,12 +39,12 @@ offersUserRouter.get(
 
 offersUserRouter.get(
 	"/last-chance",
-	authorizeUser,
+	customAuthorization(["guest", "user"]),
 	offersController.getUserLastChanceOffersHandler
 );
 
 offersUserRouter.get(
 	"/newly-added",
-	authorizeUser,
+	customAuthorization(["guest", "user"]),
 	offersController.getUserNewlyAddedOfferHandler
 );

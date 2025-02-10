@@ -31,7 +31,7 @@ userRouter.use("/banks", authorizeUser, banksUserRouter);
 
 userRouter.use("/cards", authorizeUser, cardsUserRouter);
 
-userRouter.use("/offers", authorizeUser, offersUserRouter);
+userRouter.use("/offers", offersUserRouter);
 
 userRouter.use("/favorites", authorizeUser, userFavoriteOffersRouter);
 
