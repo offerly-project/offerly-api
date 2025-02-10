@@ -44,7 +44,9 @@ export class UsersService {
 			cards: [],
 			favorites: [],
 			language: body.language,
-			notification_token: body.notification_token || null,
+			notification_token: body.notification_token
+				? [body.notification_token]
+				: [],
 		};
 		return await usersRepository.create(user);
 	}
@@ -111,7 +113,11 @@ export class UsersService {
 			full_name: data.full_name,
 			phone_number: data.phone_number,
 			language: data.language,
-			notification_token: data.notification_token,
+			notification_token: data.notification_token
+				? user.notification_token
+					? [...user.notification_token, data.notification_token]
+					: [data.notification_token]
+				: user.notification_token,
 		});
 		await usersRepository.update(userId, userPatch);
 	}
@@ -127,6 +133,18 @@ export class UsersService {
 
 	async guestContact({ email, subject, message }: GuestContactBodyData) {
 		mailService.sendContactMail(email, "Guest", subject, message);
+	}
+
+	async removeToken(userId: string, token: string) {
+		const user = await usersRepository.findById(userId);
+		if (!user) {
+			throw new NotFoundError("User not found", ErrorCodes.USER_NOT_FOUND);
+		}
+		if (!user.notification_token) {
+			throw new NotFoundError("Token not found", ErrorCodes.BAD_REQUEST);
+		}
+		const newTokens = [...user.notification_token].filter((t) => t !== token);
+		await usersRepository.update(userId, { notification_token: newTokens });
 	}
 }
 
