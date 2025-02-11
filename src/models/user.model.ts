@@ -4,6 +4,12 @@ export const LANGUAGES = ["en", "ar"] as const;
 
 export type Language = (typeof LANGUAGES)[number];
 
+export type NotificationTokenType = {
+	token: string;
+	timestamp: number;
+	device: string;
+};
+
 export interface IUser extends Document {
 	_id?: ObjectId;
 	cards: ObjectId[];
@@ -12,5 +18,5 @@ export interface IUser extends Document {
 	password: string;
 	full_name: string;
 	language?: Language;
-	notification_token?: string[];
+	notification_token?: NotificationTokenType[];
 }

@@ -1,7 +1,13 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import express, { json, urlencoded } from "express";
+import express, {
+	json,
+	NextFunction,
+	Request,
+	Response,
+	urlencoded,
+} from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import { db } from "./configs/db";
@@ -10,6 +16,7 @@ import { startGarbageCollectors } from "./configs/garbage-collector";
 import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
 import { queryMiddleware } from "./middlewares/query.middleware";
+import { pushNotificationsService } from "./notifications/notifications";
 import { otpRouter } from "./routers/otp.router";
 import { adminRouter, userRouter } from "./routers/routers";
 import { uploadsRouter } from "./routers/uploads.router";
@@ -41,6 +48,19 @@ dotenv.config();
 	app.use("/admin", adminRouter);
 
 	app.use("/user", userRouter);
+
+	app.post(
+		"/notify",
+		(
+			req: Request<{}, {}, { token: string; title: string; body: string }>,
+			res: Response,
+			next: NextFunction
+		) => {
+			const { token, title, body } = req.body;
+			pushNotificationsService.sendNotification(token, title, body);
+			res.json({ message: "Notification Sent" });
+		}
+	);
 
 	if (env.NODE_ENV === "development") {
 		app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJson));

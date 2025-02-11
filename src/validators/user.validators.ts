@@ -1,13 +1,18 @@
 import { z } from "zod";
 import { LANGUAGES } from "../models/user.model";
 
+const notificationTokenSchema = z.object({
+	token: z.string(),
+	timestamp: z.number(),
+	device: z.string(),
+});
+
 export const signupUserSchema = z.object({
 	body: z.object({
 		email: z.string({ message: "Email is required" }),
 		password: z.string({ message: "Password is required" }),
 		full_name: z.string({ message: "Full Name is required" }),
 		language: z.enum(LANGUAGES).default("en"),
-		notification_token: z.string().optional(),
 	}),
 });
 
@@ -16,7 +21,7 @@ export const patchUserSchema = z.object({
 		full_name: z.string().optional(),
 		phone_number: z.string().optional(),
 		language: z.enum(LANGUAGES).optional(),
-		notification_token: z.string().optional(),
+		notification_token: notificationTokenSchema.optional(),
 	}),
 });
 

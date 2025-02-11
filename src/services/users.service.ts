@@ -44,9 +44,7 @@ export class UsersService {
 			cards: [],
 			favorites: [],
 			language: body.language,
-			notification_token: body.notification_token
-				? [body.notification_token]
-				: [],
+			notification_tokens: [],
 		};
 		return await usersRepository.create(user);
 	}
@@ -108,16 +106,25 @@ export class UsersService {
 				);
 			}
 		}
+		let notificationToken = user.notification_token ?? [];
+
+		if (data.notification_token) {
+			const index = notificationToken.findIndex(
+				(token) => token.device === data.notification_token?.device
+			);
+
+			if (index === -1) {
+				notificationToken.push(data.notification_token);
+			} else {
+				notificationToken[index] = data.notification_token;
+			}
+		}
 
 		const userPatch: Partial<IUser> = removeUndefinedValuesFromObject({
 			full_name: data.full_name,
 			phone_number: data.phone_number,
 			language: data.language,
-			notification_token: data.notification_token
-				? user.notification_token
-					? [...user.notification_token, data.notification_token]
-					: [data.notification_token]
-				: user.notification_token,
+			notification_token: notificationToken || undefined,
 		});
 		await usersRepository.update(userId, userPatch);
 	}
@@ -135,17 +142,7 @@ export class UsersService {
 		mailService.sendContactMail(email, "Guest", subject, message);
 	}
 
-	async removeToken(userId: string, token: string) {
-		const user = await usersRepository.findById(userId);
-		if (!user) {
-			throw new NotFoundError("User not found", ErrorCodes.USER_NOT_FOUND);
-		}
-		if (!user.notification_token) {
-			throw new NotFoundError("Token not found", ErrorCodes.BAD_REQUEST);
-		}
-		const newTokens = [...user.notification_token].filter((t) => t !== token);
-		await usersRepository.update(userId, { notification_token: newTokens });
-	}
+	async removeToken(userId: string, token: string) {}
 }
 
 export const usersService = new UsersService();
