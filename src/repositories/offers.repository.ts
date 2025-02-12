@@ -5,6 +5,7 @@ import { ErrorCodes } from "../errors/errors.codes";
 import { IOffer } from "../models/offer.model";
 import { getSortDirectionNumber } from "../utils/utils";
 import { OffersQuery } from "../validators/offer.validators";
+import { EventsEn, eventsRepository } from "./events.repository";
 
 export class OffersRepositry {
 	private collection: Collection<IOffer>;
@@ -14,6 +15,11 @@ export class OffersRepositry {
 	}
 	async add(data: IOffer) {
 		const result = await this.collection.insertOne(data);
+		eventsRepository.pushEvent({
+			type: EventsEn.NewOffer,
+			offer: data.bankId.toString(),
+			cards: data.applicable_cards.map((card) => card.toString()),
+		});
 		if (!result.insertedId) {
 			throw new InternalServerError(
 				"Failed to create offer",

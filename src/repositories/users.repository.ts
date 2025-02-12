@@ -56,6 +56,35 @@ export class UsersRepository {
 		this.collection = db.getCollection("users");
 	}
 
+	async findUsersWithCards(cards: string[]) {
+		return this.collection
+			.aggregate<
+				Pick<IUser, "_id" | "notification_token"> & {
+					cards: {
+						_id: ObjectId;
+						name: string;
+					}[];
+				}
+			>([
+				{
+					$match: {
+						cards: {
+							$in: cards.map((card) => new ObjectId(card)),
+						},
+					},
+				},
+				{
+					$lookup: {
+						from: "cards",
+						localField: "cards",
+						foreignField: "_id",
+						as: "cards",
+					},
+				},
+			])
+			.toArray();
+	}
+
 	async create(user: IUser) {
 		return this.collection.insertOne(user);
 	}

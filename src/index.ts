@@ -17,6 +17,7 @@ import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
 import { queryMiddleware } from "./middlewares/query.middleware";
 import { pushNotificationsService } from "./notifications/notifications";
+import { agenda } from "./notifications/scheduler";
 import { otpRouter } from "./routers/otp.router";
 import { adminRouter, userRouter } from "./routers/routers";
 import { uploadsRouter } from "./routers/uploads.router";
@@ -25,6 +26,8 @@ import swaggerJson from "./swagger.json";
 dotenv.config();
 
 (async function () {
+	await agenda.start();
+
 	await db.connect();
 
 	const app = express();
@@ -65,7 +68,9 @@ dotenv.config();
 			next: NextFunction
 		) => {
 			const { token, title, body } = req.body;
-			pushNotificationsService.sendNotification(token, title, body);
+			pushNotificationsService.sendNotifications([
+				{ notification: { title: title, body: body }, tokens: [token] },
+			]);
 			res.json({ message: "Notification Sent" });
 		}
 	);

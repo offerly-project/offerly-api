@@ -16,6 +16,7 @@ const schema = z.object({
 	SMTP_SECURE: z.string(),
 	NODE_ENV: z.string().default("development"),
 	UPLOADS_DIR: z.string(),
+	AGENDA_URL: z.string(),
 });
 
 export const env = schema.parse(process.env);
