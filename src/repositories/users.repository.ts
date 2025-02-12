@@ -69,7 +69,7 @@ export class UsersRepository {
 				{
 					$match: {
 						cards: {
-							$in: cards.map((card) => new ObjectId(card)),
+							$elemMatch: { $in: cards.map((card) => new ObjectId(card)) },
 						},
 					},
 				},
