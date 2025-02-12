@@ -4,7 +4,7 @@ import { LANGUAGES } from "../models/user.model";
 const notificationTokenSchema = z.object({
 	token: z.string(),
 	timestamp: z.number(),
-	device: z.string(),
+	platform: z.string(),
 });
 
 export const signupUserSchema = z.object({

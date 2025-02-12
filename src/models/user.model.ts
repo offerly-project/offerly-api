@@ -7,7 +7,7 @@ export type Language = (typeof LANGUAGES)[number];
 export type NotificationTokenType = {
 	token: string;
 	timestamp: number;
-	device: string;
+	platform: string;
 };
 
 export interface IUser extends Document {

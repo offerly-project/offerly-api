@@ -109,15 +109,14 @@ export class UsersService {
 		let notificationToken = user.notification_token ?? [];
 
 		if (data.notification_token) {
-			const index = notificationToken.findIndex(
-				(token) => token.device === data.notification_token?.device
-			);
-
-			if (index === -1) {
-				notificationToken.push(data.notification_token);
-			} else {
-				notificationToken[index] = data.notification_token;
-			}
+			notificationToken = [
+				...notificationToken,
+				{
+					token: data.notification_token.token,
+					timestamp: data.notification_token.timestamp,
+					platform: data.notification_token.platform,
+				},
+			];
 		}
 
 		const userPatch: Partial<IUser> = removeUndefinedValuesFromObject({
