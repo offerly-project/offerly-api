@@ -18,7 +18,7 @@ type NotificationUI = {
 };
 
 export enum NotificationActions {
-	SHOW_SORTED_BY_NEW_ORDERS,
+	SHOW_SORTED_BY_NEW_ORDERS = "SHOW_SORTED_BY_NEW_ORDERS",
 }
 
 export type NewOffersNotificationData = {
@@ -65,54 +65,64 @@ export class PushNotificationsService {
 			Array.from(cardsSet)
 		);
 		const notifications: NotificationsSentData[] = [];
+
 		users.forEach((user) => {
 			if (!user.notification_token) return;
-			const matchingCards = user.cards.filter((card) =>
-				Array.from(cardsSet).includes(card._id.toString())
-			);
+
+			let matchedOffers = 0;
+			newOffersEvents.forEach((ev) => {
+				if (
+					ev.cards.some((card) =>
+						user.cards.some((userCard) => userCard._id.toString() === card)
+					)
+				) {
+					matchedOffers++;
+				}
+			});
+
 			const userTokens = user.notification_token.map((token) => token.token);
 
-			const numberOfMatches = matchingCards.length;
-			if (numberOfMatches === 0) return;
+			if (matchedOffers === 0) return;
 
-			if (numberOfMatches > 1) {
-				notifications.push({
-					notification: {
-						title: "New offers",
-						body: `You have ${numberOfMatches} new offers`,
-					},
-					payload: {
-						action: NotificationActions.SHOW_SORTED_BY_NEW_ORDERS,
-					},
-					tokens: userTokens,
-				});
-			} else {
-				notifications.push({
-					notification: {
-						title: "New offer",
-						body: `You have a new offer on card ${matchingCards[0].name}`,
-					},
-					payload: {
-						action: NotificationActions.SHOW_SORTED_BY_NEW_ORDERS,
-					},
-					tokens: userTokens,
-				});
-			}
+			const title = matchedOffers > 1 ? "New offers" : "New offer";
+			const body =
+				matchedOffers > 1
+					? `You have ${matchedOffers} new offers`
+					: "You have a new offer";
+
+			notifications.push({
+				notification: {
+					title,
+					body,
+				},
+				payload: {
+					action: NotificationActions.SHOW_SORTED_BY_NEW_ORDERS,
+				},
+				tokens: userTokens,
+			});
 		});
+
+		await this.eventsRepository.clearEventsByType(EventsEn.NewOffer);
+
+		if (notifications.length === 0) return;
+
 		this.sendNotifications(notifications);
 	};
 
 	sendNotifications = async (notifications: NotificationsSentData[]) => {
 		try {
-			notifications.forEach(async (notificationData) => {
+			const promises: Promise<any>[] = [];
+			for (const notificationData of notifications) {
 				const { tokens, notification, payload } = notificationData;
 				const message: MulticastMessage = {
 					notification,
-					data: payload as any,
+					data: payload,
 					tokens,
 				};
-				this.messaging.sendEachForMulticast(message);
-			});
+
+				promises.push(this.messaging.sendEachForMulticast(message));
+			}
+			await Promise.all(promises);
 		} catch (error) {
 			console.error("Error sending message:", error);
 		}

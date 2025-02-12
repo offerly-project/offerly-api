@@ -59,10 +59,13 @@ export class UsersRepository {
 	async findUsersWithCards(cards: string[]) {
 		return this.collection
 			.aggregate<
-				Pick<IUser, "_id" | "notification_token"> & {
+				Pick<IUser, "_id" | "notification_token" | "full_name"> & {
 					cards: {
 						_id: ObjectId;
-						name: string;
+						name: {
+							en: string;
+							ar: string;
+						};
 					}[];
 				}
 			>([
