@@ -1,15 +1,8 @@
-import Agenda from "agenda";
-import { env } from "../configs/env";
+import cron from "node-cron";
 import { pushNotificationsService } from "./notifications";
 
-export const agenda = new Agenda({
-	db: { address: env.AGENDA_URL },
-});
-
-export const scheduleNewOffers = async (agenda: Agenda) => {
-	agenda.define(
-		"push-new-offers",
-		pushNotificationsService.pushNewOffersNotification
-	);
-	await agenda.every("30 seconds", "push-new-offers");
+export const scheduleNewOffers = async () => {
+	cron.schedule("*/30 * * * * *", async () => {
+		pushNotificationsService.pushNewOffersNotification();
+	});
 };
