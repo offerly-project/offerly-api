@@ -17,7 +17,7 @@ import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
 import { queryMiddleware } from "./middlewares/query.middleware";
 import { pushNotificationsService } from "./notifications/notifications";
-import { agenda } from "./notifications/scheduler";
+import { agenda, scheduleNewOffers } from "./notifications/scheduler";
 import { otpRouter } from "./routers/otp.router";
 import { adminRouter, userRouter } from "./routers/routers";
 import { uploadsRouter } from "./routers/uploads.router";
@@ -27,6 +27,8 @@ dotenv.config();
 
 (async function () {
 	await agenda.start();
+
+	scheduleNewOffers(agenda);
 
 	await db.connect();
 
