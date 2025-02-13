@@ -79,6 +79,10 @@ export class UserAuthService {
 		}
 		this.changePassword(id, newPassword);
 	}
+
+	logout(id: string) {
+		return usersRepository.update(id, { logged_in: false });
+	}
 }
 
 export const adminAuthService = new AdminAuthService();

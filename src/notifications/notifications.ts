@@ -65,9 +65,15 @@ export class PushNotificationsService {
 		const users = await this.usersRepository.findUsersWithCards(
 			Array.from(cardsSet)
 		);
+		const filteredUsers = users.filter(
+			(user) =>
+				!!user.notification_token &&
+				user.notification_token.length !== 0 &&
+				user.logged_in
+		);
 		const notifications: NotificationsSentData[] = [];
 
-		users.forEach((user) => {
+		filteredUsers.forEach((user) => {
 			if (!user.notification_token) return;
 
 			let matchedOffers = 0;
@@ -141,7 +147,9 @@ export class PushNotificationsService {
 		const notifications: NotificationsSentData[] = [];
 		const filteredUsers = users.filter(
 			(user) =>
-				!!user.notification_token && user.notification_token?.length !== 0
+				!!user.notification_token &&
+				user.notification_token?.length !== 0 &&
+				user.logged_in
 		);
 		filteredUsers.forEach((user) => {
 			for (const favoriteOffer of user.favorites) {

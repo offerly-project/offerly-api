@@ -60,7 +60,7 @@ export class UsersRepository {
 	async getUsersFavorites() {
 		return this.collection
 			.aggregate<
-				Pick<IUser, "expiry_date" | "notification_token"> & {
+				Pick<IUser, "expiry_date" | "notification_token" | "logged_in"> & {
 					favorites: IOffer[];
 				}
 			>([
@@ -79,7 +79,10 @@ export class UsersRepository {
 	async findUsersWithCards(cards: string[]) {
 		return this.collection
 			.aggregate<
-				Pick<IUser, "_id" | "notification_token" | "full_name"> & {
+				Pick<
+					IUser,
+					"_id" | "notification_token" | "full_name" | "logged_in"
+				> & {
 					cards: {
 						_id: ObjectId;
 						name: {

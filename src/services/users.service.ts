@@ -45,6 +45,7 @@ export class UsersService {
 			favorites: [],
 			language: body.language,
 			notification_tokens: [],
+			logged_in: true,
 		};
 		return await usersRepository.create(user);
 	}
@@ -145,8 +146,6 @@ export class UsersService {
 	async guestContact({ email, subject, message }: GuestContactBodyData) {
 		mailService.sendContactMail(email, "Guest", subject, message);
 	}
-
-	async removeToken(userId: string, token: string) {}
 }
 
 export const usersService = new UsersService();

@@ -30,3 +30,9 @@ userAuthRouter.put(
 	validateRequest(userResetPasswordSchema),
 	authController.userResetPasswordHandler
 );
+
+userAuthRouter.post(
+	"/logout",
+	authorizeUserWithActions(["login"]),
+	authController.userLogoutHandler
+);
