@@ -18,7 +18,6 @@ export const createOfferSchema = z.object({
 		categories: z.array(z.string()).refine(validateCategories()),
 		applicable_cards: z.array(z.string()).min(1),
 		title: languagesSchema,
-		bankId: z.string().optional(),
 	}),
 });
 
@@ -33,7 +32,6 @@ export const updateOfferSchema = z.object({
 		expiry_date: z.coerce.date().optional(),
 		minimum_amount: z.string().optional(),
 		cap: z.string().optional(),
-		bankId: z.string().optional(),
 		channels: z.array(z.enum(channels)).optional(),
 		categories: z.array(z.string()).optional().refine(validateCategories(true)),
 		applicable_cards: z.array(z.string()).min(1),

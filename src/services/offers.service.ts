@@ -18,17 +18,11 @@ export class OffersService {
 			throw new NotFoundError("some cards not found");
 		}
 
-		let bankId: string;
-
-		if (data.bankId) {
-			bankId = data.bankId;
-		} else {
-			const card = await cardsRepository.findById(data.applicable_cards[0]);
-			if (!card) {
-				throw new NotFoundError("Bank not found");
-			}
-			bankId = card?.bank.toString();
+		const card = await cardsRepository.findById(data.applicable_cards[0]);
+		if (!card) {
+			throw new NotFoundError("Bank not found");
 		}
+		const bankId = card?.bank.toString();
 
 		const offer: IOffer = removeUndefinedValuesFromObject({
 			description: data.description,
@@ -74,17 +68,11 @@ export class OffersService {
 	}
 
 	async updateOffer(id: string, data: UpdateOfferBodyData) {
-		let bankId: string | undefined = undefined;
-
-		if (data.bankId) {
-			bankId = data.bankId;
-		} else {
-			const card = await cardsRepository.findById(data.applicable_cards[0]);
-			if (!card) {
-				throw new NotFoundError("Bank not found");
-			}
-			bankId = card?.bank.toString();
+		const card = await cardsRepository.findById(data.applicable_cards[0]);
+		if (!card) {
+			throw new NotFoundError("Bank not found");
 		}
+		const bankId = card?.bank.toString();
 
 		const patchData: Partial<IOffer> = removeUndefinedValuesFromObject({
 			description: data.description,
@@ -97,7 +85,7 @@ export class OffersService {
 			applicable_cards: data.applicable_cards?.map((id) => new ObjectId(id)),
 			logo: data.logo,
 			discount_code: data.discount_code,
-			bankId: data.bankId ? new ObjectId(data.bankId) : undefined,
+			bankId: new ObjectId(bankId),
 			starting_date: data.starting_date
 				? new Date(data.starting_date)
 				: undefined,
