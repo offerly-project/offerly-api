@@ -108,7 +108,12 @@ export class UsersService {
 		}
 		let notificationToken = user.notification_token ?? [];
 
-		if (data.notification_token) {
+		if (
+			data.notification_token?.token &&
+			!user.notification_token?.find(
+				(t) => t.token === data.notification_token?.token
+			)
+		) {
 			notificationToken = [
 				...notificationToken,
 				{
