@@ -2,6 +2,7 @@ import { Collection, Document, ObjectId, PullOperator, WithId } from "mongodb";
 import { db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
 import { ErrorCodes } from "../errors/errors.codes";
+import { IBank } from "../models/bank.model";
 import { ICard } from "../models/card.model";
 import { Translation } from "../ts/global";
 import { languageSearchQuery } from "../utils/utils";
@@ -86,7 +87,7 @@ export class CardsRepository {
 
 	async findById(id: string) {
 		const card = await this.collection
-			.aggregate<WithId<ICard>>([
+			.aggregate<Omit<WithId<ICard>, "bank"> & { bank: IBank }>([
 				{
 					$match: {
 						_id: new ObjectId(id),

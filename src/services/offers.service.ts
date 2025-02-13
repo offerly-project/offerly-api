@@ -22,7 +22,7 @@ export class OffersService {
 		if (!card) {
 			throw new NotFoundError("Bank not found");
 		}
-		const bankId = card?.bank.toString();
+		const bankId = card?.bank._id;
 
 		const offer: IOffer = removeUndefinedValuesFromObject({
 			description: data.description,
@@ -72,7 +72,8 @@ export class OffersService {
 		if (!card) {
 			throw new NotFoundError("Bank not found");
 		}
-		const bankId = card?.bank.toString();
+
+		const bankId = card?.bank._id;
 
 		const patchData: Partial<IOffer> = removeUndefinedValuesFromObject({
 			description: data.description,
