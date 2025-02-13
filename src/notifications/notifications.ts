@@ -116,7 +116,7 @@ export class PushNotificationsService {
 		const messages: Record<number, { title: string; body: string }> = {
 			7: {
 				title: "⏳ One Week Left!",
-				body: "Some of your favorite offers will expire in **7 days**. Don't miss out!",
+				body: "Some of your favorite offers will expire in 7 days. Don't miss out!",
 			},
 			3: {
 				title: "🔥 Only 3 Days Left!",
