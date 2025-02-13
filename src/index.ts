@@ -17,7 +17,10 @@ import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
 import { queryMiddleware } from "./middlewares/query.middleware";
 import { pushNotificationsService } from "./notifications/notifications";
-import { scheduleNewOffers } from "./notifications/scheduler";
+import {
+	scheduleExpiringFavouritesNotifier,
+	scheduleNewOffersNotifier,
+} from "./notifications/scheduler";
 import { otpRouter } from "./routers/otp.router";
 import { adminRouter, userRouter } from "./routers/routers";
 import { uploadsRouter } from "./routers/uploads.router";
@@ -28,7 +31,8 @@ dotenv.config();
 (async function () {
 	await db.connect();
 
-	scheduleNewOffers();
+	scheduleNewOffersNotifier();
+	scheduleExpiringFavouritesNotifier();
 
 	const app = express();
 

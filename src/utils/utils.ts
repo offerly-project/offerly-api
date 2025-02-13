@@ -113,3 +113,6 @@ export const generateToken = (
 
 export const getSortDirectionNumber = (direction: "asc" | "desc") =>
 	direction === "asc" ? 1 : -1;
+
+export const sleep = (s: number) =>
+	new Promise((resolve) => setTimeout(resolve, s * 1000));

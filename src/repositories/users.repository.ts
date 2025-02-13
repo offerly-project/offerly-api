@@ -2,6 +2,7 @@ import { Collection, ObjectId, PullOperator } from "mongodb";
 import { Database, db } from "../configs/db";
 import { InternalServerError } from "../errors/errors";
 import { ErrorCodes } from "../errors/errors.codes";
+import { IOffer } from "../models/offer.model";
 import { IUser } from "../models/user.model";
 
 export class UsersRepository {
@@ -54,6 +55,25 @@ export class UsersRepository {
 
 	constructor(db: Database) {
 		this.collection = db.getCollection("users");
+	}
+
+	async getUsersFavorites() {
+		return this.collection
+			.aggregate<
+				Pick<IUser, "expiry_date" | "notification_token"> & {
+					favorites: IOffer[];
+				}
+			>([
+				{
+					$lookup: {
+						from: "offers",
+						localField: "favorites",
+						foreignField: "_id",
+						as: "favorites",
+					},
+				},
+			])
+			.toArray();
 	}
 
 	async findUsersWithCards(cards: string[]) {
