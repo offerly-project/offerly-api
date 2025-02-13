@@ -18,7 +18,7 @@ export const createOfferSchema = z.object({
 		categories: z.array(z.string()).refine(validateCategories()),
 		applicable_cards: z.array(z.string()),
 		title: languagesSchema,
-		bankId: z.string(),
+		bankId: z.string().optional(),
 	}),
 });
 
