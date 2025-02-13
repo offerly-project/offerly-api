@@ -14,7 +14,7 @@ export interface IOffer extends Document {
 	starting_date?: Date;
 	expiry_date: Date;
 	minimum_amount?: string;
-	bankId?: ObjectId;
+	bankId: ObjectId;
 	bank?: Omit<IBank, "cards">;
 	cap?: string;
 	status: EntityStatus;
