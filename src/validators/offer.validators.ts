@@ -32,8 +32,9 @@ export const updateOfferSchema = z.object({
 		expiry_date: z.coerce.date().optional(),
 		minimum_amount: z.string().optional(),
 		cap: z.string().optional(),
+
 		channels: z.array(z.enum(channels)).optional(),
-		categories: z.array(z.string()).optional(),
+		categories: z.array(z.string()).optional().refine(validateCategories(true)),
 		applicable_cards: z.array(z.string()).min(1),
 		status: z.enum(entityStatuses).optional(),
 		title: languagesSchema.optional(),
