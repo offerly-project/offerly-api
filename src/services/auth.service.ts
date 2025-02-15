@@ -1,16 +1,11 @@
 import bcrypt from "bcrypt";
 import { omit } from "lodash";
 import { env } from "../configs/env";
-import {
-	BadRequestError,
-	NotFoundError,
-	UnauthorizedError,
-} from "../errors/errors";
+import { BadRequestError, NotFoundError } from "../errors/errors";
 import { ErrorCodes } from "../errors/errors.codes";
 import { adminsRepository } from "../repositories/admins.repository";
 import { usersRepository } from "../repositories/users.repository";
 import { generateToken, validatePassword } from "../utils/utils";
-import { ANNONYMOUS_KEY } from "./users.service";
 
 export class AdminAuthService {
 	async login(username: string, password: string) {
@@ -32,12 +27,8 @@ export class AdminAuthService {
 
 export class UserAuthService {
 	async login(email: string, password: string) {
-		if (email === ANNONYMOUS_KEY) {
-			throw new UnauthorizedError(
-				"Anonymous user cannot login",
-				ErrorCodes.UNAUTHORIZED
-			);
-		}
+		email = email.toLowerCase();
+
 		const user = await usersRepository.findByEmail(email);
 		if (!user) {
 			throw new NotFoundError("User not found", ErrorCodes.USER_NOT_FOUND);
@@ -50,6 +41,7 @@ export class UserAuthService {
 			);
 		}
 		const token = await generateToken(user._id.toString(), "user", "login");
+		usersRepository.update(user._id.toString(), { logged_in: true });
 		return {
 			token,
 			user: omit(user, ["password", "_id"]),

@@ -9,6 +9,7 @@ type Collections =
 	| "users"
 	| "stores"
 	| "events"
+	| "deleted-users"
 	| "categories";
 
 export class Database {

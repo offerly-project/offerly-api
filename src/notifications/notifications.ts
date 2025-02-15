@@ -20,13 +20,21 @@ type NotificationUI = {
 
 export enum NotificationActions {
 	SHOW_SORTED_BY_NEW_ORDERS = "SHOW_SORTED_BY_NEW_ORDERS",
+	EXPIRING_FAVOURITES = "EXPIRING_FAVOURITES",
 }
 
 export type NewOffersNotificationData = {
 	action: NotificationActions.SHOW_SORTED_BY_NEW_ORDERS;
 };
 
-export type NotificationPayload = NewOffersNotificationData;
+export type ExpiringOffersNotificationData = {
+	action: NotificationActions.EXPIRING_FAVOURITES;
+	offers: string;
+};
+
+export type NotificationPayload =
+	| NewOffersNotificationData
+	| ExpiringOffersNotificationData;
 
 export type NotificationsSentData = {
 	notification: NotificationUI;
@@ -116,32 +124,6 @@ export class PushNotificationsService {
 		this.sendNotifications(notifications);
 	};
 
-	private _getExpiringFavoritesNotificationBasedOnDays = (
-		days: number
-	): NotificationUI => {
-		const messages: Record<number, { title: string; body: string }> = {
-			7: {
-				title: "⏳ One Week Left!",
-				body: "Some of your favorite offers will expire in 7 days. Don't miss out!",
-			},
-			3: {
-				title: "🔥 Only 3 Days Left!",
-				body: "Your favorite offers are expiring in 3 days. Act fast before they’re gone!",
-			},
-			1: {
-				title: "⚠️ Last Chance!",
-				body: "One of your favorite offers expires tomorrow. Grab it now before it's too late!",
-			},
-		};
-
-		return (
-			messages[days] ?? {
-				title: "⏰ Offer Expiring Soon!",
-				body: "Some of your favorite offers are **ending soon**. Check them out now!",
-			}
-		);
-	};
-
 	pushExpiringFavouritesNotification = async () => {
 		const users = await this.usersRepository.getUsersFavorites();
 		const notifications: NotificationsSentData[] = [];
@@ -151,22 +133,30 @@ export class PushNotificationsService {
 				user.notification_token?.length !== 0 &&
 				user.logged_in
 		);
+
 		filteredUsers.forEach((user) => {
+			const expiringOffers = [];
 			for (const favoriteOffer of user.favorites) {
 				const expiry = favoriteOffer.expiry_date;
 				const diff = expiry.getTime() - Date.now();
 
 				const days = diff / (1000 * 60 * 60 * 24);
 				if (days === 7 || days === 3 || days === 1) {
-					const notificationUi =
-						this._getExpiringFavoritesNotificationBasedOnDays(days);
-					notifications.push({
-						notification: notificationUi,
-						tokens: user.notification_token?.map((token) => token.token)!,
-					});
-					break;
+					expiringOffers.push(favoriteOffer._id);
 				}
 			}
+			const notificationUi: NotificationUI = {
+				title: "⏳ Hurry Up!",
+				body: "Some of your favorite offers will expire soon. Check them out now!",
+			};
+			notifications.push({
+				notification: notificationUi,
+				tokens: user.notification_token?.map((token) => token.token)!,
+				payload: {
+					action: NotificationActions.EXPIRING_FAVOURITES,
+					offers: expiringOffers.join(","),
+				},
+			});
 		});
 
 		this.sendNotifications(notifications);

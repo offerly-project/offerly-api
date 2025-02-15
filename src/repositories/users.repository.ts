@@ -7,6 +7,7 @@ import { IUser } from "../models/user.model";
 
 export class UsersRepository {
 	collection: Collection<IUser>;
+	deletedUsersCollection: Collection<IUser>;
 
 	private _favoritesPipeline = [
 		{
@@ -55,6 +56,7 @@ export class UsersRepository {
 
 	constructor(db: Database) {
 		this.collection = db.getCollection("users");
+		this.deletedUsersCollection = db.getCollection("deleted-users");
 	}
 
 	async getUsersFavorites() {
@@ -196,6 +198,10 @@ export class UsersRepository {
 		);
 	}
 
+	moveToHistory(user: IUser) {
+		return this.deletedUsersCollection.insertOne(user);
+	}
+
 	async removeFavoriteOffers(userId: string, offers: string[]) {
 		await this.collection.updateOne({ _id: new ObjectId(userId) }, {
 			$pull: {
@@ -203,6 +209,11 @@ export class UsersRepository {
 			},
 		} as unknown as PullOperator<IUser>);
 	}
+
+	async deleteUser(userId: string) {
+		return await this.collection.deleteOne({ _id: new ObjectId(userId) });
+	}
+
 	async update(userId: string, data: Partial<IUser>) {
 		const result = await this.collection.updateOne(
 			{ _id: new ObjectId(userId) },

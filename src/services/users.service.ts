@@ -18,8 +18,6 @@ import {
 } from "../validators/user.validators";
 import { mailService } from "./mail.service";
 
-export const ANNONYMOUS_KEY = "anonymous";
-
 export class UsersService {
 	async signupUser(body: SignupUserBodyData) {
 		const userDoc = await usersRepository.findByEmail(body.email);
@@ -38,7 +36,7 @@ export class UsersService {
 				);
 			});
 		const user: IUser = {
-			email: body.email,
+			email: body.email.toLowerCase(),
 			password: hashedPassword,
 			full_name: body.full_name,
 			cards: [],
@@ -85,11 +83,15 @@ export class UsersService {
 		if (!user) {
 			throw new NotFoundError("User not found", ErrorCodes.USER_NOT_FOUND);
 		}
-		await usersRepository.update(userId, {
-			full_name: ANNONYMOUS_KEY,
-			email: ANNONYMOUS_KEY,
-			password: ANNONYMOUS_KEY,
-		});
+		const historicalUser: IUser = {
+			...user,
+			full_name: "---",
+			email: "---",
+			password: "---",
+		};
+		await usersRepository.moveToHistory(historicalUser);
+
+		await usersRepository.deleteUser(userId);
 	};
 
 	async updateUser(userId: string, data: Partial<PatchUserBodyData>) {

@@ -5,6 +5,7 @@ import { IBank } from "./bank.model";
 export type OfferChannel = "online" | "in-store";
 
 export interface IOffer extends Document {
+	_id?: ObjectId;
 	description: Translation;
 	terms_and_conditions: Translation;
 	offer_source_link: string;

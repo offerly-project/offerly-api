@@ -3,11 +3,13 @@ import { randomBytes } from "crypto";
 import { env } from "../configs/env";
 import { JWTSource } from "../utils/utils";
 
+// 30 seconds
 export const OTP_REREQUEST = 0.5 * (60 * 1000);
 
-export const OTP_REREQUEST_SLACKED = 30 * 60 * 1000;
+// 30 minutes
+export const OTP_BUFFER = 30 * 60 * 1000;
 
-export const OTP_REREQUEST_SECONDS = OTP_REREQUEST / 1000;
+export const OTP_SECONDS_BUFFER = OTP_REREQUEST / 1000;
 
 export const OTP_LENGTH = 4;
 
@@ -36,7 +38,7 @@ export class OTP {
 			}, OTP_REREQUEST),
 			setTimeout(() => {
 				this._code = null;
-			}, OTP_REREQUEST_SLACKED)
+			}, OTP_BUFFER)
 		);
 	};
 
@@ -56,7 +58,7 @@ export class OTP {
 				this._code = hash;
 				this.clearTimeouts();
 				this._startTimer();
-				resolve({ code: otpGenerated, expiry: OTP_REREQUEST_SECONDS });
+				resolve({ code: otpGenerated, expiry: OTP_SECONDS_BUFFER });
 			});
 		});
 	};
