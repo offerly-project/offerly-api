@@ -144,7 +144,9 @@ export class OffersRepositry {
 			: sort_by === "created_at"
 			? {
 					$sort: {
-						created_at: getSortDirectionNumber("desc"),
+						created_at: getSortDirectionNumber(
+							sort_direction ? sort_direction : "desc"
+						),
 					},
 			  }
 			: {
