@@ -93,14 +93,14 @@ type TrendingOffersQuery = {
 	limit?: number;
 };
 
-const getUserLastChanceOffersHandler = async (
+const getUserTrendingOffersHandler = async (
 	req: Request<{}, {}, {}, TrendingOffersQuery>,
 	res: Response,
 	next: NextFunction
 ) => {
 	try {
 		const limit = req.query.limit || 10;
-		const offers = await offersService.getLastChanceOffers(+limit);
+		const offers = await offersService.getTrendingOffers(+limit);
 		res.status(StatusCodes.OK).send(transformDocsResponse(offers));
 	} catch (e) {
 		next(e);
@@ -128,6 +128,6 @@ export const offersController = {
 	updateOfferHandler,
 	deleteOfferHandler,
 	getUserOffersHandler,
-	getUserLastChanceOffersHandler,
+	getUserTrendingOffersHandler,
 	getUserNewlyAddedOfferHandler,
 };

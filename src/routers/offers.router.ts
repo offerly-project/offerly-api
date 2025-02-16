@@ -38,9 +38,9 @@ offersUserRouter.get(
 );
 
 offersUserRouter.get(
-	"/last-chance",
+	"/trending-offers",
 	customAuthorization(["guest", "user"]),
-	offersController.getUserLastChanceOffersHandler
+	offersController.getUserTrendingOffersHandler
 );
 
 offersUserRouter.get(

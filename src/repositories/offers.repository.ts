@@ -115,7 +115,7 @@ export class OffersRepositry {
 		const categoryFilter = category
 			? {
 					$or: category.split(",").map((cat) => ({
-						categories: { $regex: cat, $options: "i" }, // Case-insensitive partial match
+						categories: { $regex: cat, $options: "i" },
 					})),
 			  }
 			: {};
@@ -235,8 +235,8 @@ export class OffersRepositry {
 			);
 	}
 
-	async getLastChanceOffers(limit: number) {
-		return this.collection
+	async getTrendingOffers(limit: number) {
+		const result = await this.collection
 			.aggregate<WithId<IOffer>>([
 				{
 					$match: {
@@ -244,14 +244,8 @@ export class OffersRepositry {
 						status: { $eq: "enabled" },
 					},
 				},
-
 				{
-					$sort: {
-						expiry_date: 1,
-					},
-				},
-				{
-					$limit: limit,
+					$sample: { size: limit },
 				},
 				{
 					$lookup: {
@@ -285,9 +279,11 @@ export class OffersRepositry {
 				},
 			])
 			.toArray();
+
+		return result;
 	}
 
-	async getNewlyAddedOffers(limit: number) {
+	async getRecentlyAddedOffers(limit: number) {
 		return this.collection
 			.aggregate<WithId<IOffer>>([
 				{
@@ -300,9 +296,6 @@ export class OffersRepositry {
 						status: { $eq: "enabled" },
 						expiry_date: { $gte: new Date() },
 					},
-				},
-				{
-					$limit: limit,
 				},
 				{
 					$lookup: {
@@ -327,13 +320,35 @@ export class OffersRepositry {
 						channels: 1,
 						starting_date: 1,
 						categories: 1,
-						created_at: 1,
+						bankId: 1,
 						applicable_cards: {
 							_id: 1,
 							name: 1,
 							logo: 1,
 						},
 					},
+				},
+				{
+					$group: {
+						_id: "$bankId",
+						offers: { $push: "$$ROOT" },
+					},
+				},
+				{
+					$project: {
+						bankId: "$_id",
+						offers: { $slice: ["$offers", 0, 2] },
+						_id: 0,
+					},
+				},
+				{
+					$unwind: "$offers",
+				},
+				{
+					$replaceRoot: { newRoot: "$offers" },
+				},
+				{
+					$limit: limit,
 				},
 			])
 			.toArray();

@@ -130,12 +130,12 @@ export class OffersService {
 	}
 
 	async getNewlyAddedOffers(limit: number) {
-		const offers = await offersRepository.getNewlyAddedOffers(limit);
+		const offers = await offersRepository.getRecentlyAddedOffers(limit);
 		return offers;
 	}
 
-	async getLastChanceOffers(limit: number) {
-		const offers = await offersRepository.getLastChanceOffers(limit);
+	async getTrendingOffers(limit: number) {
+		const offers = await offersRepository.getTrendingOffers(limit);
 		return offers;
 	}
 }
