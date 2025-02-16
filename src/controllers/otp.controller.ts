@@ -62,7 +62,8 @@ const generateUserOtpHandler = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	const { email, source } = req.body;
+	let { email, source } = req.body;
+	email = email.toLowerCase();
 	try {
 		if (source === "login") {
 			throw new UnauthorizedError(
