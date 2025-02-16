@@ -44,7 +44,7 @@ offersUserRouter.get(
 );
 
 offersUserRouter.get(
-	"/recently-added",
+	"/newly-added",
 	customAuthorization(["guest", "user"]),
 	offersController.getUserNewlyAddedOfferHandler
 );
