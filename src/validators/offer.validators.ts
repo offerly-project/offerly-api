@@ -44,7 +44,12 @@ export const updateOfferSchema = z.object({
 export type CreateOfferBodyData = z.infer<typeof createOfferSchema>["body"];
 export type UpdateOfferBodyData = z.infer<typeof updateOfferSchema>["body"];
 
-const offerSortBySchema = z.enum(["expiry_date", "alphabet_ar", "alphabet_en"]);
+const offerSortBySchema = z.enum([
+	"expiry_date",
+	"alphabet_ar",
+	"alphabet_en",
+	"created_at",
+]);
 
 const offerSortDirectionSchema = z.enum(["asc", "desc"]);
 

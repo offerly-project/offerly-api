@@ -141,6 +141,12 @@ export class OffersRepositry {
 						),
 					},
 			  }
+			: sort_by === "created_at"
+			? {
+					$sort: {
+						created_at: getSortDirectionNumber("desc"),
+					},
+			  }
 			: {
 					$sort: {
 						[`title.${sort_by.split("_")[1]}`]: getSortDirectionNumber(
