@@ -59,13 +59,7 @@ export class OffersRepositry {
 						cap: 1,
 						channels: 1,
 						starting_date: 1,
-						categories: {
-							$map: {
-								input: "$categories",
-								as: "category",
-								in: "$$category.name",
-							},
-						},
+						categories: 1,
 						applicable_cards: 1,
 					},
 				},
@@ -110,13 +104,7 @@ export class OffersRepositry {
 						cap: 1,
 						channels: 1,
 						starting_date: 1,
-						categories: {
-							$map: {
-								input: "$categories",
-								as: "category",
-								in: "$$category.name",
-							},
-						},
+						categories: 1,
 						applicable_cards: 1,
 					},
 				},
