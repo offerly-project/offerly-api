@@ -3,6 +3,7 @@ import { ConflictError, NotFoundError } from "../errors/errors";
 import { ErrorCodes } from "../errors/errors.codes";
 import { IBank } from "../models/bank.model";
 import { banksRepository } from "../repositories/banks.repository";
+import { countriesRepository } from "../repositories/countries.repository";
 import { removeUndefinedValuesFromObject } from "../utils/utils";
 import {
 	CreateBankBodyData,
@@ -20,14 +21,23 @@ export class BanksService {
 			);
 		}
 
-		const newBank: IBank = removeUndefinedValuesFromObject({
-			country: bank.country,
+		const countryExists = await countriesRepository.countryExists(bank.country);
+
+		if (!countryExists) {
+			throw new NotFoundError(
+				"Country not found",
+				ErrorCodes.COUNTRY_NOT_FOUND
+			);
+		}
+
+		const newBank: IBank = {
+			country: new ObjectId(bank.country),
 			type: bank.type,
 			name: bank.name,
 			logo: bank.logo,
 			status: "enabled",
 			cards: [],
-		});
+		};
 
 		return banksRepository.add(newBank);
 	}
@@ -48,7 +58,7 @@ export class BanksService {
 		}
 
 		const patchData = removeUndefinedValuesFromObject<Partial<IBank>>({
-			country: bank.country,
+			country: bank.country ? new ObjectId(bank.country) : undefined,
 			type: bank.type,
 			name: bank.name,
 			logo: bank.logo,

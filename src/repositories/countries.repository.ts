@@ -1,4 +1,4 @@
-import { Collection } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
 import { Database, db } from "../configs/db";
 import { ICountry } from "../models/country.model";
 
@@ -10,15 +10,11 @@ export class CountriesRepository {
 	}
 
 	async getCountries() {
-		return this.collection
-			.aggregate<ICountry>([
-				{
-					$project: {
-						_id: 0,
-					},
-				},
-			])
-			.toArray();
+		return this.collection.aggregate<ICountry>().toArray();
+	}
+
+	async countryExists(id: string) {
+		return this.collection.findOne({ _id: { $eq: new ObjectId(id) } });
 	}
 }
 

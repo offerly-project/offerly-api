@@ -5,7 +5,7 @@ export type BankType = "regular" | "digital" | "digital-wallet";
 
 export interface IBank extends Document {
 	_id?: ObjectId;
-	country: string;
+	country: ObjectId;
 	type: BankType;
 	name: Translation;
 	logo?: string;

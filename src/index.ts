@@ -92,29 +92,6 @@ dotenv.config();
 
 	startGarbageCollectors();
 
-	// (async function () {
-	// 	// Sandbox
-	// 	const offers = await offersRepository.getAll();
-	// 	const categories = await categoriesRepository.getCategories();
-	// 	console.log(categories);
-
-	// 	offers.forEach((offer) => {
-	// 		const offerCategories = offer.categories;
-	// 		const newCategories: string[] = [];
-	// 		for (const category of offerCategories) {
-	// 			const categoryId = categories.find((c) => c.name === category)?._id;
-	// 			console.log(categories, category);
-
-	// 			if (categoryId) {
-	// 				newCategories.push(categoryId);
-	// 			}
-	// 		}
-	// 		offersRepository.update(offer._id.toString(), {
-	// 			categories: newCategories,
-	// 		});
-	// 	});
-	// })();
-
 	app.listen(env.PORT, () => {
 		console.log(`Server is running on port ${env.PORT}`);
 	});

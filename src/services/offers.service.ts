@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { NotFoundError } from "../errors/errors";
+import { ErrorCodes } from "../errors/errors.codes";
 import { IOffer } from "../models/offer.model";
 import { cardsRepository } from "../repositories/cards.repository";
 import { categoriesRepository } from "../repositories/categories.repository";
@@ -29,7 +30,10 @@ export class OffersService {
 		);
 
 		if (!categoriesExist) {
-			throw new NotFoundError("categories not found");
+			throw new NotFoundError(
+				"categories not found",
+				ErrorCodes.CATEGORY_NOT_FOUND
+			);
 		}
 
 		const offer: IOffer = removeUndefinedValuesFromObject({
@@ -88,7 +92,10 @@ export class OffersService {
 			);
 
 			if (!categoriesExist) {
-				throw new NotFoundError("categories not found");
+				throw new NotFoundError(
+					"categories not found",
+					ErrorCodes.CATEGORY_NOT_FOUND
+				);
 			}
 		}
 
