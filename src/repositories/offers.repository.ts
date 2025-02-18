@@ -37,6 +37,25 @@ export class OffersRepositry {
 						_id: new ObjectId(id),
 					},
 				},
+				{
+					$lookup: {
+						from: "categories",
+						localField: "categories",
+						foreignField: "_id",
+						as: "categories",
+					},
+				},
+				{
+					$project: {
+						categories: {
+							$map: {
+								input: "$categories",
+								as: "category",
+								in: "$$category.name",
+							},
+						},
+					},
+				},
 			])
 			.toArray()
 			.then((offers) => offers[0]);
@@ -55,6 +74,25 @@ export class OffersRepositry {
 				},
 				{
 					$unwind: "$bank",
+				},
+				{
+					$lookup: {
+						from: "categories",
+						localField: "categories",
+						foreignField: "_id",
+						as: "categories",
+					},
+				},
+				{
+					$project: {
+						categories: {
+							$map: {
+								input: "$categories",
+								as: "category",
+								in: "$$category.name",
+							},
+						},
+					},
 				},
 				{
 					$project: {
