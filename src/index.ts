@@ -84,7 +84,6 @@ dotenv.config();
 		}
 	);
 
-	console.log(env.DATA_DIR);
 	console.log(env.UPLOADS_DIR);
 
 	app.use("/uploads", express.static(env.UPLOADS_DIR));
