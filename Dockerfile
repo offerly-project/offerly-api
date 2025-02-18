@@ -27,9 +27,6 @@ COPY ./scripts/data_dir_init.sh /app/data_dir_init.sh
 
 RUN chmod +x /app/data_dir_init.sh
 
-
-RUN sh /app/data_dir_init.sh -u "${UPLOADS_DIR}" -d "${DATA_DIR}" -c "${COUNTRIES}" -a "${CATEGORIES}" -l "${LANGUAGES}"
-
 EXPOSE 8000
 
 RUN apt update && apt install nano
