@@ -47,6 +47,18 @@ export class OffersRepositry {
 				},
 				{
 					$project: {
+						_id: 1,
+						title: 1,
+						description: 1,
+						logo: 1,
+						offer_source_link: 1,
+						status: 1,
+						terms_and_conditions: 1,
+						expiry_date: 1,
+						minimum_amount: 1,
+						cap: 1,
+						channels: 1,
+						starting_date: 1,
 						categories: {
 							$map: {
 								input: "$categories",
@@ -54,6 +66,7 @@ export class OffersRepositry {
 								in: "$$category.name",
 							},
 						},
+						applicable_cards: 1,
 					},
 				},
 			])
@@ -85,6 +98,18 @@ export class OffersRepositry {
 				},
 				{
 					$project: {
+						_id: 1,
+						title: 1,
+						description: 1,
+						logo: 1,
+						offer_source_link: 1,
+						status: 1,
+						terms_and_conditions: 1,
+						expiry_date: 1,
+						minimum_amount: 1,
+						cap: 1,
+						channels: 1,
+						starting_date: 1,
 						categories: {
 							$map: {
 								input: "$categories",
@@ -92,6 +117,7 @@ export class OffersRepositry {
 								in: "$$category.name",
 							},
 						},
+						applicable_cards: 1,
 					},
 				},
 				{
