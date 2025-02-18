@@ -35,7 +35,7 @@ export const updateOfferSchema = z.object({
 
 		channels: z.array(z.enum(channels)).optional(),
 		categories: z.array(z.string()).optional(),
-		applicable_cards: z.array(z.string()).min(1),
+		applicable_cards: z.array(z.string()).min(1).optional(),
 		status: z.enum(entityStatuses).optional(),
 		title: languagesSchema.optional(),
 	}),
