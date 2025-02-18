@@ -18,6 +18,17 @@ export class BanksRepository {
 				as: "cards",
 			},
 		},
+		{
+			$lookup: {
+				from: "countries",
+				localField: "country",
+				foreignField: "_id",
+				as: "country",
+			},
+		},
+		{
+			$unwind: "$country",
+		},
 	];
 
 	private _bankCardsPipeline: Document[] = [
