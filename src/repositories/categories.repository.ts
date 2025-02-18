@@ -10,15 +10,14 @@ export class CategoriesRepository {
 	}
 
 	async getCategories() {
-		return this.collection
-			.aggregate([
-				{
-					$project: {
-						_id: 0,
-					},
-				},
-			])
+		return this.collection.aggregate<ICategory>().toArray();
+	}
+
+	async categoriesExists(ids: string[]) {
+		const categories = await this.collection
+			.find({ _id: { $in: ids } })
 			.toArray();
+		return categories.length === ids.length;
 	}
 }
 

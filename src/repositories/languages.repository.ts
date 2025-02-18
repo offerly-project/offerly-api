@@ -11,7 +11,7 @@ export class LanguagesRepository {
 
 	async getLanguages() {
 		return this.collection
-			.aggregate([
+			.aggregate<ILanguage>([
 				{
 					$project: {
 						_id: 0,

@@ -200,6 +200,14 @@ export class OffersRepositry {
 									as: "applicable_cards",
 								},
 							},
+							{
+								$lookup: {
+									from: "categories",
+									localField: "categories",
+									foreignField: "_id",
+									as: "categories",
+								},
+							},
 
 							{ $skip: skip },
 							{ $limit: +limit },
@@ -217,7 +225,13 @@ export class OffersRepositry {
 									cap: 1,
 									channels: 1,
 									starting_date: 1,
-									categories: 1,
+									categories: {
+										$map: {
+											input: "$categories",
+											as: "category",
+											in: "$$category.name",
+										},
+									},
 									applicable_cards: {
 										_id: 1,
 										name: 1,
@@ -264,6 +278,14 @@ export class OffersRepositry {
 					},
 				},
 				{
+					$lookup: {
+						from: "categories",
+						localField: "categories",
+						foreignField: "_id",
+						as: "categories",
+					},
+				},
+				{
 					$project: {
 						_id: 1,
 						title: 1,
@@ -277,7 +299,13 @@ export class OffersRepositry {
 						cap: 1,
 						channels: 1,
 						starting_date: 1,
-						categories: 1,
+						categories: {
+							$map: {
+								input: "$categories",
+								as: "category",
+								in: "$$category.name",
+							},
+						},
 						applicable_cards: {
 							_id: 1,
 							name: 1,
@@ -314,6 +342,14 @@ export class OffersRepositry {
 					},
 				},
 				{
+					$lookup: {
+						from: "categories",
+						localField: "categories",
+						foreignField: "_id",
+						as: "categories",
+					},
+				},
+				{
 					$project: {
 						_id: 1,
 						title: 1,
@@ -327,7 +363,13 @@ export class OffersRepositry {
 						cap: 1,
 						channels: 1,
 						starting_date: 1,
-						categories: 1,
+						categories: {
+							$map: {
+								input: "$categories",
+								as: "category",
+								in: "$$category.name",
+							},
+						},
 						bankId: 1,
 						applicable_cards: {
 							_id: 1,

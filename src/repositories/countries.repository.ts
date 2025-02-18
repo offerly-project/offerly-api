@@ -11,7 +11,7 @@ export class CountriesRepository {
 
 	async getCountries() {
 		return this.collection
-			.aggregate([
+			.aggregate<ICountry>([
 				{
 					$project: {
 						_id: 0,
