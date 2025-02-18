@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb";
 import { NotFoundError } from "../errors/errors";
 import { IOffer } from "../models/offer.model";
 import { cardsRepository } from "../repositories/cards.repository";
+import { categoriesRepository } from "../repositories/categories.repository";
 import { offersRepository } from "../repositories/offers.repository";
 import { usersRepository } from "../repositories/users.repository";
 import { removeUndefinedValuesFromObject } from "../utils/utils";
@@ -23,6 +24,13 @@ export class OffersService {
 			throw new NotFoundError("Bank not found");
 		}
 		const bankId = card?.bank._id;
+		const categoriesExist = categoriesRepository.categoriesExists(
+			data.categories
+		);
+
+		if (!categoriesExist) {
+			throw new NotFoundError("categories not found");
+		}
 
 		const offer: IOffer = removeUndefinedValuesFromObject({
 			description: data.description,
@@ -31,7 +39,7 @@ export class OffersService {
 			expiry_date: new Date(data.expiry_date),
 			minimum_amount: data.minimum_amount,
 			channels: data.channels,
-			categories: data.categories,
+			categories: data.categories.map((id) => new ObjectId(id)) || [],
 			applicable_cards:
 				data.applicable_cards?.map((id) => new ObjectId(id)) || [],
 			logo: data.logo,
@@ -74,6 +82,15 @@ export class OffersService {
 		}
 
 		const bankId = card?.bank._id;
+		if (data.categories) {
+			const categoriesExist = categoriesRepository.categoriesExists(
+				data.categories
+			);
+
+			if (!categoriesExist) {
+				throw new NotFoundError("categories not found");
+			}
+		}
 
 		const patchData: Partial<IOffer> = removeUndefinedValuesFromObject({
 			description: data.description,
@@ -82,7 +99,7 @@ export class OffersService {
 			expiry_date: data.expiry_date ? new Date(data.expiry_date) : undefined,
 			minimum_amount: data.minimum_amount,
 			channel: data.channels,
-			categories: data.categories,
+			categories: data.categories?.map((id) => new ObjectId(id)),
 			applicable_cards: data.applicable_cards?.map((id) => new ObjectId(id)),
 			logo: data.logo,
 			discount_code: data.discount_code,

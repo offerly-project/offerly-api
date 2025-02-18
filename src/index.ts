@@ -12,6 +12,7 @@ import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import { db } from "./configs/db";
 import { env } from "./configs/env";
+import { createUploadDirectories } from "./configs/files";
 import { startGarbageCollectors } from "./configs/garbage-collector";
 import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
@@ -23,12 +24,14 @@ import {
 } from "./notifications/scheduler";
 import { otpRouter } from "./routers/otp.router";
 import { adminRouter, userRouter } from "./routers/routers";
+import { staticRouter } from "./routers/static.router";
 import { uploadsRouter } from "./routers/uploads.router";
 import swaggerJson from "./swagger.json";
 
 dotenv.config();
 
 (async function () {
+	await createUploadDirectories();
 	await db.connect();
 
 	scheduleNewOffersNotifier();
@@ -56,6 +59,8 @@ dotenv.config();
 
 	app.use("/user", userRouter);
 
+	app.use("/static", staticRouter);
+
 	if (env.NODE_ENV === "development") {
 		app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 	}
@@ -79,15 +84,36 @@ dotenv.config();
 		}
 	);
 
-	console.log(env.DATA_DIR);
 	console.log(env.UPLOADS_DIR);
 
 	app.use("/uploads", express.static(env.UPLOADS_DIR));
-	app.use("/static", express.static(env.DATA_DIR));
 
 	app.use(errorsMiddleware);
 
 	startGarbageCollectors();
+
+	// (async function () {
+	// 	// Sandbox
+	// 	const offers = await offersRepository.getAll();
+	// 	const categories = await categoriesRepository.getCategories();
+	// 	console.log(categories);
+
+	// 	offers.forEach((offer) => {
+	// 		const offerCategories = offer.categories;
+	// 		const newCategories: string[] = [];
+	// 		for (const category of offerCategories) {
+	// 			const categoryId = categories.find((c) => c.name === category)?._id;
+	// 			console.log(categories, category);
+
+	// 			if (categoryId) {
+	// 				newCategories.push(categoryId);
+	// 			}
+	// 		}
+	// 		offersRepository.update(offer._id.toString(), {
+	// 			categories: newCategories,
+	// 		});
+	// 	});
+	// })();
 
 	app.listen(env.PORT, () => {
 		console.log(`Server is running on port ${env.PORT}`);

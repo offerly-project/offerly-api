@@ -20,7 +20,7 @@ export interface IOffer extends Document {
 	cap?: string;
 	status: EntityStatus;
 	channels: OfferChannel[];
-	categories: string[];
+	categories: ObjectId[];
 	applicable_cards: ObjectId[];
 	created_at: Date;
 }

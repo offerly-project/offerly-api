@@ -1,7 +1,7 @@
 import { isNumber } from "lodash";
 import { z } from "zod";
 import { channels, entityStatuses } from "../constants";
-import { languagesSchema, validateCategories } from "./data.validators";
+import { languagesSchema } from "./data.validators";
 
 export const createOfferSchema = z.object({
 	body: z.object({
@@ -15,7 +15,7 @@ export const createOfferSchema = z.object({
 		minimum_amount: z.string().optional(),
 		cap: z.string().optional(),
 		channels: z.array(z.enum(channels)),
-		categories: z.array(z.string()).refine(validateCategories()),
+		categories: z.array(z.string()),
 		applicable_cards: z.array(z.string()).min(1),
 		title: languagesSchema,
 	}),
@@ -34,7 +34,7 @@ export const updateOfferSchema = z.object({
 		cap: z.string().optional(),
 
 		channels: z.array(z.enum(channels)).optional(),
-		categories: z.array(z.string()).optional().refine(validateCategories(true)),
+		categories: z.array(z.string()).optional(),
 		applicable_cards: z.array(z.string()).min(1),
 		status: z.enum(entityStatuses).optional(),
 		title: languagesSchema.optional(),
@@ -60,7 +60,7 @@ export const getUserOffersSchema = z.object({
 		bank: z.string().optional(),
 		sort_by: offerSortBySchema.optional(),
 		sort_direction: offerSortDirectionSchema.default("asc").optional(),
-		category: z.string().optional().refine(validateCategories(true)),
+		category: z.string().optional(),
 		page: z
 			.string()
 			.refine((value) => {

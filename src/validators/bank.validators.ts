@@ -1,13 +1,11 @@
 import { z } from "zod";
 import { entityStatuses } from "../constants";
 import { BankType } from "../models/bank.model";
-import { languagesSchema, validateCountries } from "./data.validators";
+import { languagesSchema } from "./data.validators";
 
 export const createBankSchema = z.object({
 	body: z.object({
-		country: z
-			.string({ message: "Country is required" })
-			.refine(validateCountries),
+		country: z.string({ message: "Country is required" }),
 		type: z.enum<BankType, [BankType, BankType, BankType]>(
 			["regular", "digital", "digital-wallet"],
 			{
@@ -21,7 +19,7 @@ export const createBankSchema = z.object({
 
 export const updateBankSchema = z.object({
 	body: z.object({
-		country: z.string().refine(validateCountries).optional(),
+		country: z.string().optional(),
 		type: z
 			.enum<BankType, [BankType, BankType, BankType]>(
 				["regular", "digital", "digital-wallet"],
