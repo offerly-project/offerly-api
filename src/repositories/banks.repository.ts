@@ -18,27 +18,6 @@ export class BanksRepository {
 				as: "cards",
 			},
 		},
-		{
-			$lookup: {
-				from: "countries",
-				localField: "country",
-				foreignField: "_id",
-				as: "country_temp",
-			},
-		},
-		{
-			$unwind: "$country_temp",
-		},
-		{
-			$addFields: {
-				country: "$country_temp.name",
-			},
-		},
-		{
-			$project: {
-				country_temp: 0,
-			},
-		},
 	];
 
 	private _bankCardsPipeline: Document[] = [
