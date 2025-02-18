@@ -4,7 +4,7 @@ import jwt, { SignOptions } from "jsonwebtoken";
 import { Document } from "mongodb";
 import { env } from "../configs/env";
 import { InternalServerError, ZodFriendlyError } from "../errors/errors";
-import { JwtUserPayload, Translation, UserRole } from "../ts/global";
+import { TokenPayload, Translation, UserRole } from "../ts/global";
 
 export const validateRequest =
 	(schema: Zod.Schema) =>
@@ -80,13 +80,13 @@ export const languageSearchQuery = (key: string, value: Translation) => ({
 	$or: [{ [`${key}.en`]: value.en }, { [`${key}.ar`]: value.ar }],
 });
 
-export const verifyToken = (token: string): Promise<JwtUserPayload> => {
+export const verifyToken = (token: string): Promise<TokenPayload> => {
 	return new Promise((resolve, reject) => {
 		jwt.verify(token, env.PRIVATE_KEY, (err, decoded) => {
 			if (err) {
 				reject(new InternalServerError("failed to validate token"));
 			}
-			if (decoded) resolve(decoded as JwtUserPayload);
+			if (decoded) resolve(decoded as TokenPayload);
 		});
 	});
 };
