@@ -21,6 +21,6 @@ exports.userForgotPasswordSchema = zod_1.z.object({
 });
 exports.userResetPasswordSchema = zod_1.z.object({
     body: zod_1.z.object({
-        password: zod_1.z.string({ message: "Password is required" }),
+        new_password: zod_1.z.string({ message: "New Password is required" }),
     }),
 });

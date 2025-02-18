@@ -9,29 +9,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.adminsRepository = exports.AdminsRepository = void 0;
-const mongodb_1 = require("mongodb");
+exports.categoriesRepository = exports.CategoriesRepository = void 0;
 const db_1 = require("../configs/db");
-class AdminsRepository {
-    constructor() {
-        this.collection = db_1.db.getCollection("admins");
+class CategoriesRepository {
+    constructor(db) {
+        this.collection = db.getCollection("categories");
     }
-    findById(id) {
+    getCategories() {
         return __awaiter(this, void 0, void 0, function* () {
-            const admin = yield this.collection.findOne({
-                _id: new mongodb_1.ObjectId(id),
-            });
-            return admin;
+            return this.collection.aggregate().toArray();
         });
     }
-    findByUsername(username) {
+    categoriesExists(ids) {
         return __awaiter(this, void 0, void 0, function* () {
-            const admin = yield this.collection.findOne({
-                username,
-            });
-            return admin;
+            const categories = yield this.collection
+                .find({ _id: { $in: ids } })
+                .toArray();
+            return categories.length === ids.length;
         });
     }
 }
-exports.AdminsRepository = AdminsRepository;
-exports.adminsRepository = new AdminsRepository();
+exports.CategoriesRepository = CategoriesRepository;
+exports.categoriesRepository = new CategoriesRepository(db_1.db);

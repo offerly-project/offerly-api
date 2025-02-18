@@ -20,6 +20,7 @@ const path_1 = __importDefault(require("path"));
 const image_builder_1 = require("../builders/image.builder");
 const env_1 = require("../configs/env");
 const errors_1 = require("../errors/errors");
+const errors_codes_1 = require("../errors/errors.codes");
 const imageUploadMiddleware = (options) => (req, res, next) => {
     try {
         const { allowCustomDimensions, allowedPaths } = options;
@@ -30,33 +31,33 @@ const imageUploadMiddleware = (options) => (req, res, next) => {
             }
             const payload = Object.assign(Object.assign({}, files), fields);
             if (!payload.image) {
-                next(new errors_1.BadRequestError("Image is required"));
+                next(new errors_1.BadRequestError("Image is required", errors_codes_1.ErrorCodes.IMAGE_REQUIRED));
                 return;
             }
             if (!payload.path) {
-                next(new errors_1.BadRequestError("Path is required"));
+                next(new errors_1.BadRequestError("Path is required", errors_codes_1.ErrorCodes.PATH_REQUIRED));
                 return;
             }
             if (allowedPaths &&
                 allowedPaths.length !== 0 &&
                 !allowedPaths.some((path) => payload.path.startsWith(path))) {
-                next(new errors_1.BadRequestError("Invalid Path"));
+                next(new errors_1.BadRequestError("Invalid Path", errors_codes_1.ErrorCodes.INVALID_PATH));
                 return;
             }
             if (payload.dims && !allowCustomDimensions) {
-                next(new errors_1.BadRequestError("Custom dimensions are not allowed"));
+                next(new errors_1.BadRequestError("Custom dimensions are not allowed", errors_codes_1.ErrorCodes.CUSTOM_DIMENSIONS_NOT_ALLOWED));
                 return;
             }
             const oldPath = payload.image.filepath;
             const targetPath = path_1.default.join(env_1.env.UPLOADS_DIR, payload.path);
             if (!oldPath) {
-                next(new errors_1.BadRequestError("File not uploaded"));
+                next(new errors_1.InternalServerError("File not uploaded", errors_codes_1.ErrorCodes.FILE_NOT_UPLOADED));
                 return;
             }
             const imageBuffer = fs_1.default.readFileSync(oldPath);
             const builder = new image_builder_1.ImageBuilder(imageBuffer);
             if (payload.dims) {
-                builder.withDimensions(payload.dims);
+                yield builder.withDimensions(payload.dims, payload.fit || false);
             }
             yield builder.build().toFile(targetPath);
             res

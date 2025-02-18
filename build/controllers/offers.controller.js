@@ -60,7 +60,28 @@ const deleteOfferHandler = (req, res, next) => __awaiter(void 0, void 0, void 0,
 });
 const getUserOffersHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const offers = yield offers_service_1.offersService.getUserOffers(req.query);
+        const userId = req.user.id;
+        const offers = yield offers_service_1.offersService.getUserOffers(req.query, userId);
+        res.status(http_status_codes_1.StatusCodes.OK).send((0, utils_1.transformDocsResponse)(offers));
+    }
+    catch (e) {
+        next(e);
+    }
+});
+const getUserTrendingOffersHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const limit = req.query.limit || 10;
+        const offers = yield offers_service_1.offersService.getTrendingOffers(+limit);
+        res.status(http_status_codes_1.StatusCodes.OK).send((0, utils_1.transformDocsResponse)(offers));
+    }
+    catch (e) {
+        next(e);
+    }
+});
+const getUserNewlyAddedOfferHandler = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const limit = req.query.limit || 10;
+        const offers = yield offers_service_1.offersService.getNewlyAddedOffers(+limit);
         res.status(http_status_codes_1.StatusCodes.OK).send((0, utils_1.transformDocsResponse)(offers));
     }
     catch (e) {
@@ -74,4 +95,6 @@ exports.offersController = {
     updateOfferHandler,
     deleteOfferHandler,
     getUserOffersHandler,
+    getUserTrendingOffersHandler,
+    getUserNewlyAddedOfferHandler,
 };

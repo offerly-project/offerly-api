@@ -16,7 +16,7 @@ const getUserFavoriteOffersHandler = (req, res, next) => __awaiter(void 0, void 
     try {
         const userId = req.user.id;
         const favorites = yield users_repository_1.usersRepository.getFavoriteOffers(userId);
-        const elements = favorites[0].favorites;
+        const elements = favorites;
         res.status(200).send((0, utils_1.transformDocsResponse)(elements));
     }
     catch (e) {

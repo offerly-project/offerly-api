@@ -9,29 +9,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.adminsRepository = exports.AdminsRepository = void 0;
-const mongodb_1 = require("mongodb");
+exports.countriesRepository = exports.CountriesRepository = void 0;
 const db_1 = require("../configs/db");
-class AdminsRepository {
-    constructor() {
-        this.collection = db_1.db.getCollection("admins");
+class CountriesRepository {
+    constructor(db) {
+        this.collection = db.getCollection("countries");
     }
-    findById(id) {
+    getCountries() {
         return __awaiter(this, void 0, void 0, function* () {
-            const admin = yield this.collection.findOne({
-                _id: new mongodb_1.ObjectId(id),
-            });
-            return admin;
-        });
-    }
-    findByUsername(username) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const admin = yield this.collection.findOne({
-                username,
-            });
-            return admin;
+            return this.collection
+                .aggregate([
+                {
+                    $project: {
+                        _id: 0,
+                    },
+                },
+            ])
+                .toArray();
         });
     }
 }
-exports.AdminsRepository = AdminsRepository;
-exports.adminsRepository = new AdminsRepository();
+exports.CountriesRepository = CountriesRepository;
+exports.countriesRepository = new CountriesRepository(db_1.db);

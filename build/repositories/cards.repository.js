@@ -13,6 +13,7 @@ exports.cardsRepository = exports.CardsRepository = void 0;
 const mongodb_1 = require("mongodb");
 const db_1 = require("../configs/db");
 const errors_1 = require("../errors/errors");
+const errors_codes_1 = require("../errors/errors.codes");
 const utils_1 = require("../utils/utils");
 class CardsRepository {
     constructor() {
@@ -38,6 +39,11 @@ class CardsRepository {
             },
         ];
         this._userCardsPipeline = [
+            {
+                $match: {
+                    status: { $eq: "enabled" },
+                },
+            },
             {
                 $lookup: {
                     from: "cards",
@@ -68,6 +74,11 @@ class CardsRepository {
                     bank: {
                         cards: 0,
                     },
+                },
+            },
+            {
+                $match: {
+                    "bank.status": { $eq: "enabled" },
                 },
             },
         ];
@@ -108,9 +119,19 @@ class CardsRepository {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield this.collection.insertOne(card);
             if (!result.insertedId) {
-                throw new errors_1.InternalServerError("Failed to create card");
+                throw new errors_1.InternalServerError("Failed to create card", errors_codes_1.ErrorCodes.CREATE_CARD_FAILED);
             }
             return result.insertedId;
+        });
+    }
+    cardsExists(ids) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const cards = yield this.collection
+                .find({
+                _id: { $in: ids.map((id) => new mongodb_1.ObjectId(id)) },
+            })
+                .toArray();
+            return cards.length === ids.length;
         });
     }
     findCards(ids) {
@@ -130,8 +151,8 @@ class CardsRepository {
     update(id, card) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield this.collection.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: card });
-            if (!result.matchedCount) {
-                throw new errors_1.InternalServerError("Failed to update card");
+            if (!result.acknowledged) {
+                throw new errors_1.InternalServerError("Failed to update card", errors_codes_1.ErrorCodes.UPDATE_CARD_FAILED);
             }
         });
     }

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateToken = exports.verifyToken = exports.languageSearchQuery = exports.validatePassword = exports.transformDocsResponse = exports.renameDocsObjectIdField = exports.removeUndefinedValuesFromObject = exports.validateRequest = void 0;
+exports.sleep = exports.getSortDirectionNumber = exports.generateToken = exports.jwtSources = exports.verifyToken = exports.languageSearchQuery = exports.validatePassword = exports.transformDocsResponse = exports.renameDocsObjectIdField = exports.removeUndefinedValuesFromObject = exports.validateRequest = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const env_1 = require("../configs/env");
@@ -92,9 +92,10 @@ const verifyToken = (token) => {
     });
 };
 exports.verifyToken = verifyToken;
-const generateToken = (id, role, options = {}) => {
+exports.jwtSources = ["password-reset", "login"];
+const generateToken = (id, role, source, options = {}) => {
     return new Promise((resolve, reject) => {
-        jsonwebtoken_1.default.sign({ id, role }, env_1.env.PRIVATE_KEY, options, ((err, token) => {
+        jsonwebtoken_1.default.sign({ id, role, source }, env_1.env.PRIVATE_KEY, options, ((err, token) => {
             if (err || !token) {
                 reject(new errors_1.InternalServerError("failed to generate token"));
             }
@@ -104,3 +105,7 @@ const generateToken = (id, role, options = {}) => {
     });
 };
 exports.generateToken = generateToken;
+const getSortDirectionNumber = (direction) => direction === "asc" ? 1 : -1;
+exports.getSortDirectionNumber = getSortDirectionNumber;
+const sleep = (s) => new Promise((resolve) => setTimeout(resolve, s * 1000));
+exports.sleep = sleep;

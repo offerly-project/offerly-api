@@ -13,6 +13,7 @@ exports.banksRepository = exports.BanksRepository = void 0;
 const mongodb_1 = require("mongodb");
 const db_1 = require("../configs/db");
 const errors_1 = require("../errors/errors");
+const errors_codes_1 = require("../errors/errors.codes");
 const utils_1 = require("../utils/utils");
 class BanksRepository {
     constructor() {
@@ -27,6 +28,11 @@ class BanksRepository {
             },
         ];
         this._bankCardsPipeline = [
+            {
+                $match: {
+                    status: { $eq: "enabled" },
+                },
+            },
             {
                 $lookup: {
                     from: "cards",
@@ -71,6 +77,11 @@ class BanksRepository {
         ];
         this._userBanksPipeline = [
             {
+                $match: {
+                    status: { $eq: "enabled" },
+                },
+            },
+            {
                 $project: {
                     name: 1,
                     logo: 1,
@@ -103,7 +114,7 @@ class BanksRepository {
         return __awaiter(this, void 0, void 0, function* () {
             const bank = yield this.collection.findOne({ _id: new mongodb_1.ObjectId(id) });
             if (!bank) {
-                throw new errors_1.NotFoundError("Bank not found");
+                throw new errors_1.NotFoundError("Bank not found", errors_codes_1.ErrorCodes.BANK_NOT_FOUND);
             }
             return bank.cards;
         });
@@ -122,7 +133,7 @@ class BanksRepository {
                 .toArray()
                 .then((result) => result[0]);
             if (!bank) {
-                throw new errors_1.NotFoundError("Bank not found");
+                throw new errors_1.NotFoundError("Bank not found", errors_codes_1.ErrorCodes.BANK_NOT_FOUND);
             }
             return bank;
         });
@@ -131,7 +142,7 @@ class BanksRepository {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield this.collection.insertOne(bank);
             if (!result.insertedId) {
-                throw new errors_1.InternalServerError("Failed to create bank");
+                throw new errors_1.InternalServerError("Failed to create bank", errors_codes_1.ErrorCodes.CREATE_BANK_FAILED);
             }
             return result.insertedId;
         });
@@ -139,8 +150,8 @@ class BanksRepository {
     update(id, bank) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield this.collection.updateOne({ _id: new mongodb_1.ObjectId(id) }, { $set: bank });
-            if (!result.matchedCount) {
-                throw new errors_1.InternalServerError("Failed to update bank");
+            if (!result.acknowledged) {
+                throw new errors_1.InternalServerError("Failed to update bank", errors_codes_1.ErrorCodes.UPDATE_BANK_FAILED);
             }
         });
     }

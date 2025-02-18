@@ -5,6 +5,103 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/guest/token": {
+            "get": {
+                "tags": ["guest"],
+                "responses": {
+                    "200": {
+                        "description": "guest token returned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/guest/offers": {
+            "get": {
+                "tags": ["guest"],
+                "responses": {
+                    "200": {
+                        "description": "guest offers returned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "format": "objectId",
+                                                "example": "6482d6b5e9c8f8b5f3c781d4"
+                                            },
+                                            "applicable_cards": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "format": "objectId"
+                                                },
+                                                "example": ["6482d6b5e9c8f8b5f3c781d5"]
+                                            },
+                                            "categories": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "example": ["electronics"]
+                                            },
+                                            "title": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "terms_and_conditions": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "description": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "logo": {
+                                                "$ref": "#/components/schemas/OfferLogo"
+                                            },
+                                            "offer_source_link": {
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "$ref": "#/components/schemas/EntityStatus"
+                                            },
+                                            "expiry_date": {
+                                                "type": "string"
+                                            },
+                                            "minimum_amount": {
+                                                "type": "string"
+                                            },
+                                            "cap": {
+                                                "type": "string"
+                                            },
+                                            "channel": {
+                                                "type": "string"
+                                            },
+                                            "starting_date": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "summary": "check health status",
@@ -85,49 +182,6 @@
                 }
             }
         },
-        "/user/auth/forgot-password": {
-            "post": {
-                "summary": "requesting password reset",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "email": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "tags": ["auth"],
-                "responses": {
-                    "200": {
-                        "description": "successful response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Password reset link sent to your email"
-                                        },
-                                        "timer": {
-                                            "type": "number",
-                                            "description": "Timer in minutes",
-                                            "example": 1
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/user/auth/reset-password": {
             "post": {
                 "summary": "password reset",
@@ -142,7 +196,10 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "password": {
+                                    "new_password": {
+                                        "type": "string"
+                                    },
+                                    "old_password": {
                                         "type": "string"
                                     }
                                 }
@@ -161,10 +218,172 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Password reset link sent to your email"
+                                            "example": "Password reset successfully"
                                         },
                                         "token": {
                                             "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/user/contact": {
+            "post": {
+                "summary": "user contact the support team",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": ["contact"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "subject": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Contact email sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Contact email sent successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/guest/contact": {
+            "post": {
+                "summary": "guest contact the support team",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": ["contact"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "subject": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Contact email sent",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Contact email sent successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/user": {
+            "delete": {
+                "summary": "delete user",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": ["user"],
+                "responses": {
+                    "200": {
+                        "description": "user deleted"
+                    }
+                }
+            },
+            "get": {
+                "summary": "get user data",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": ["user"],
+                "responses": {
+                    "200": {
+                        "description": "retrieve user data"
+                    }
+                }
+            },
+            "patch": {
+                "tags": ["user"],
+                "summary": "patch user data",
+                "requestBody": {
+                    "content": {
+                        "applicaton/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "full_name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "user patched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User data patched"
                                         }
                                     }
                                 }
@@ -218,6 +437,52 @@
                 "tags": ["signup"]
             }
         },
+        "/otp/generate": {
+            "post": {
+                "tags": ["otp"],
+                "summary": "otp generation",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "source": {
+                                        "type": "string",
+                                        "enum": ["password-reset"]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "otp sent to email",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "OTP sent to your email"
+                                        },
+                                        "expiry": {
+                                            "type": "number",
+                                            "example": 30
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/otp/verify": {
             "post": {
                 "summary": "otp verification",
@@ -260,22 +525,6 @@
                     }
                 },
                 "tags": ["otp"]
-            }
-        },
-        "/user/auth": {
-            "get": {
-                "summary": "check authorization",
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "tags": ["auth"],
-                "responses": {
-                    "200": {
-                        "description": "authorized"
-                    }
-                }
             }
         },
         "/user/banks": {
@@ -720,12 +969,199 @@
                 }
             }
         },
+        "/user/offers/last-chance": {
+            "get": {
+                "tags": ["offers"],
+                "summary": "Fetch Last Chance Offers",
+                "description": "retrieve offers about to expired sorted",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of offers to return.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "format": "objectId",
+                                                "example": "6482d6b5e9c8f8b5f3c781d4"
+                                            },
+                                            "applicable_cards": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "format": "objectId"
+                                                },
+                                                "example": ["6482d6b5e9c8f8b5f3c781d5"]
+                                            },
+                                            "categories": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "example": ["electronics"]
+                                            },
+                                            "title": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "terms_and_conditions": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "description": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "logo": {
+                                                "$ref": "#/components/schemas/OfferLogo"
+                                            },
+                                            "offer_source_link": {
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "$ref": "#/components/schemas/EntityStatus"
+                                            },
+                                            "expiry_date": {
+                                                "type": "string"
+                                            },
+                                            "minimum_amount": {
+                                                "type": "string"
+                                            },
+                                            "cap": {
+                                                "type": "string"
+                                            },
+                                            "channel": {
+                                                "type": "string"
+                                            },
+                                            "starting_date": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/offers/newly-added": {
+            "get": {
+                "tags": ["offers"],
+                "summary": "Fetch Newly added Offers",
+                "description": "retrieve recently offers sorted",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of offers to return.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "format": "objectId",
+                                                "example": "6482d6b5e9c8f8b5f3c781d4"
+                                            },
+                                            "applicable_cards": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string",
+                                                    "format": "objectId"
+                                                },
+                                                "example": ["6482d6b5e9c8f8b5f3c781d5"]
+                                            },
+                                            "categories": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "example": ["electronics"]
+                                            },
+                                            "title": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "terms_and_conditions": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "description": {
+                                                "$ref": "#/components/schemas/Translation"
+                                            },
+                                            "logo": {
+                                                "$ref": "#/components/schemas/OfferLogo"
+                                            },
+                                            "offer_source_link": {
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "$ref": "#/components/schemas/EntityStatus"
+                                            },
+                                            "expiry_date": {
+                                                "type": "string"
+                                            },
+                                            "minimum_amount": {
+                                                "type": "string"
+                                            },
+                                            "cap": {
+                                                "type": "string"
+                                            },
+                                            "channel": {
+                                                "type": "string"
+                                            },
+                                            "starting_date": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/offers": {
             "get": {
                 "tags": ["offers"],
                 "summary": "Fetch Offers",
                 "description": "Retrieve offers based on applicable cards, categories, search query, and pagination.",
                 "parameters": [
+                    {
+                        "name": "bank",
+                        "in": "query",
+                        "description": "Filter offers by bankId",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "objectId",
+                            "example": "6482d6b5e9c8f8b5f3c7842s"
+                        }
+                    },
                     {
                         "name": "card",
                         "in": "query",
@@ -798,6 +1234,14 @@
                                                         "type": "string",
                                                         "format": "objectId",
                                                         "example": "6482d6b5e9c8f8b5f3c781d4"
+                                                    },
+                                                    "applicable_cards": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string",
+                                                            "format": "objectId"
+                                                        },
+                                                        "example": ["6482d6b5e9c8f8b5f3c781d5"]
                                                     },
                                                     "categories": {
                                                         "type": "array",

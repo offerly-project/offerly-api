@@ -6,9 +6,7 @@ const constants_1 = require("../constants");
 const data_validators_1 = require("./data.validators");
 exports.createBankSchema = zod_1.z.object({
     body: zod_1.z.object({
-        country: zod_1.z
-            .string({ message: "Country is required" })
-            .refine(data_validators_1.validateCountries),
+        country: zod_1.z.string({ message: "Country is required" }),
         type: zod_1.z.enum(["regular", "digital", "digital-wallet"], {
             message: "Type should be regular, digital, or digital-wallet",
         }),
@@ -18,7 +16,7 @@ exports.createBankSchema = zod_1.z.object({
 });
 exports.updateBankSchema = zod_1.z.object({
     body: zod_1.z.object({
-        country: zod_1.z.string().refine(data_validators_1.validateCountries).optional(),
+        country: zod_1.z.string().optional(),
         type: zod_1.z
             .enum(["regular", "digital", "digital-wallet"], {
             message: "Type should be regular, digital, or digital-wallet",

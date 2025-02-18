@@ -6,6 +6,7 @@ const http_status_codes_1 = require("http-status-codes");
 const errors_1 = require("../errors/errors");
 const errorsMiddleware = (err, req, res, next) => {
     console.error(err.toString());
+    console.error(err.stack);
     if (err instanceof errors_1.CustomError) {
         res.status(err.status).send(err.toString());
     }

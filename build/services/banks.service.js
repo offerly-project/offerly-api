@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.banksService = exports.BanksService = void 0;
 const mongodb_1 = require("mongodb");
 const errors_1 = require("../errors/errors");
+const errors_codes_1 = require("../errors/errors.codes");
 const banks_repository_1 = require("../repositories/banks.repository");
 const utils_1 = require("../utils/utils");
 class BanksService {
@@ -19,7 +20,7 @@ class BanksService {
         return __awaiter(this, void 0, void 0, function* () {
             const bankExists = yield banks_repository_1.banksRepository.bankNameExists(bank.name);
             if (bankExists) {
-                throw new errors_1.ConflictError("Bank already exists");
+                throw new errors_1.ConflictError("Bank already exists", errors_codes_1.ErrorCodes.BANK_ALREADY_EXISTS);
             }
             const newBank = (0, utils_1.removeUndefinedValuesFromObject)({
                 country: bank.country,
@@ -37,12 +38,12 @@ class BanksService {
             var _a;
             const bankExists = yield banks_repository_1.banksRepository.findById(id);
             if (!bankExists) {
-                throw new errors_1.NotFoundError("Bank not found");
+                throw new errors_1.NotFoundError("Bank not found", errors_codes_1.ErrorCodes.BANK_NOT_FOUND);
             }
             if (bank.name) {
                 const foundBank = yield banks_repository_1.banksRepository.findByName(bank.name);
                 if (foundBank && foundBank._id.toString() !== id) {
-                    throw new errors_1.BadRequestError("Bank name already exists");
+                    throw new errors_1.ConflictError("Bank name already exists", errors_codes_1.ErrorCodes.BANK_ALREADY_EXISTS);
                 }
             }
             const patchData = (0, utils_1.removeUndefinedValuesFromObject)({
@@ -70,7 +71,7 @@ class BanksService {
         return __awaiter(this, void 0, void 0, function* () {
             const bank = yield banks_repository_1.banksRepository.findById(id);
             if (!bank) {
-                throw new errors_1.NotFoundError("Bank not found");
+                throw new errors_1.NotFoundError("Bank not found", errors_codes_1.ErrorCodes.BANK_NOT_FOUND);
             }
             return bank;
         });

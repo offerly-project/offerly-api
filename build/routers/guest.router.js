@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.guestRouter = void 0;
+const express_1 = require("express");
+const guest_controller_1 = require("../controllers/guest.controller");
+const auth_middleware_1 = require("../middlewares/auth.middleware");
+const utils_1 = require("../utils/utils");
+const user_validators_1 = require("../validators/user.validators");
+exports.guestRouter = (0, express_1.Router)();
+exports.guestRouter.get("/token", guest_controller_1.guestController.getGuestTokenHandler);
+exports.guestRouter.get("/offers", auth_middleware_1.authorizeGuest, guest_controller_1.guestController.getGuestOffersHandler);
+exports.guestRouter.post("/contact", auth_middleware_1.authorizeGuest, (0, utils_1.validateRequest)(user_validators_1.guestContactSchema), guest_controller_1.guestController.contactGuestHandler);

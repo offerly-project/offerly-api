@@ -10,52 +10,50 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.otpService = exports.OTPService = void 0;
+const errors_1 = require("../errors/errors");
 const otp_model_1 = require("../models/otp.model");
 class OTPService {
     constructor() {
-        this.otps = {};
-        this.hasOtp = (email) => {
-            return !!this.otps[email];
-        };
-        this.sendOtp = (email) => {
-            if (this.otps[email]) {
-                if (this.otps[email].requestable) {
-                    this.otps[email].requestOtp();
-                    return {
-                        code: this.otps[email].code,
-                        timer: this.otps[email].requestTimer,
-                    };
+        this._otps = {};
+        this.requestOtp = (email, source) => {
+            const otpInstance = this._otps[email];
+            if (otpInstance) {
+                if (otpInstance.canRequest()) {
+                    return otpInstance.init();
                 }
                 else {
-                    return {
-                        code: null,
-                        timer: this.otps[email].requestTimer,
-                    };
+                    throw new errors_1.BadRequestError(`Please wait for ${otp_model_1.OTP_SECONDS_BUFFER} seconds before requesting another OTP`);
                 }
             }
             else {
-                this.otps[email] = new otp_model_1.OTP();
-                this.otps[email].requestOtp();
-                setTimeout(() => {
-                    this.deleteOtp(email);
-                }, 75 * 60 * 1000);
-                return {
-                    code: this.otps[email].code,
-                    timer: this.otps[email].requestTimer,
-                };
+                this._otps[email] = new otp_model_1.OTP(source);
+                return this._otps[email].init();
             }
         };
-        this.verifyOtp = (email, otp) => {
-            const userOtp = this.otps[email];
-            if (!userOtp) {
+        this.hasOtp = (email) => {
+            return !!this._otps[email];
+        };
+        this.verifyOtp = (email, code) => __awaiter(this, void 0, void 0, function* () {
+            const otpInstance = this._otps[email];
+            if (!otpInstance) {
                 return false;
             }
-            const verified = userOtp.validateOtp(otp);
+            const verified = yield otpInstance.verify(code);
+            if (verified) {
+                delete this._otps[email];
+            }
             return verified;
-        };
-        this.deleteOtp = (email) => __awaiter(this, void 0, void 0, function* () {
-            delete this.otps[email];
         });
+        this.getOtp = (email) => {
+            return this._otps[email];
+        };
+        this.shouldCleanup = () => {
+            return Object.values(this._otps).every((otp) => otp.isExpired());
+        };
+        this.reset = () => {
+            Object.values(this._otps).forEach((otp) => otp.clearTimeouts());
+            this._otps = {};
+        };
     }
 }
 exports.OTPService = OTPService;

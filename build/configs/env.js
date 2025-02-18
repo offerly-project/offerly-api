@@ -21,5 +21,6 @@ const schema = zod_1.default.object({
     SMTP_SECURE: zod_1.default.string(),
     NODE_ENV: zod_1.default.string().default("development"),
     UPLOADS_DIR: zod_1.default.string(),
+    AGENDA_URL: zod_1.default.string(),
 });
 exports.env = schema.parse(process.env);
