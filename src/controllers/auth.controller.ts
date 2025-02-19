@@ -89,25 +89,8 @@ const userResetPasswordHandler = async (
 	}
 };
 
-const userLogoutHandler = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		const { id } = req.user;
-		await userAuthService.logout(id);
-		res.status(StatusCodes.OK).send({
-			message: "logged out",
-		});
-	} catch (e) {
-		next(e);
-	}
-};
-
 export const authController = {
 	adminLoginHandler,
 	userLoginHandler,
 	userResetPasswordHandler,
-	userLogoutHandler,
 };
