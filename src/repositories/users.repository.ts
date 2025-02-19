@@ -62,7 +62,10 @@ export class UsersRepository {
 	async getUsersFavorites() {
 		return this.collection
 			.aggregate<
-				Pick<IUser, "expiry_date" | "notification_token" | "logged_in"> & {
+				Pick<
+					IUser,
+					"expiry_date" | "notification_token" | "_id" | "logged_in"
+				> & {
 					favorites: IOffer[];
 				}
 			>([
@@ -183,6 +186,17 @@ export class UsersRepository {
 				...this._favoritesPipeline,
 			])
 			.toArray();
+	}
+	async removeInvalidNotificationTokens(userId: string, tokens: string[]) {
+		await this.collection.updateOne(
+			{ _id: new ObjectId(userId) },
+			{
+				//@ts-ignore
+				$pull: {
+					notification_token: { token: { $in: tokens } },
+				},
+			}
+		);
 	}
 
 	async patchFavoriteOffers(userId: string, offers: string[]) {

@@ -40,6 +40,7 @@ export type NotificationsSentData = {
 	notification: NotificationUI;
 	payload?: NotificationPayload;
 	tokens: string[];
+	userId?: string;
 };
 
 export const MAX_MULTICAST_RECEIVERS = 500;
@@ -112,6 +113,7 @@ export class PushNotificationsService {
 					action: NotificationActions.SHOW_SORTED_BY_NEW_ORDERS,
 				},
 				tokens: userTokens,
+				userId: user._id?.toString(),
 			});
 		});
 
@@ -152,6 +154,7 @@ export class PushNotificationsService {
 					action: NotificationActions.EXPIRING_FAVOURITES,
 					offers: expiringOffers.join(","),
 				},
+				userId: user._id?.toString(),
 			});
 		});
 
@@ -160,7 +163,6 @@ export class PushNotificationsService {
 
 	sendNotifications = async (notifications: NotificationsSentData[]) => {
 		try {
-			const promises: Promise<any>[] = [];
 			for (const notificationData of notifications) {
 				const { tokens, notification, payload } = notificationData;
 				const message: MulticastMessage = {
@@ -169,10 +171,27 @@ export class PushNotificationsService {
 					tokens,
 				};
 
-				promises.push(this.messaging.sendEachForMulticast(message));
-				await sleep(2);
+				const response = await this.messaging.sendEachForMulticast(message);
+				const invalidTokens: string[] = [];
+				response.responses.forEach((response, index) => {
+					const errorCode = response.error?.code;
+					if (
+						errorCode === "messaging/invalid-registration-token" ||
+						errorCode === "messaging/registration-token-not-registered" ||
+						(errorCode === "messaging/invalid-argument" &&
+							response.error?.message ===
+								"The registration token is not a valid FCM registration token")
+					) {
+						console.error("Removing invalid token:", response.error?.message);
+						invalidTokens.push(tokens[index]);
+					}
+				});
+				this.usersRepository.removeInvalidNotificationTokens(
+					notificationData.userId!,
+					invalidTokens
+				);
+				await sleep(1);
 			}
-			await Promise.all(promises);
 		} catch (error) {
 			console.error("Error sending message:", error);
 		}
