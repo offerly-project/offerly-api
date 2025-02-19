@@ -167,7 +167,7 @@ export class OffersRepositry {
 		const categoryFilter = category
 			? {
 					$or: category.split(",").map((cat) => ({
-						categories: { $regex: cat, $options: "i" },
+						categories: { $in: [new ObjectId(cat)] },
 					})),
 			  }
 			: {};
