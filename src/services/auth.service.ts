@@ -41,7 +41,7 @@ export class UserAuthService {
 			);
 		}
 		const token = await generateToken(user._id.toString(), "user", "login");
-		usersRepository.update(user._id.toString(), { logged_in: true });
+
 		return {
 			token,
 			user: omit(user, ["password", "_id"]),
@@ -70,10 +70,6 @@ export class UserAuthService {
 			);
 		}
 		this.changePassword(id, newPassword);
-	}
-
-	logout(id: string) {
-		return usersRepository.update(id, { logged_in: false });
 	}
 }
 

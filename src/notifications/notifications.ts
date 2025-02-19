@@ -75,9 +75,7 @@ export class PushNotificationsService {
 		);
 		const filteredUsers = users.filter(
 			(user) =>
-				!!user.notification_token &&
-				user.notification_token.length !== 0 &&
-				user.logged_in
+				!!user.notification_token && user.notification_token.length !== 0
 		);
 		const notifications: NotificationsSentData[] = [];
 
@@ -129,9 +127,7 @@ export class PushNotificationsService {
 		const notifications: NotificationsSentData[] = [];
 		const filteredUsers = users.filter(
 			(user) =>
-				!!user.notification_token &&
-				user.notification_token?.length !== 0 &&
-				user.logged_in
+				!!user.notification_token && user.notification_token?.length !== 0
 		);
 
 		filteredUsers.forEach((user) => {

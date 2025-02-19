@@ -43,7 +43,6 @@ export class UsersService {
 			favorites: [],
 			language: body.language,
 			notification_tokens: [],
-			logged_in: true,
 		};
 		return await usersRepository.create(user);
 	}
