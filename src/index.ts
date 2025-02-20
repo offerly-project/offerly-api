@@ -1,13 +1,7 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import express, {
-	json,
-	NextFunction,
-	Request,
-	Response,
-	urlencoded,
-} from "express";
+import express, { json, urlencoded } from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import { db } from "./configs/db";
@@ -17,7 +11,6 @@ import { startGarbageCollectors } from "./configs/garbage-collector";
 import { CORS_OPTIONS } from "./configs/options";
 import { errorsMiddleware } from "./middlewares/errors.middleware";
 import { queryMiddleware } from "./middlewares/query.middleware";
-import { pushNotificationsService } from "./notifications/notifications";
 import {
 	scheduleExpiringFavouritesNotifier,
 	scheduleNewOffersNotifier,
@@ -65,24 +58,9 @@ dotenv.config();
 		app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 	}
 
-	app.get("/health", (req, res) => {
-		res.json({ status: "healthy!" });
+	app.get("/health-check", (req, res) => {
+		res.json({ status: "API is healthy!" });
 	});
-
-	app.post(
-		"/notify",
-		(
-			req: Request<{}, {}, { token: string; title: string; body: string }>,
-			res: Response,
-			next: NextFunction
-		) => {
-			const { token, title, body } = req.body;
-			pushNotificationsService.sendNotifications([
-				{ notification: { title: title, body: body }, tokens: [token] },
-			]);
-			res.json({ message: "Notification Sent" });
-		}
-	);
 
 	console.log(env.UPLOADS_DIR);
 

@@ -64,7 +64,11 @@ export class UsersRepository {
 			.aggregate<
 				Pick<
 					IUser,
-					"expiry_date" | "notification_token" | "_id" | "logged_in"
+					| "expiry_date"
+					| "notification_token"
+					| "_id"
+					| "logged_in"
+					| "full_name"
 				> & {
 					favorites: IOffer[];
 				}
