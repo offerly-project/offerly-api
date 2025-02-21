@@ -125,9 +125,7 @@ export class PushNotificationsService {
 	};
 
 	pushExpiringFavouritesNotification = async () => {
-		const users = (await this.usersRepository.getUsersFavorites()).filter(
-			(user) => user.full_name === "jadhamwi"
-		);
+		const users = await this.usersRepository.getUsersFavorites();
 		const notifications: NotificationsSentData[] = [];
 		const filteredUsers = users.filter(
 			(user) =>
@@ -141,7 +139,7 @@ export class PushNotificationsService {
 				const diff = expiry.getTime() - Date.now();
 
 				const days = diff / (1000 * 60 * 60 * 24);
-				if (days === 7 || days === 3 || days === 1) {
+				if (days === 7 || days === 5 || days === 3) {
 					expiringOffers.push(favoriteOffer._id);
 				}
 			}

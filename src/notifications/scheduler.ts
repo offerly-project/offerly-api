@@ -8,7 +8,7 @@ export const scheduleNewOffersNotifier = async () => {
 };
 
 export const scheduleExpiringFavouritesNotifier = async () => {
-	cron.schedule("0 10 * * *", async () => {
+	cron.schedule("0 12 * * *", async () => {
 		pushNotificationsService.pushExpiringFavouritesNotification();
 	});
 };
