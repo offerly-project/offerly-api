@@ -138,9 +138,9 @@ export class PushNotificationsService {
 				const expiry = favoriteOffer.expiry_date;
 				const diff = expiry.getTime() - Date.now();
 
-				const days = diff / (1000 * 60 * 60 * 24);
-				if (days === 7 || days === 5 || days === 3) {
-					expiringOffers.push(favoriteOffer._id);
+				const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+				if (days === 7 || days === 3) {
+					expiringOffers.push(favoriteOffer.title);
 				}
 			}
 			const notificationUi: NotificationUI = {
