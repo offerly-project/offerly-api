@@ -352,6 +352,7 @@ export class OffersRepositry {
 						cap: 1,
 						channels: 1,
 						starting_date: 1,
+						bankId: 1,
 						categories: {
 							$map: {
 								input: "$categories",
@@ -415,6 +416,7 @@ export class OffersRepositry {
 						minimum_amount: 1,
 						cap: 1,
 						channels: 1,
+						bankId: 1,
 						starting_date: 1,
 						categories: {
 							$map: {
@@ -423,7 +425,7 @@ export class OffersRepositry {
 								in: "$$category.name",
 							},
 						},
-						bankId: 1,
+
 						applicable_cards: {
 							_id: 1,
 							name: 1,
