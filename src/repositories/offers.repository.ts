@@ -277,6 +277,7 @@ export class OffersRepositry {
 									cap: 1,
 									channels: 1,
 									starting_date: 1,
+									bankId: 1,
 									categories: {
 										$map: {
 											input: "$categories",
