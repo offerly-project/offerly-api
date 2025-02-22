@@ -47,6 +47,7 @@ export class UsersRepository {
 				minimum_amount: 1,
 				cap: 1,
 				channels: 1,
+				bankId: 1,
 				starting_date: 1,
 				categories: 1,
 				applicable_cards: 1,
