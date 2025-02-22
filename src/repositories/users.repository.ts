@@ -35,6 +35,14 @@ export class UsersRepository {
 			},
 		},
 		{
+			$lookup: {
+				from: "categories",
+				localField: "categories",
+				foreignField: "_id",
+				as: "categories",
+			},
+		},
+		{
 			$project: {
 				_id: 1,
 				title: 1,
