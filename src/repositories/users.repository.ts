@@ -57,7 +57,13 @@ export class UsersRepository {
 				channels: 1,
 				bankId: 1,
 				starting_date: 1,
-				categories: 1,
+				categories: {
+					$map: {
+						input: "$categories",
+						as: "category",
+						in: "$$category.name",
+					},
+				},
 				applicable_cards: 1,
 			},
 		},
