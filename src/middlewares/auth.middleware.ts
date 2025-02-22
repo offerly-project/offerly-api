@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import moment from "moment";
 import { InternalServerError, UnauthorizedError } from "../errors/errors";
 import { ErrorCodes } from "../errors/errors.codes";
 import { UserRole } from "../ts/global";
@@ -37,13 +36,6 @@ const _authorize = (roles: UserRole[], sources: JWTSource[]) => {
 			}
 
 			const userData = await verifyToken(token!);
-			console.log(userData.iat);
-			if (userData.iat && +userData.iat < moment().subtract(1, "days").unix()) {
-				throw new UnauthorizedError(
-					"Token has expired",
-					ErrorCodes.UNAUTHORIZED
-				);
-			}
 
 			req.user = userData;
 			if (roles && !roles.includes(userData.role)) {
