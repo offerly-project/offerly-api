@@ -112,7 +112,6 @@ export class OffersRepositry {
 				{
 					$project: {
 						"bank.cards": 0,
-						bankId: 0,
 					},
 				},
 			])
