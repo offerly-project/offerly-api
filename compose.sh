@@ -1,1 +1,0 @@
-DATA_DIR='/etc/offerly-data' UPLOADS_DIR='/etc/offerly-uploads' COUNTRIES='["USA", "UAE","UK"]' CATEGORIES='["Food", "Groceries"]' LANGUAGES='["en", "ar"]' docker-compose up --build -d
