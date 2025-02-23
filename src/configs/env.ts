@@ -17,6 +17,7 @@ const schema = z.object({
 	NODE_ENV: z.string().default("development"),
 	UPLOADS_DIR: z.string(),
 	AGENDA_URL: z.string(),
+	APP_SCHEMA: z.string(),
 });
 
 export const env = schema.parse(process.env);

@@ -116,3 +116,7 @@ export const getSortDirectionNumber = (direction: "asc" | "desc") =>
 
 export const sleep = (s: number) =>
 	new Promise((resolve) => setTimeout(resolve, s * 1000));
+
+export const formatDeepLink = (link: string) => {
+	return [env.APP_SCHEMA, link + "&" + `d=${crypto.randomUUID()}`].join("://");
+};

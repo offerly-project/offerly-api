@@ -8,7 +8,7 @@ import {
 	usersRepository,
 	UsersRepository,
 } from "../repositories/users.repository";
-import { sleep } from "../utils/utils";
+import { formatDeepLink, sleep } from "../utils/utils";
 import { messagingInstance } from "./firebase";
 
 type MessagingType = typeof messagingInstance;
@@ -18,19 +18,13 @@ type NotificationUI = {
 	body: string;
 };
 
-export enum NotificationActions {
-	SHOW_SORTED_BY_NEW_ORDERS = "SHOW_SORTED_BY_NEW_ORDERS",
-	EXPIRING_FAVOURITES = "EXPIRING_FAVOURITES",
-}
+export type NotificationBasePayload<T extends object = {}> = {
+	link: string;
+} & T;
 
-export type NewOffersNotificationData = {
-	action: NotificationActions.SHOW_SORTED_BY_NEW_ORDERS;
-};
+export type NewOffersNotificationData = NotificationBasePayload;
 
-export type ExpiringOffersNotificationData = {
-	action: NotificationActions.EXPIRING_FAVOURITES;
-	offers: string;
-};
+export type ExpiringOffersNotificationData = NotificationBasePayload;
 
 export type NotificationPayload =
 	| NewOffersNotificationData
@@ -110,7 +104,9 @@ export class PushNotificationsService {
 					body,
 				},
 				payload: {
-					action: NotificationActions.SHOW_SORTED_BY_NEW_ORDERS,
+					link: formatDeepLink(
+						"tabs/offers?sort_by=created_at&sort_direction=desc"
+					),
 				},
 				tokens: userTokens,
 				userId: user._id?.toString(),
@@ -139,20 +135,22 @@ export class PushNotificationsService {
 				const diff = expiry.getTime() - Date.now();
 
 				const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-				if (days === 7 || days === 3) {
-					expiringOffers.push(favoriteOffer.title);
+				if (days === 7 || days === 5 || days === 3) {
+					expiringOffers.push(favoriteOffer._id);
 				}
 			}
 			const notificationUi: NotificationUI = {
 				title: "⏳ Hurry Up!",
 				body: "Some of your favorite offers will expire soon. Check them out now!",
 			};
+			if (expiringOffers.length === 0) return;
 			notifications.push({
 				notification: notificationUi,
 				tokens: user.notification_token?.map((token) => token.token)!,
 				payload: {
-					action: NotificationActions.EXPIRING_FAVOURITES,
-					offers: expiringOffers.join(","),
+					link: formatDeepLink(
+						`tabs/favorites?highlighted_offers=${expiringOffers.join(",")}`
+					),
 				},
 				userId: user._id?.toString(),
 			});
