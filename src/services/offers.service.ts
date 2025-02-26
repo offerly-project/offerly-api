@@ -80,13 +80,13 @@ export class OffersService {
 	}
 
 	async updateOffer(id: string, data: UpdateOfferBodyData) {
+		let bankId: ObjectId | undefined;
 		if (data.applicable_cards) {
 			const card = await cardsRepository.findById(data.applicable_cards[0]);
 			if (!card) {
 				throw new NotFoundError("Bank not found");
 			}
-
-			const bankId = card?.bank._id;
+			bankId = card?.bank._id;
 		}
 		if (data.categories) {
 			const categoriesExist = categoriesRepository.categoriesExists(
@@ -107,14 +107,13 @@ export class OffersService {
 			offer_source_link: data.offer_source_link,
 			expiry_date: data.expiry_date ? new Date(data.expiry_date) : undefined,
 			minimum_amount: data.minimum_amount,
-			channel: data.channels,
+			channels: data.channels,
 			categories: data.categories?.map((id) => new ObjectId(id)),
 			applicable_cards: data.applicable_cards?.map((id) => new ObjectId(id)),
 			logo: data.logo,
 			discount_code: data.discount_code,
-			bankId: data.applicable_cards
-				? new ObjectId(data.applicable_cards[0])
-				: undefined,
+			bankId:
+				data.applicable_cards?.length !== 0 ? new ObjectId(bankId) : undefined,
 			starting_date: data.starting_date
 				? new Date(data.starting_date)
 				: undefined,
