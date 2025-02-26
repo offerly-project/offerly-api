@@ -1,24 +1,45 @@
 import sharp, { Sharp } from "sharp";
 import { ImageDimensions } from "../middlewares/uploads.middleware";
-//@ts-ignore
-import ColorThief from "colorthief"; // You'll need to install this library: npm install colorthief
 
 export class ImageBuilder {
 	private _image: Sharp;
+
 	constructor(buffer: Buffer) {
 		this._image = sharp(buffer);
 	}
 
-	// Helper function to get dominant color
-	async getDominantColor() {
-		const dominantColor = await new Promise<any>((resolve, reject) => {
-			//@ts-ignore
-			ColorThief.getColor(this._image, (err, color) => {
-				if (err) reject(err);
-				resolve(color);
-			});
+	// Helper function to calculate dominant color
+	async getDominantColor(): Promise<{ r: number; g: number; b: number }> {
+		const { data, info } = await this._image
+			.raw()
+			.toBuffer({ resolveWithObject: true });
+		const pixelCount = info.width * info.height;
+
+		// Create a map to count color occurrences
+		const colorMap = new Map<string, number>();
+
+		for (let i = 0; i < pixelCount; i++) {
+			const r = data[i * 3];
+			const g = data[i * 3 + 1];
+			const b = data[i * 3 + 2];
+			const colorKey = `${r},${g},${b}`;
+
+			colorMap.set(colorKey, (colorMap.get(colorKey) || 0) + 1);
+		}
+
+		// Find the most frequent color
+		let dominantColor = { r: 255, g: 255, b: 255 }; // Default to white
+		let maxCount = 0;
+
+		colorMap.forEach((count, colorKey) => {
+			if (count > maxCount) {
+				maxCount = count;
+				const [r, g, b] = colorKey.split(",").map(Number);
+				dominantColor = { r, g, b };
+			}
 		});
-		return dominantColor || { r: 255, g: 255, b: 255 }; // Default to white if no dominant color found
+
+		return dominantColor;
 	}
 
 	async withDimensions(dims: ImageDimensions, fit: boolean) {
@@ -31,10 +52,10 @@ export class ImageBuilder {
 		const metadata = await this._image.metadata();
 		const hasAlpha = metadata.hasAlpha;
 
-		// Default to white if the image has no transparent background
+		// Default to white if no transparency
 		let backgroundColor = { r: 255, g: 255, b: 255 };
 
-		// If the image has transparency, get the dominant color of the image
+		// If the image has transparency, get the dominant color
 		if (hasAlpha) {
 			backgroundColor = await this.getDominantColor();
 		}
