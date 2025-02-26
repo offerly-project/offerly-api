@@ -1,4 +1,4 @@
-import sharp, { Sharp } from "sharp";
+import sharp, { Color, Sharp } from "sharp";
 import { ImageDimensions } from "../middlewares/uploads.middleware";
 
 export class ImageBuilder {
@@ -13,18 +13,24 @@ export class ImageBuilder {
 			throw new Error("Invalid dimensions");
 		}
 
+		// Get image metadata to check for transparency (alpha channel)
+		const metadata = await this._image.metadata();
+		const hasAlpha = metadata.hasAlpha;
+
+		// Default background color is white if no transparency is found
+		const backgroundColor = hasAlpha
+			? metadata.background
+			: { r: 255, g: 255, b: 255, alpha: 1 };
+
 		if (fit) {
 			this._image.resize(width, height, {
 				fit: "contain",
-				background: {
-					r: 0,
-					g: 0,
-					b: 0,
-					alpha: 0,
-				},
+				background: backgroundColor as Color,
 			});
 		} else {
-			this._image.resize(width, height);
+			this._image.resize(width, height, {
+				background: backgroundColor as Color,
+			});
 		}
 	}
 
