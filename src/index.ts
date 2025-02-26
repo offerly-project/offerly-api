@@ -70,27 +70,6 @@ dotenv.config();
 
 	startGarbageCollectors();
 
-	// (async () => {
-	// 	const offers: any[] = await db.getCollection("offers").find().toArray();
-	// 	for (const offer of offers) {
-	// 		if (!offer.applicable_cards.length) continue;
-	// 		cardsRepository
-	// 			.findById(offer.applicable_cards[0].toString())
-	// 			.then(async (card) => {
-	// 				const bankId = card?.bank._id;
-	// 				console.log(offer.title.en);
-
-	// 				if (offer.title.en === "DragonPass") {
-	// 					console.log(bankId);
-	// 				}
-
-	// 				await offersRepository.update(offer._id.toString(), {
-	// 					bankId: bankId,
-	// 				});
-	// 			});
-	// 	}
-	// })();
-
 	app.listen(env.PORT, () => {
 		console.log(`Server is running on port ${env.PORT}`);
 	});

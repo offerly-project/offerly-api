@@ -39,6 +39,17 @@ export class OffersRepositry {
 				},
 				{
 					$lookup: {
+						from: "banks",
+						localField: "bankId",
+						foreignField: "_id",
+						as: "bank",
+					},
+				},
+				{
+					$unwind: "$bank",
+				},
+				{
+					$lookup: {
 						from: "categories",
 						localField: "categories",
 						foreignField: "_id",
