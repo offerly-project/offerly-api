@@ -72,6 +72,7 @@ export class OffersRepositry {
 						starting_date: 1,
 						categories: 1,
 						applicable_cards: 1,
+						bankId: 1,
 					},
 				},
 			])
