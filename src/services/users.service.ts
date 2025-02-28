@@ -41,7 +41,7 @@ export class UsersService {
 			full_name: body.full_name,
 			cards: [],
 			favorites: [],
-			language: body.language,
+			language: body.language || "en",
 			notification_tokens: [],
 		};
 		return await usersRepository.create(user);

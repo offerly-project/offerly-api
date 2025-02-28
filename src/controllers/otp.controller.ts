@@ -73,10 +73,16 @@ const generateUserOtpHandler = async (
 		}
 		const otp = await otpService.requestOtp(email, source);
 		const user = await usersRepository.findByEmail(email);
+
 		if (!user) {
 			throw new NotFoundError("User not found", ErrorCodes.NOT_FOUND);
 		}
-		mailService.sendOtpMail(email, user?.full_name, otp.code, user.language);
+		mailService.sendOtpMail(
+			email,
+			user?.full_name,
+			otp.code,
+			user.language || "en"
+		);
 		res.status(StatusCodes.OK).send({
 			status: StatusCodes.OK,
 			message: "OTP sent to your email",
