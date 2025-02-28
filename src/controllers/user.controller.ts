@@ -15,6 +15,8 @@ const createUserHandler = async (
 	try {
 		const user = req.body;
 
+		await usersService.signupUser(user);
+
 		mailService.sendWelcomeMail(user.email, user.full_name, user.language);
 		res.status(201).send({ message: "User created successfully" });
 	} catch (e) {
