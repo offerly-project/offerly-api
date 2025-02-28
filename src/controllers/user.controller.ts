@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { mailService } from "../services/mail.service";
 import { usersService } from "../services/users.service";
-import { generateToken } from "../utils/utils";
 import {
 	PatchUserBodyData,
 	SignupUserBodyData,
@@ -16,14 +15,8 @@ const createUserHandler = async (
 	try {
 		const user = req.body;
 
-		const userDoc = await usersService.signupUser(user);
-		const token = await generateToken(
-			userDoc.insertedId.toString(),
-			"user",
-			"login"
-		);
 		mailService.sendWelcomeMail(user.email, user.full_name, user.language);
-		res.status(201).send({ message: "User created successfully", token });
+		res.status(201).send({ message: "User created successfully" });
 	} catch (e) {
 		next(e);
 	}
